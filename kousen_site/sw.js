@@ -1,6 +1,6 @@
 // 知育Webアプリ KouSen式 Service Worker
 // ファイルを更新したら VERSION を上げてください（古いキャッシュが入れ替わります）
-const VERSION = 'v2';
+const VERSION = 'v7';
 const CACHE = 'kousen-' + VERSION;
 const FONT_CACHE = 'kousen-fonts';
 const ASSETS = [
@@ -8,14 +8,19 @@ const ASSETS = [
   './index.html',
   './korokoro_puzzle.html',
   './korokoro_craft.html',
+  './anzan_timeattack.html',
   './manifest.webmanifest',
   './img/puzzle.svg',
   './img/craft.svg',
+  './img/keisan.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
   './icons/apple-touch-icon.png',
-  './icons/favicon-32.png'
+  './icons/favicon-32.png',
+  './video/puzzle_tutorial.jpg',
+  './video/craft_tutorial.jpg',
+  './video/anzan_tutorial.jpg'
 ];
 
 self.addEventListener('install', e => {
@@ -48,6 +53,8 @@ self.addEventListener('fetch', e => {
   }
 
   if (url.origin !== location.origin) return;
+  // 動画は途中から読み込む（Range）ため、Service Worker を通さずそのまま配信
+  if (req.headers.has('range') || url.pathname.endsWith('.mp4')) return;
 
   // 同じサイト内: ネットにつながればネット優先、だめならキャッシュ
   e.respondWith(
