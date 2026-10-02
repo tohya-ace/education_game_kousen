@@ -54,19 +54,21 @@ h1 .kicker{display:block;font-size:.42em;letter-spacing:.12em;color:var(--sub);m
 /* ---- game buttons ---- */
 .games{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px}
 .game{position:relative;display:flex;align-items:center;height:clamp(128px,34vw,158px);border-radius:24px;overflow:hidden;
-  text-decoration:none;color:#1F2A44;background:var(--art) right center/cover no-repeat,var(--tint);
+  text-decoration:none;color:#1F2A44;background:var(--tint);isolation:isolate;
   border:3px solid var(--edge);box-shadow:0 6px 0 var(--edge);transition:transform .12s,box-shadow .12s;margin-bottom:6px}
 .game:active{transform:translateY(4px);box-shadow:0 2px 0 var(--edge)}
-.game.puzzle{--art:url(img/puzzle.svg);--tint:#FBE7A1;--edge:#C9961B}
-.game.craft{--art:url(img/craft.svg);--tint:#CDEFD9;--edge:#2E9A5E}
-.game.keisan{--art:url(img/keisan.svg);--tint:#DCD2FA;--edge:#7A5CC9}
+.game.puzzle{--tint:#FBE7A1;--edge:#C9961B}
+.game.craft{--tint:#CDEFD9;--edge:#2E9A5E}
+.game.keisan{--tint:#DCD2FA;--edge:#7A5CC9}
 .game.keisan .plate{max-width:min(66%,310px)}
 .game.keisan .plate .name{font-size:clamp(1.05rem,4.7vw,1.5rem)}
-.plate{position:relative;margin-left:12px;max-width:min(58%,272px);padding:10px 14px 11px;border-radius:16px;
+.game .art{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;pointer-events:none}
+.game .art img{display:block;width:100%;height:100%;object-fit:cover;object-position:right center}
+.plate{position:relative;z-index:1;margin-left:12px;max-width:min(58%,272px);padding:10px 14px 11px;border-radius:16px;
   background:#fff;border:2px solid var(--edge);box-shadow:0 3px 0 var(--edge)}
 .plate .name{display:block;font-size:clamp(1.25rem,5.4vw,1.6rem);font-weight:600;line-height:1.2;letter-spacing:.03em;white-space:nowrap}
 .plate .desc{display:block;margin-top:4px;font-size:clamp(.78rem,3.3vw,.9rem);line-height:1.45;color:#46516B}
-.go{position:absolute;right:12px;bottom:12px;width:44px;height:44px;border-radius:50%;background:#fff;border:2px solid var(--edge);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 var(--edge)}
+.go{position:absolute;z-index:1;right:12px;bottom:12px;width:44px;height:44px;border-radius:50%;background:#fff;border:2px solid var(--edge);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 var(--edge)}
 .go svg{width:20px;height:20px;margin-left:3px}
 
 .foot{margin-top:6px;text-align:center;color:var(--sub);font-size:.82rem}
@@ -117,7 +119,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
       <h1><span class="kicker">知育Webアプリ</span>KouSen式<span class="rollIn" aria-hidden="true"><i style="background-color:var(--red)"></i><i style="background-color:var(--blue)"></i><i style="background-color:var(--green)"></i></span></h1>
     </div>
     <button class="bmBtn" id="openBm" aria-haspopup="dialog">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21z"/><path d="M12 7.5v6M9 10.5h6" stroke-linecap="round"/></svg>ブックマークのおすすめ
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21z"/><path d="M12 7.5v6M9 10.5h6" stroke-linecap="round"/></svg>ブックマークのススメ
     </button>
   </header>
   <p class="lead">ボールの道すじを考えるパズルや、暗算のタイムアタックであそべます。あそびたいゲームをえらんでね。</p>
@@ -125,6 +127,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
   <ul class="games">
     <li>
       <a class="game puzzle" href="korokoro_puzzle.html">
+        <picture class="art"><source srcset="img/puzzle.webp" type="image/webp"><img src="img/puzzle.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">ころころパズル</span>
           <span class="desc">黄色のピースとトンネルをヒントに、すきまをうめよう</span>
@@ -134,6 +137,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
     </li>
     <li>
       <a class="game craft" href="korokoro_craft.html">
+        <picture class="art"><source srcset="img/craft.webp" type="image/webp"><img src="img/craft.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">ころころクラフト</span>
           <span class="desc">まっさらな盤面に、ピースをぜんぶ自分でならべよう</span>
@@ -143,6 +147,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
     </li>
     <li>
       <a class="game keisan" href="anzan_timeattack.html">
+        <picture class="art"><source srcset="img/keisan.webp" type="image/webp"><img src="img/keisan.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">あんざんタイムアタック</span>
           <span class="desc">足し算・引き算・掛け算・割り算を10問。はやくとくほど高得点</span>
@@ -157,7 +162,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
 
 <dialog class="bm" id="bm" aria-labelledby="bmTitle">
   <div class="head">
-    <h2 id="bmTitle" tabindex="-1">ブックマークのおすすめ</h2>
+    <h2 id="bmTitle" tabindex="-1">ブックマークのススメ</h2>
     <button class="close" id="closeBm" aria-label="閉じる">✕</button>
   </div>
   <div class="body">
@@ -380,6 +385,21 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
     deferred=null;$('installNow').hidden=true;
   });
   window.addEventListener('appinstalled',()=>{$('installNow').hidden=true});
+
+  // ---- ボタン画像：戻ったときに消えていたら読み込み直す ----
+  function fixArt(force){
+    document.querySelectorAll('.game .art img').forEach(img=>{
+      if(force||!img.complete||img.naturalWidth===0){
+        const pic=img.parentNode;pic.querySelectorAll('source').forEach(s=>{const v=s.getAttribute('srcset');s.setAttribute('srcset',v)});
+        const src=img.getAttribute('src');img.removeAttribute('src');img.setAttribute('src',src);
+      }
+    });
+  }
+  document.querySelectorAll('.game .art img').forEach(img=>{
+    img.addEventListener('error',()=>{if(!img.dataset.retry){img.dataset.retry='1';img.parentNode.querySelectorAll('source').forEach(s=>s.remove());img.src=img.getAttribute('src').split('?')[0]+'?r='+Date.now()}});
+  });
+  window.addEventListener('pageshow',e=>{fixArt(e.persisted)});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')fixArt(false)});
 
   // ---- Service Worker（オフライン対応） ----
   if('serviceWorker' in navigator&&location.protocol!=='file:'){

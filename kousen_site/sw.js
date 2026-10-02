@@ -1,6 +1,6 @@
 // 知育Webアプリ KouSen式 Service Worker
 // ファイルを更新したら VERSION を上げてください（古いキャッシュが入れ替わります）
-const VERSION = 'v7';
+const VERSION = 'v8';
 const CACHE = 'kousen-' + VERSION;
 const FONT_CACHE = 'kousen-fonts';
 const ASSETS = [
@@ -10,9 +10,12 @@ const ASSETS = [
   './korokoro_craft.html',
   './anzan_timeattack.html',
   './manifest.webmanifest',
-  './img/puzzle.svg',
-  './img/craft.svg',
-  './img/keisan.svg',
+  './img/puzzle.webp',
+  './img/craft.webp',
+  './img/keisan.webp',
+  './img/puzzle.png',
+  './img/craft.png',
+  './img/keisan.png',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
