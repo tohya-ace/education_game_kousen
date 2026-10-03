@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>知育Webアプリ KouSen式</title>
-<meta name="description" content="知育Webアプリ KouSen式。ボールをころがして考える、こども向けの知育ゲーム集です。">
+<meta name="description" content="知育Webアプリ KouSen式。ボールをころがして考える、こどもむけのゲームです。">
 <meta name="theme-color" content="#274F8E">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
@@ -32,7 +32,7 @@
 :root[data-theme="dark"]{--bg:#141B28;--ink:#E7ECF5;--sub:#9AA7BF;--panel:#1E2738;--line:#33415A;--accent:#8FB2F0;}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
-/* 文字はすべて NK-R。NK-R に太字は無いので擬似太字を出さない（Klee One のみ 600 を使う） */
+/* 文字はすべて NK-R。NK-R に太字は無いので擬似太字を出さない（Klee One のみ 600 をつかう） */
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:400;font-synthesis:none;line-height:1.6}
 body.lock{overflow:hidden}
 button,a{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
@@ -101,7 +101,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
 .done{margin:12px 0 0;padding:10px 12px;border-radius:12px;background:#DFF5E7;color:#135C33;font-size:.92rem}
 .done[hidden]{display:none}
 
-/* 読み込み時に一度だけ、ボールが転がってくる */
+/* 読み込み時にいちどだけ、ボールがころがってくる */
 @media (prefers-reduced-motion:no-preference){
   .rollIn i{animation:roll .9s cubic-bezier(.2,.8,.3,1.1) both}
   .rollIn i:nth-child(2){animation-delay:.12s}
@@ -122,7 +122,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21z"/><path d="M12 7.5v6M9 10.5h6" stroke-linecap="round"/></svg>ブックマークのススメ
     </button>
   </header>
-  <p class="lead">ボールの道すじを考えるパズルや、暗算のタイムアタックであそべます。あそびたいゲームをえらんでね。</p>
+  <p class="lead">ボールの道すじを考えるパズルや、あんざんのタイムアタックであそべます。あそびたいゲームをえらんでね。</p>
 
   <ul class="games">
     <li>
@@ -140,7 +140,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
         <picture class="art"><source srcset="img/craft.webp" type="image/webp"><img src="img/craft.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">ころころクラフト</span>
-          <span class="desc">まっさらな盤面に、ピースをぜんぶ自分でならべよう</span>
+          <span class="desc">まっさらなばんめんに、ピースをぜんぶ自分でならべよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
@@ -150,14 +150,14 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
         <picture class="art"><source srcset="img/keisan.webp" type="image/webp"><img src="img/keisan.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">あんざんタイムアタック</span>
-          <span class="desc">足し算・引き算・掛け算・割り算を10問。はやくとくほど高得点</span>
+          <span class="desc">足し算・引き算・かけ算・わり算を10もん。はやくとくほど高い点になるよ</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
   </ul>
 
-  <p class="foot">ホーム画面に追加すると、電波がないところでもあそべます。</p>
+  <p class="foot">ホームがめんについかすると、インターネットがつながらないところでもあそべます。</p>
 </div>
 
 <dialog class="bm" id="bm" aria-labelledby="bmTitle">
@@ -353,7 +353,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
   selectTab(isAndroid?tabs[1]:tabs[0]);
   if(standalone)$('already').hidden=false;
 
-  // ---- ポップアップの開閉 ----
+  // ---- ポップアップのひら閉 ----
   function openBm(){
     if(typeof dlg.showModal==='function'){if(!dlg.open)dlg.showModal()}else dlg.setAttribute('open','');
     document.body.classList.add('lock');
@@ -371,7 +371,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
   dlg.addEventListener('cancel',e=>{e.preventDefault();closeBm()});
   dlg.addEventListener('click',e=>{if(e.target===dlg)closeBm()});
 
-  // 初めてのアクセスでは最初から表示（ホーム画面から開いたときは除く）
+  // 初めてのアクセスではさいしょからひょうじ（ホームがめんからひらいたときは除く）
   let seen=false;try{seen=localStorage.getItem(KEY)==='1'}catch(e){}
   if(!seen&&!standalone)openBm();
 
@@ -386,7 +386,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
   });
   window.addEventListener('appinstalled',()=>{$('installNow').hidden=true});
 
-  // ---- ボタン画像：戻ったときに消えていたら読み込み直す ----
+  // ---- ボタン画像：もどったときに消えていたら読み込み直す ----
   function fixArt(force){
     document.querySelectorAll('.game .art img').forEach(img=>{
       if(force||!img.complete||img.naturalWidth===0){

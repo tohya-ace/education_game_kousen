@@ -158,7 +158,7 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
 }
 @media (max-width:360px){.mode{gap:6px;padding:0 7px;font-size:.8rem}.mode .sym{width:30px;height:30px;font-size:1.25rem}.pill{padding:0 9px 0 7px;font-size:.85rem!important;gap:4px}h1{font-size:.95rem}.pill svg{width:16px;height:16px}.titlebar{gap:6px}.tabs button{font-size:.98rem;white-space:nowrap}.bestTable{font-size:.82rem}.bestTable th,.bestTable td{padding:7px 5px}}
 
-/* チュートリアル動画 */
+/* チュートリアルどうが */
 .tvid{padding:14px 0 6px}
 .vbox{position:relative;margin:0 auto;width:min(100%,280px,calc(52vh*.5625));width:min(100%,280px,calc(52dvh*.5625));aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:#E6EFF6;border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
 .vbox video{display:block;width:100%;height:100%;object-fit:cover;background:#E6EFF6}
@@ -182,8 +182,8 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
       <div class="modes" role="group" aria-label="アタックモード">
         <button class="mode" data-mode="add" style="--c:var(--red)"><span class="sym" aria-hidden="true">＋</span>足し算アタック</button>
         <button class="mode" data-mode="sub" style="--c:var(--blue)"><span class="sym" aria-hidden="true">−</span>引き算アタック</button>
-        <button class="mode" data-mode="mul" style="--c:var(--green)"><span class="sym" aria-hidden="true">×</span>掛け算アタック</button>
-        <button class="mode" data-mode="div" style="--c:var(--orange)"><span class="sym" aria-hidden="true">÷</span>割り算アタック</button>
+        <button class="mode" data-mode="mul" style="--c:var(--green)"><span class="sym" aria-hidden="true">×</span>かけ算アタック</button>
+        <button class="mode" data-mode="div" style="--c:var(--orange)"><span class="sym" aria-hidden="true">÷</span>わり算アタック</button>
       </div>
       <p class="label">むずかしさ</p>
       <div class="tabs" role="group" aria-label="むずかしさ">
@@ -192,8 +192,8 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
       <div class="bestNow"><span class="k">ベストスコア</span><span class="v" id="bestNow">―</span></div>
       <button class="start" id="start"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>スタート</button>
       <div class="sndRow"><button class="snd" data-snd aria-pressed="true"></button></div>
-      <table class="bestTable" aria-label="ベストスコア一覧">
-        <caption>ベストスコア一覧</caption>
+      <table class="bestTable" aria-label="ベストスコアいちらん">
+        <caption>ベストスコアいちらん</caption>
         <thead><tr><th scope="col" style="text-align:left">アタックモード</th><th scope="col">Normal</th><th scope="col">Hard</th><th scope="col">Very Hard</th></tr></thead>
         <tbody id="bestBody"></tbody>
       </table>
@@ -201,7 +201,7 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
   </section>
 
   <!-- ===== プレイ ===== -->
-  <section id="play" aria-label="問題" hidden>
+  <section id="play" aria-label="もんだい" hidden>
     <div style="display:flex;flex-direction:column;gap:12px">
       <div class="hud">
         <span class="tag" id="playTag"></span>
@@ -234,37 +234,37 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
       <h2 id="rTitle" tabindex="-1">クリア！</h2>
       <p class="rmode" id="rMode"></p>
       <div class="scoreBox" id="scoreBox"><div class="k">スコア</div><div class="v"><span id="rScore">0</span><small>点</small></div></div>
-      <span class="newBest" id="rNew" hidden>ベストスコア更新！</span>
+      <span class="newBest" id="rNew" hidden>ベストスコアこうしん！</span>
       <div class="stats">
         <div><span class="k">タイム</span><span class="v" id="rTime"></span></div>
         <div><span class="k">まちがい</span><span class="v" id="rMiss"></span></div>
         <div id="rBestWrap"><span class="k">ベスト</span><span class="v" id="rBest"></span></div>
       </div>
-      <p class="over5" id="rOver" hidden>5分をこえたので、最低スコアになりました。</p>
+      <p class="over5" id="rOver" hidden>5分をこえたので、さいていスコアになりました。</p>
       <div class="rbtns">
-        <button class="start" id="again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>もう一度</button>
-        <button class="btn2 retry" id="retry" hidden>まちがえた問題だけれんしゅう</button>
+        <button class="start" id="again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>もういちど</button>
+        <button class="btn2 retry" id="retry" hidden>まちがえたもんだいだけれんしゅう</button>
         <button class="btn2" id="toSel">アタックモードをえらぶ</button>
       </div>
     </div>
   </section>
 
-  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページに戻る</a>
+  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにもどる</a>
 </div>
 
 <dialog class="tuto" id="tuto" aria-labelledby="tutoTitle">
-  <div class="head"><h2 id="tutoTitle" tabindex="-1">あんざんタイムアタックのあそびかた</h2><button class="close" id="closeTuto" aria-label="閉じる">✕</button></div>
+  <div class="head"><h2 id="tutoTitle" tabindex="-1">あんざんタイムアタックのあそびかた</h2><button class="close" id="closeTuto" aria-label="とじる">✕</button></div>
   <div class="body">
-    <section class="tvid" aria-label="動画で見るあそびかた">
+    <section class="tvid" aria-label="どうがで見るあそびかた">
       <div class="vbox" id="vbox">
         <video id="tutoVideo" src="video/anzan_tutorial.mp4" poster="video/anzan_tutorial.jpg" playsinline muted preload="metadata" controls></video>
-        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">動画を見る</span></button>
+        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">どうがを見る</span></button>
       </div>
-      <p class="vnext">動画のあとは、下のくわしい説明も見てね</p>
+      <p class="vnext">どうがのあとは、下のくわしいせつめいも見てね</p>
     </section>
     <section class="step">
       <h3><span class="n">1</span>アタックモードとむずかしさをえらぶ</h3>
-      <p>足し算・引き算・掛け算・割り算の4つのアタックモードと、Normal・Hard・Very Hard の3つのむずかしさがあります。</p>
+      <p>足し算・引き算・かけ算・わり算の4つのアタックモードと、Normal・Hard・Very Hard の3つのむずかしさがあります。</p>
       <table>
         <thead><tr><th></th><th>Normal</th><th>Hard</th><th>Very Hard</th></tr></thead>
         <tbody>
@@ -274,15 +274,15 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
           <tr><th>÷</th><td>42 ÷ 7</td><td>252 ÷ 4</td><td>1872 ÷ 8</td></tr>
         </tbody>
       </table>
-      <p>引き算の答えは、Normal は1桁、Hard は1桁〜2桁、Very Hard は1桁〜3桁になります。答えはマイナスになりません。割り算はかならず割り切れます。</p>
+      <p>引き算の答えは、Normal は1けた、Hard は1けた〜2けた、Very Hard は1けた〜3けたになります。答えはマイナスになりません。わり算はかならずわり切れます。</p>
     </section>
     <section class="step">
       <h3><span class="n">2</span>数字キーで答えを入れる</h3>
-      <p>答えの桁数まで入れると、その場で○か×が出ます。まちがえたら、同じ問題にもう一度チャレンジ。3回まちがえると答えが出ます。</p>
+      <p>答えをさいごのけたまで入れると、その場で○か×が出ます。まちがえたら、同じもんだいにもういちどチャレンジ。3回まちがえると答えが出ます。</p>
     </section>
     <section class="step">
-      <h3><span class="n">3</span>まちがえた問題だけれんしゅう</h3>
-      <p>まちがえた問題があったときは、結果画面からその問題だけをもう一度とけます（スコアはつきません）。</p>
+      <h3><span class="n">3</span>まちがえたもんだいだけれんしゅう</h3>
+      <p>まちがえたもんだいがあったときは、けっかがめんからそのもんだいだけをもういちどとけます（スコアはつきません）。</p>
     </section>
   </div>
   <div class="foot"><button id="startTuto">はじめる</button></div>
@@ -294,8 +294,8 @@ const $=id=>document.getElementById(id);
 const MODES={
   add:{label:'足し算アタック',sym:'+',c:'var(--red)'},
   sub:{label:'引き算アタック',sym:'−',c:'var(--blue)'},
-  mul:{label:'掛け算アタック',sym:'×',c:'var(--green)'},
-  div:{label:'割り算アタック',sym:'÷',c:'var(--orange)'}
+  mul:{label:'かけ算アタック',sym:'×',c:'var(--green)'},
+  div:{label:'わり算アタック',sym:'÷',c:'var(--orange)'}
 };
 // 難易度ごとのスコア設定：fast 秒以内で最高点、300秒(5分)以上で最低点
 const LV={1:{max:1000,min:10,fast:15},2:{max:10000,min:100,fast:30},3:{max:100000,min:1000,fast:60}};
@@ -312,14 +312,14 @@ let mode=MODES[last.mode]?last.mode:'add', dig=[1,2,3].includes(last.dig)?last.d
 let soundOn=load(KEY_SND,true);
 const fmt=n=>Number(n).toLocaleString('ja-JP');
 
-/* ---------- 問題 ---------- */
+/* ---------- もんだい ---------- */
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function range(d){return d===1?[1,9]:[10**(d-1),10**d-1]}
 function gen(m,d){
   const [lo,hi]=range(d); let a,b,ans;
   if(m==='add'){a=rnd(lo,hi);b=rnd(lo,hi);ans=a+b}
   else if(m==='sub'){
-    // 引く数は難易度の桁数、答えは Normal:1桁 / Hard:1〜2桁 / Very Hard:1〜3桁（例 15−8=7）
+    // 引く数は難易度のけた数、答えは Normal:1けた / Hard:1〜2けた / Very Hard:1〜3けた（例 15−8=7）
     b=rnd(lo,hi);
     const W={1:[1],2:[.3,.7],3:[.2,.3,.5]}[d];
     let r=Math.random(),ad=1;for(let i=0;i<W.length;i++){if(r<W[i]){ad=i+1;break}r-=W[i]}
@@ -395,7 +395,7 @@ function calcScore(sec,d){
 }
 function fmtTime(sec){const m=Math.floor(sec/60),s=sec-m*60;return m+':'+(s<10?'0':'')+s.toFixed(1)}
 
-/* ---------- えらぶ画面 ---------- */
+/* ---------- えらぶがめん ---------- */
 function renderSel(){
   document.querySelectorAll('.mode').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===mode));
   document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-pressed',Number(b.dataset.dig)===dig));
@@ -446,7 +446,7 @@ function loop(){
 }
 function showQ(){
   const p=set[idx];
-  $('qn').textContent='第'+(idx+1)+'問 / '+set.length+'問';
+  $('qn').textContent='だい'+(idx+1)+'もん / '+set.length+'もん';
   $('q').textContent=p.a+' '+MODES[p.m].sym+' '+p.b+' =';
   input='';tries=0;$('hint').textContent='';renderAns();
   [...$('dots').children].forEach((d,i)=>d.classList.toggle('now',i===idx&&!d.classList.contains('ok')&&!d.classList.contains('re')));
@@ -475,7 +475,7 @@ function judge(){
     if(tries===1)wrongs.push(p);
     later(()=>{
       input='';renderAns();
-      $('hint').textContent=tries>=3?'こたえは '+p.ans+' だよ。入れてみよう':'もう一度！';
+      $('hint').textContent=tries>=3?'こたえは '+p.ans+' だよ。入れてみよう':'もういちど！';
       locked=false;
     },420);
   }
@@ -499,7 +499,7 @@ function finish(){
   $('rTime').textContent=practice?'―':fmtTime(sec);
   $('rMiss').textContent=miss+'回';
   $('retry').hidden=wrongs.length===0;
-  $('retry').textContent='まちがえた'+wrongs.length+'問だけれんしゅう';
+  $('retry').textContent='まちがえた'+wrongs.length+'もんだけれんしゅう';
   if(practice){
     $('rTitle').textContent='れんしゅうおわり！';
     $('scoreBox').hidden=true;$('rNew').hidden=true;$('rOver').hidden=true;$('rBestWrap').hidden=true;
@@ -536,16 +536,16 @@ if(!load(KEY_TUTO,0))openTuto();
 if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
 </script>
 <script>
-/* チュートリアル動画：開いたら最初から再生、閉じたら止める */
+/* チュートリアルどうが：ひらいたらさいしょから再生、閉じたら止める */
 (function(){
   const dlg=document.getElementById('tuto'),v=document.getElementById('tutoVideo'),box=document.getElementById('vbox'),
         btn=document.getElementById('vplay'),lbl=document.getElementById('vplayLabel');
   if(!dlg||!v)return;
   const sync=()=>{box.classList.toggle('playing',!v.paused&&!v.ended)};
   v.addEventListener('play',sync);v.addEventListener('playing',sync);v.addEventListener('pause',sync);
-  v.addEventListener('ended',()=>{lbl.textContent='もう一度見る';sync()});
+  v.addEventListener('ended',()=>{lbl.textContent='もういちど見る';sync()});
   btn.addEventListener('click',()=>{if(v.ended)v.currentTime=0;v.play().catch(()=>{})});
-  function onOpen(){lbl.textContent='動画を見る';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
+  function onOpen(){lbl.textContent='どうがを見る';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
   function onClose(){v.pause()}
   let was=dlg.open;if(was)onOpen();
   new MutationObserver(()=>{if(dlg.open&&!was)onOpen();else if(!dlg.open&&was)onClose();was=dlg.open}).observe(dlg,{attributes:true,attributeFilter:['open']});

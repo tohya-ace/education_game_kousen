@@ -1,7 +1,7 @@
 {
   "name": "知育Webアプリ KouSen式",
   "short_name": "KouSen式",
-  "description": "知育Webアプリ KouSen式 ― ボールをころがして考える、こども向けの知育ゲーム集",
+  "description": "知育Webアプリ KouSen式 ― ボールをころがして考える、こどもむけのゲーム",
   "lang": "ja",
   "id": "./",
   "start_url": "./",
