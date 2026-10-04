@@ -49,7 +49,8 @@ h1 .dot{display:inline-block;width:.5em;height:.5em;border-radius:50%;margin-lef
 .counts button[aria-pressed="true"]{background:var(--board);color:#fff}
 .foods{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
 .food{position:relative;display:flex;flex-direction:column;align-items:stretch;padding:4px 4px 6px;border-radius:14px;border:2px solid var(--line);background:var(--panel);color:var(--ink);box-shadow:0 3px 0 var(--line)}
-.food img{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;background:#eee}
+.food img{display:block;width:100%;height:auto;aspect-ratio:2/1;object-fit:cover;border-radius:10px;background:#eee}
+.food.all img{aspect-ratio:1}
 .food span{display:block;margin-top:4px;font-size:.82rem;line-height:1.2;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .food[aria-pressed="true"]{border-color:var(--orange);box-shadow:0 0 0 3px rgba(240,138,36,.35),0 3px 0 var(--orange)}
 .food.all{grid-column:1/-1;flex-direction:row;align-items:center;gap:12px;padding:6px 12px 6px 6px}
@@ -74,8 +75,7 @@ h1 .dot{display:inline-block;width:.5em;height:.5em;border-radius:50%;margin-lef
 .stat span{font-size:1.15rem;color:var(--board)}
 .field{position:relative;width:100%;height:calc(100vh - 150px);height:calc(100dvh - 150px);min-height:420px;border-radius:18px;background:var(--field);border:2px solid var(--line);overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
 .boardBg{position:absolute;border-radius:4px;background:rgba(255,255,255,.75);box-shadow:inset 0 0 0 2px rgba(31,42,68,.18)}
-.ghost{position:absolute;opacity:0;transition:opacity .25s;pointer-events:none;border-radius:4px}
-.ghost.on{opacity:.32}
+.ghost{position:absolute;opacity:.32;pointer-events:none;border-radius:4px}
 .pc{position:absolute;left:0;top:0;touch-action:none;cursor:grab;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
 .pc.drag{cursor:grabbing;filter:drop-shadow(0 8px 8px rgba(0,0,0,.35))}
 .pc.lock{filter:none;cursor:default;pointer-events:none;transition:left .15s ease,top .15s ease}
@@ -148,7 +148,7 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
   <section id="selScr">
     <p class="label">ピースの数</p>
     <div class="counts" id="counts" role="group" aria-label="ピースの数" style="margin-top:8px">
-      <button data-n="36">36</button><button data-n="64">64</button><button data-n="100">100</button>
+      <button data-n="16">16</button><button data-n="25">25</button><button data-n="36">36</button>
     </div>
     <p class="label" style="margin-top:14px">たべものをえらぶ</p>
     <div class="foods" id="foodsAll" style="margin-top:8px"></div>
@@ -168,7 +168,6 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
       <button class="sbtn" id="quit">‹ やめる</button>
       <div class="info"><b id="pName"></b><span id="pCount"></span></div>
       <button class="sbtn" id="sortBtn">ならべる</button>
-      <button class="sbtn" id="ghostBtn" aria-pressed="false">見本</button>
       <div class="stat"><small>のこり</small><span id="rest">0</span></div>
     </div>
     <div class="field" id="field" style="margin-top:8px"><div class="loading" id="loading">じゅんびちゅう…</div></div>
@@ -194,15 +193,15 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
     </section>
     <section class="step">
       <h3><span class="n">1</span>ピースの数とたべものをえらぶ</h3>
-      <p>ピースの数を <b>36・64・100</b> からえらんで、すきなやさいやくだものをタップします。<b>オールスター</b>は、ぜんぶのやさいとくだものがあつまった絵です。えらんだら「スタート」をおします。</p>
+      <p>ピースの数を <b>16・25・36</b> からえらんで、すきなやさいやくだものをタップします。<b>オールスター</b>は、ぜんぶのやさいとくだものがあつまった絵です。えらんだら「スタート」をおします。</p>
     </section>
     <section class="step">
       <h3><span class="n">2</span>ピースをうごかしてはめる</h3>
       <p>ばらばらのピースを、ゆびでおさえたままうごかして、まん中のわくの中のただしいばしょにおきます。ちかくまでもっていくと、ピタッとはまります。</p>
     </section>
     <section class="step">
-      <h3><span class="n">3</span>こまったときは「見本」</h3>
-      <p>「見本」をおすと、わくの中にうすく絵が出ます。もういちどおすと きえます。ピースがかさなって見づらいときは「ならべる」をおすと、ピースがきれいにならびます。</p>
+      <h3><span class="n">3</span>うすい絵を見ながら</h3>
+      <p>わくの中には、できあがりの絵がうすく出ています。ピースの絵と見くらべて、はまるばしょをさがしてね。ピースがかさなって見づらいときは「ならべる」をおすと、ピースがきれいにならびます。</p>
     </section>
     <section class="step">
       <h3><span class="n">4</span>ぜんぶはめたらクリア</h3>
@@ -215,20 +214,20 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
 <script>
 const FOODS=[
  {k:'allstar',n:'オールスター',c:'all'},
- {k:'ichigo',n:'イチゴ',c:'f'},{k:'mikan',n:'みかん',c:'f'},{k:'kaki',n:'カキ',c:'f'},{k:'kiwi',n:'キウイフルーツ',c:'f'},{k:'suika',n:'スイカ',c:'f'},
+ {k:'ichigo',n:'イチゴ',c:'f'},{k:'mikan',n:'みかん',c:'f'},{k:'kiwi',n:'キウイフルーツ',c:'f'},{k:'suika',n:'スイカ',c:'f'},
  {k:'banana',n:'バナナ',c:'f'},{k:'pine',n:'パイナップル',c:'f'},{k:'budou',n:'ブドウ',c:'f'},{k:'melon',n:'メロン',c:'f'},{k:'mango',n:'マンゴー',c:'f'},
  {k:'momo',n:'モモ',c:'f'},{k:'ringo',n:'リンゴ',c:'f'},{k:'lemon',n:'レモン',c:'f'},
  {k:'asupara',n:'アスパラ',c:'v'},{k:'avocado',n:'アボガド',c:'v'},{k:'edamame',n:'えだまめ',c:'v'},{k:'eringi',n:'えりんぎ',c:'v'},{k:'kyuri',n:'きゅうり',c:'v'},
  {k:'shiitake',n:'しいたけ',c:'v'},{k:'jagaimo',n:'じゃがいも',c:'v'},{k:'tamanegi',n:'タマネギ',c:'v'},{k:'tomato',n:'トマト',c:'v'},{k:'nasu',n:'ナス',c:'v'},
  {k:'negi',n:'ネギ',c:'v'},{k:'hakusai',n:'はくさい',c:'v'},{k:'broccoli',n:'ブロッコリー',c:'v'},{k:'hourenso',n:'ほうれん草',c:'v'},{k:'maitake',n:'まいたけ',c:'v'},
  {k:'renkon',n:'れんこん',c:'v'},{k:'lettuce',n:'レタス',c:'v'},{k:'cabbage',n:'キャベツ',c:'v'},{k:'piman',n:'ピーマン',c:'v'},{k:'satsuma',n:'さつまいも',c:'v'},
- {k:'kabocha',n:'カボチャ',c:'v'},{k:'goya',n:'ゴーヤー',c:'v'}
+ {k:'kabocha',n:'カボチャ',c:'v'}
 ];
 const $=id=>document.getElementById(id);
 const KEY_TUTO='kousen-food-tutorial-seen',KEY_SEL='kousen-food-sel';
 function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-let sel=load(KEY_SEL,{k:null,n:36});if(![36,64,100].includes(sel.n))sel.n=36;
+let sel=load(KEY_SEL,{k:null,n:16});if(![16,25,36].includes(sel.n))sel.n=16;
 
 /* ---- えらぶ画面 ---- */
 function buildSel(){
@@ -316,7 +315,7 @@ function startGame(){
   const f=FOODS.find(x=>x.k===sel.k);if(!f)return;
   $('selScr').hidden=true;$('playScr').hidden=false;window.scrollTo(0,0);
   $('pName').textContent=f.n;$('pCount').textContent=sel.n+'ピース';
-  $('msg').hidden=true;$('endBtns').hidden=true;$('ghostBtn').setAttribute('aria-pressed','false');
+  $('msg').hidden=true;$('endBtns').hidden=true;
   field.classList.remove('done');field.innerHTML='<div class="loading">じゅんびちゅう…</div>';
   const img=new Image();img.decoding='async';
   img.onload=()=>setup(f,img);
@@ -339,7 +338,7 @@ function setup(f,img){
     p.el=d;p.lock=false;bindDrag(d,p);
   });
   field.appendChild(G.full);
-  fit(true);
+  fit(true);arrange(false);
   $('rest').textContent=G.N;
 }
 // 大きさを 決めて ピースを かきなおす
@@ -349,7 +348,7 @@ function fit(scatter){
   const wide=fw>fh*1.15;
   let bw,bh;
   if(wide){bh=Math.min(fh-2*pad,(fw*.52)/G.A);bw=bh*G.A}
-  else{const fr={36:.58,64:.52,100:.47}[G.N]||.5;bw=Math.min(fw-2*pad,(fh*fr)*G.A);bh=bw/G.A}
+  else{const fr={16:.44,25:.44,36:.44}[G.N]||.5;bw=Math.min(fw-2*pad,(fh*fr)*G.A);bh=bw/G.A}
   const bx=wide?pad+6:(fw-bw)/2, by=wide?(fh-bh)/2:pad+4;
   const old=G.B;G.B={x:bx,y:by,w:bw,h:bh};
   Object.assign(G.bg.style,{left:bx+'px',top:by+'px',width:bw+'px',height:bh+'px'});
@@ -434,23 +433,26 @@ function win(){
   $('endBtns').hidden=false;
 }
 let rz=0;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if(G&&!$('playScr').hidden)fit(false)},150)});
-$('ghostBtn').onclick=()=>{if(!G)return;const on=!G.ghost.classList.contains('on');G.ghost.classList.toggle('on',on);$('ghostBtn').setAttribute('aria-pressed',on)};
 // ばらばらのピースを、あいているところに ならべなおす
-$('sortBtn').onclick=()=>{
+$('sortBtn').onclick=()=>arrange(true);
+function arrange(anim){
   if(!G||G.done)return;
   const fw=field.clientWidth,fh=field.clientHeight,B=G.B,wide=fw>fh*1.15;
   const loose=G.pieces.filter(p=>!p.lock);if(!loose.length)return;
   const pw=loose[0].w,ph=loose[0].h;
   // ならべる ばしょ（わくの 下 または 右）
   const area=wide?{x:B.x+B.w+8,y:6,w:fw-(B.x+B.w+8)-4,h:fh-12}:{x:4,y:B.y+B.h+8,w:fw-8,h:fh-(B.y+B.h+8)-4};
-  let step=Math.max(pw,ph)*.92,cols,rows;
-  for(;;){cols=Math.max(1,Math.floor((area.w-pw*.1)/step));rows=Math.ceil(loose.length/cols);if(rows*step<=area.h-ph*.1||step<pw*.45)break;step*=.94}
-  shuffleArr(loose).forEach((p,k)=>{const c=k%cols,r=Math.floor(k/cols);
-    p.x=area.x+c*step+(step-p.w)/2;p.y=area.y+r*step+(step-p.h)/2;
+  // ピースの はばと たかさで あいだを きめる（入りきらないときは 少しずつ かさねる）
+  const iw=loose.reduce((a,p)=>a+p.w,0)/loose.length*.86, ih=loose.reduce((a,p)=>a+p.h,0)/loose.length*.86;
+  let k=1,cols,rows;
+  for(;;){cols=Math.max(1,Math.floor(area.w/(iw*k)));rows=Math.ceil(loose.length/cols);if(rows*ih*k<=area.h||k<.42)break;k*=.95}
+  const sx=area.w/cols, sy=Math.min(ih*k*1.06,area.h/rows);
+  shuffleArr(loose).forEach((p,n)=>{const c=n%cols,r=Math.floor(n/cols);
+    p.x=area.x+c*sx+(sx-p.w)/2;p.y=area.y+r*sy+(sy-p.h)/2;
     p.x=Math.max(0,Math.min(fw-p.w,p.x));p.y=Math.max(0,Math.min(fh-p.h,p.y));
-    p.el.style.transition='left .3s ease,top .3s ease';place(p);p.el.style.zIndex=++G.z;
-    setTimeout(()=>p.el.style.transition='',320)});
-};
+    if(anim)p.el.style.transition='left .3s ease,top .3s ease';place(p);p.el.style.zIndex=++G.z;
+    if(anim)setTimeout(()=>p.el.style.transition='',320)});
+}
 function shuffleArr(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 $('go').onclick=startGame;$('again').onclick=startGame;
 function toSel(){clearFx();if(G){G=null}$('playScr').hidden=true;$('selScr').hidden=false;renderSel();window.scrollTo(0,0)}
