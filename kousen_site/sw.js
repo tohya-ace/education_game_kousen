@@ -1,6 +1,6 @@
 // 知育Webアプリ KouSen式 Service Worker
 // ファイルを更新したら VERSION を上げてください（古いキャッシュが入れ替わります）
-const VERSION = 'v10';
+const VERSION = 'v15';
 const CACHE = 'kousen-' + VERSION;
 const FONT_CACHE = 'kousen-fonts';
 const ASSETS = [
@@ -9,6 +9,7 @@ const ASSETS = [
   './korokoro_puzzle.html',
   './korokoro_craft.html',
   './anzan_timeattack.html',
+  './chiba_puzzle.html',
   './manifest.webmanifest',
   './img/puzzle.webp',
   './img/craft.webp',
@@ -16,6 +17,9 @@ const ASSETS = [
   './img/puzzle.png',
   './img/craft.png',
   './img/keisan.png',
+  './img/chiba.webp',
+  './img/chiba.png',
+  './img/openchat_qr.png',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
@@ -23,7 +27,8 @@ const ASSETS = [
   './icons/favicon-32.png',
   './video/puzzle_tutorial.jpg',
   './video/craft_tutorial.jpg',
-  './video/anzan_tutorial.jpg'
+  './video/anzan_tutorial.jpg',
+  './video/chiba_tutorial.jpg'
 ];
 
 self.addEventListener('install', e => {

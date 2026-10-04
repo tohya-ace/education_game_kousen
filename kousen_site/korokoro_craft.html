@@ -160,6 +160,25 @@ button *{font-weight:700}
 .vplay svg{width:22px;height:22px}
 .vbox.playing .vplay{display:none}
 .vnext{margin:12px 0 0;text-align:center;font-size:.86rem;color:var(--sub)}
+
+/* クリア演出（★と「クリア！」） */
+.clearFx{position:absolute;inset:0;z-index:30;pointer-events:none;overflow:visible;border-radius:20px;--bw:300px}
+.clearFx.out{animation:cfOut .45s ease forwards}
+.cfFlash{position:absolute;inset:0;border-radius:20px;background:radial-gradient(circle at 50% 48%,rgba(255,255,255,.75),rgba(255,255,255,0) 65%);animation:cfFlash .9s ease-out forwards}
+.cfText{position:absolute;z-index:2;left:50%;top:47%;transform:translate(-50%,-50%);font-family:var(--boldFont);font-weight:900;font-synthesis:weight;font-size:calc(var(--bw)*.14);line-height:1.15;letter-spacing:.06em;color:#F6C343;-webkit-text-stroke:.022em #F6C343;white-space:nowrap;text-shadow:0.055em 0.000em 0 #111,0.051em 0.021em 0 #111,0.039em 0.039em 0 #111,0.021em 0.051em 0 #111,0.000em 0.055em 0 #111,-0.021em 0.051em 0 #111,-0.039em 0.039em 0 #111,-0.051em 0.021em 0 #111,-0.055em 0.000em 0 #111,-0.051em -0.021em 0 #111,-0.039em -0.039em 0 #111,-0.021em -0.051em 0 #111,-0.000em -0.055em 0 #111,0.021em -0.051em 0 #111,0.039em -0.039em 0 #111,0.051em -0.021em 0 #111,0 .09em .12em rgba(0,0,0,.4);animation:cfPop .6s cubic-bezier(.2,1.6,.4,1) .12s both}
+.cfText span{display:inline-block;animation:cfHop .5s ease-in-out both;animation-delay:calc(.75s + var(--i)*.07s)}
+.cfStar{position:absolute;z-index:3;width:calc(var(--bw)*var(--s));aspect-ratio:1;transform:translate(-50%,-50%);animation:cfStar .7s cubic-bezier(.2,1.5,.4,1) both;animation-delay:var(--d)}
+.cfStar svg{display:block;width:100%;height:100%;animation:cfTwinkle 1.2s ease-in-out infinite alternate;animation-delay:calc(var(--d) + .7s);filter:drop-shadow(0 3px 0 rgba(0,0,0,.25))}
+.cfSparks{position:absolute;left:50%;top:47%;width:0;height:0}
+.cfSparks i{position:absolute;left:-4px;top:-4px;width:8px;height:8px;border-radius:50%;background:var(--c);opacity:0;animation:cfSpark .9s ease-out .15s forwards;transform:rotate(var(--a)) translateY(0)}
+@keyframes cfFlash{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+@keyframes cfPop{0%{transform:translate(-50%,-50%) scale(0) rotate(-12deg);opacity:0}100%{transform:translate(-50%,-50%) scale(1) rotate(0);opacity:1}}
+@keyframes cfHop{0%,100%{transform:none}50%{transform:translateY(-18%)}}
+@keyframes cfStar{0%{transform:translate(-50%,-50%) scale(0) rotate(-200deg);opacity:0}100%{transform:translate(-50%,-50%) scale(1) rotate(0);opacity:1}}
+@keyframes cfTwinkle{from{transform:scale(1) rotate(-6deg)}to{transform:scale(1.1) rotate(6deg)}}
+@keyframes cfSpark{0%{opacity:1;transform:rotate(var(--a)) translateY(0) scale(1)}100%{opacity:0;transform:rotate(var(--a)) translateY(calc(var(--bw)*-.42)) scale(.4)}}
+@keyframes cfOut{to{opacity:0;transform:scale(.96)}}
+@media (prefers-reduced-motion:reduce){.clearFx *,.clearFx{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important}.cfSparks{display:none}}
 </style>
 </head>
 <body>
@@ -377,7 +396,7 @@ function sizeBoard(){
   $('lanes').style.setProperty('--cols',P.cols);$('lanes').style.setProperty('--rows',P.rows);
 }
 function load(){
-  stopAnim();busy=false;
+  clearFx();stopAnim();busy=false;
   P=DATA[lv][idx];
   grid=P.grid.map(r=>r.slice());fixed=P.grid.map(r=>r.map(v=>v!==null));
   document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lv===lv));
@@ -455,7 +474,7 @@ function setDisabled(d){['roll','answer'].forEach(i=>$(i).disabled=d)}
 let timer=0;
 function stopAnim(){clearTimeout(timer);timer=0}
 function roll(){
-  if(busy)return;placeBallsAtStart();busy=true;setDisabled(true);setMsg('ころころ…');
+  if(busy)return;clearFx();placeBallsAtStart();busy=true;setDisabled(true);setMsg('ころころ…');
   const els=ballEls();const paths=P.balls.map(pathOf);
   const seg=380;
   const maxSeg=Math.max(...paths.map(p=>p.pts.length-1));const t0=Date.now();
@@ -480,14 +499,33 @@ function finish(paths){
   prog[lv+idx]=1;saveProg();renderNums();
   const last=idx===DATA[lv].length-1&&lv==='hard';
   if(!last)setCleared(true);
+  celebrate();
   setMsg(idx===DATA[lv].length-1?`クリア！「${LVNAME[lv]}」をぜんぶおえました。`:'クリア！上の「つぎのもんだいへ」ですすもう。','ok');
+}
+
+/* ---- クリア演出 ---- */
+let fxTimer=0;
+const FX_STAR='<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4l8.2 17.6 19.3 2.2-14.3 13.1 3.9 19L32 46.3 14.9 55.9l3.9-19L4.5 23.8l19.3-2.2z" fill="#F6C343" stroke="#1F2A44" stroke-width="3.5" stroke-linejoin="round"/><circle cx="25" cy="24" r="3.4" fill="#fff" opacity=".8"/></svg>';
+function clearFx(){clearTimeout(fxTimer);const e=document.getElementById('clearFx');if(e)e.remove()}
+function celebrate(){
+  clearFx();
+  const b=$('board');const fx=document.createElement('div');
+  fx.className='clearFx';fx.id='clearFx';fx.setAttribute('aria-hidden','true');
+  fx.style.setProperty('--bw',Math.min(Math.max(b.clientWidth,window.innerWidth*.86),b.clientHeight*1.6,560)+'px');
+  const cols=['#E23B3B','#F08A24','#F6C343','#22A55B','#2F6FE0','#8E5BD8'];
+  const sparks=Array.from({length:14},(_,i)=>`<i style="--a:${i*360/14}deg;--c:${cols[i%cols.length]}"></i>`).join('');
+  const stars=[[-.45,.07,.19,.3],[0,-.23,.24,.45],[.45,.07,.19,.6]].map(([x,y,s,d])=>`<div class="cfStar" style="left:calc(50% + var(--bw)*${x});top:calc(47% + var(--bw)*${y});--s:${s};--d:${d}s">${FX_STAR}</div>`).join('');
+  const txt=[...'クリア！'].map((c,i)=>`<span style="--i:${i}">${c}</span>`).join('');
+  fx.innerHTML=`<div class="cfFlash"></div><div class="cfSparks">${sparks}</div>${stars}<div class="cfText">${txt}</div>`;
+  b.appendChild(fx);
+  fxTimer=setTimeout(()=>{fx.classList.add('out');fxTimer=setTimeout(()=>fx.remove(),460)},3000);
 }
 function setMsg(t,k){const m=$('msg');m.textContent=t;m.className='msg'+(k?' '+k:'')}
 $('pickS').onclick=()=>{sel='S';render()};$('pickX').onclick=()=>{sel='X';render()};
 $('roll').onclick=()=>{if(cleared){goNext();return}roll()};
 $('prevQ').onclick=()=>{if(idx>0){idx--;load()}};
 $('nextQ').onclick=()=>{if(idx<DATA[lv].length-1){idx++;load()}};
-$('reset').onclick=()=>{stopAnim();busy=false;setDisabled(false);grid=P.grid.map(r=>r.slice());placeBallsAtStart();render();setMsg('ピースとボールをさいしょのじょうたいにもどしました。')};
+$('reset').onclick=()=>{clearFx();stopAnim();busy=false;setDisabled(false);grid=P.grid.map(r=>r.slice());placeBallsAtStart();render();setMsg('ピースとボールをさいしょのじょうたいにもどしました。')};
 $('answer').onclick=()=>{grid=P.solution.map(r=>r.slice());placeBallsAtStart();render();setMsg('こたえをおきました。上の「ボールをころがす」でたしかめよう。')};
 function goNext(){const order=['easy','normal','hard'];if(idx<DATA[lv].length-1)idx++;else{const j=order.indexOf(lv);if(j<2){lv=order[j+1];idx=0}}load()}
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{lv=b.dataset.lv;idx=0;load()});
