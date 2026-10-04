@@ -61,6 +61,9 @@ h1 .kicker{display:block;font-size:.42em;letter-spacing:.12em;color:var(--sub);m
 .game.craft{--tint:#CDEFD9;--edge:#2E9A5E}
 .game.keisan{--tint:#DCD2FA;--edge:#7A5CC9}
 .game.chiba{--tint:#FFE3C8;--edge:#E07B39}
+.game.food{--tint:#E4F5CF;--edge:#5FA330}
+.game.food .plate{max-width:min(68%,330px)}
+.game.food .plate .name{font-size:clamp(.82rem,4.05vw,1.4rem)}
 .game.keisan .plate{max-width:min(66%,310px)}
 .game.keisan .plate .name{font-size:clamp(1.05rem,4.7vw,1.5rem)}
 .game .art{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;pointer-events:none}
@@ -178,6 +181,16 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
         <span class="plate">
           <span class="name">ちばけんパズル</span>
           <span class="desc">市町村のピースを、ちばけんの地図にはめよう</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li>
+      <a class="game food" href="food_jigsaw.html">
+        <picture class="art"><source srcset="img/food.webp" type="image/webp"><img src="img/food.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="name">やさい・くだものジグソー</span>
+          <span class="desc">すきなやさいやくだものの絵で、ジグソーパズルをしよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
