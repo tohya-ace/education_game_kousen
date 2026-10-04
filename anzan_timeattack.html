@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>あんざんタイムアタック｜知育Webアプリ KouSen式</title>
+<meta name="theme-color" content="#274F8E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="KouSen式">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --font:"UD Digi Kyokasho NK-R","UD デジタル 教科書体 NK-R","UDDigiKyokashoNK-R","Klee One","Hiragino Maru Gothic ProN","Hiragino Sans","Meiryo",sans-serif;
+  --bg:#E6EFF6;--ink:#1F2A44;--sub:#5B6782;--panel:#FFFFFF;--line:#C9D6E4;--key:#FFFFFF;--keyEdge:#B7C3D6;
+  --board:#274F8E;--rim:#183766;--well:#1E4078;--accent:#274F8E;
+  --red:#E23B3B;--orange:#F08A24;--green:#22A55B;--blue:#2F6FE0;--yellow:#F6C343;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141B28;--ink:#E7ECF5;--sub:#9AA7BF;--panel:#1E2738;--line:#33415A;--accent:#8FB2F0;--key:#2A3550;--keyEdge:#151C2B;
+}}
+:root[data-theme="dark"]{--bg:#141B28;--ink:#E7ECF5;--sub:#9AA7BF;--panel:#1E2738;--line:#33415A;--accent:#8FB2F0;--key:#2A3550;--keyEdge:#151C2B;}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:400;font-synthesis:none;line-height:1.6}
+body.lock{overflow:hidden}
+button,a{font:inherit;color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+/* ボタンの文字はすべて太字（UD デジタル 教科書体 NK-B／iOS などは Klee One の太字） */
+:root{--boldFont:"UD Digi Kyokasho NK-B","UD デジタル 教科書体 NK-B","UDDigiKyokashoNK-B","UD Digi Kyokasho NK-R","UD デジタル 教科書体 NK-R","Klee One","Hiragino Maru Gothic ProN","Hiragino Sans","Meiryo",sans-serif}
+button,button *,.backTop{font-family:var(--boldFont)!important;font-weight:700!important;font-synthesis:weight}
+button:focus-visible,a:focus-visible{outline:3px solid #FFB020;outline-offset:2px}
+[hidden]{display:none!important}
+.wrap{max-width:580px;margin:0 auto;padding:12px 12px 28px;display:flex;flex-direction:column;gap:12px}
+
+/* header */
+.titlebar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+h1{margin:0;font-size:clamp(1.15rem,5.2vw,1.7rem);font-weight:600;line-height:1.2;letter-spacing:.02em;white-space:nowrap}
+.pill{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;height:39px;padding:0 14px 0 10px;border-radius:999px;border:2px solid var(--accent);background:var(--panel);color:var(--accent);font-size:15px;white-space:nowrap}
+.pill svg{width:18px;height:18px}
+
+/* select */
+.label{margin:2px 0 -4px;font-size:1rem;color:var(--ink)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode{display:flex;align-items:center;gap:8px;height:62px;padding:0 10px;border-radius:16px;border:2px solid var(--line);background:var(--panel);box-shadow:0 4px 0 var(--line);font-size:clamp(.86rem,3.9vw,1.15rem);text-align:left;white-space:nowrap;min-width:0}
+.mode .sym{flex:0 0 auto;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--c);color:#fff;font-size:1.6rem;line-height:1;background-image:radial-gradient(circle at 32% 30%,rgba(255,255,255,.5) 0 16%,transparent 18%);box-shadow:inset -3px -4px 0 rgba(0,0,0,.16)}
+.mode[aria-pressed="true"]{border-color:var(--c);box-shadow:0 4px 0 var(--c);background:color-mix(in srgb,var(--c) 10%,var(--panel))}
+.tabs{display:flex;gap:4px;background:var(--panel);padding:4px;border-radius:999px;border:1px solid var(--line)}
+.tabs button{flex:1;height:40px;border:0;background:transparent;border-radius:999px;font-size:1.1rem}
+.tabs button[aria-pressed="true"]{background:var(--board);color:#fff}
+.bestNow{display:flex;align-items:baseline;justify-content:center;gap:10px;padding:8px 12px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
+.bestNow .k{color:var(--sub);font-size:.95rem}
+.bestNow .v{font-size:1.6rem;letter-spacing:.02em}
+.bestNow .v.empty{font-size:1.05rem;color:var(--sub)}
+.start{height:58px;border:0;border-radius:16px;background:var(--green);color:#fff;font-size:1.4rem;box-shadow:0 5px 0 #17773F;display:flex;align-items:center;justify-content:center;gap:10px}
+.start svg{width:24px;height:24px}
+.start:active{transform:translateY(3px);box-shadow:0 2px 0 #17773F}
+.bestTable{width:100%;border-collapse:separate;border-spacing:0;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:.92rem}
+.bestTable caption{text-align:left;color:var(--ink);font-size:1rem;padding:0 2px 4px}
+.bestTable th,.bestTable td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;font-weight:400;white-space:nowrap}
+.bestTable thead th{color:#135C33;background:#E4F4EA}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bestTable thead th{color:#BFEBD0;background:#1D3A2A}}
+:root[data-theme="dark"] .bestTable thead th{color:#BFEBD0;background:#1D3A2A}
+.bestTable th[scope="row"]{text-align:left}
+.bestTable th[scope="row"] i{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--c);margin-right:6px;vertical-align:.05em}
+.bestTable tr:last-child>*{border-bottom:0}
+.bestTable td.none{color:var(--sub)}
+.sndRow{display:flex;justify-content:flex-end}
+.snd{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:999px;border:2px solid var(--line);background:var(--panel);font-size:.95rem}
+.snd svg{width:18px;height:18px}
+
+/* play */
+.hud{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tag{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:.95rem;white-space:nowrap}
+.tag i{display:inline-block;width:.7em;height:.7em;border-radius:50%;background:var(--c)}
+.timer{font-size:1.5rem;letter-spacing:.03em;font-variant-numeric:tabular-nums;min-width:5.2em;text-align:right}
+.timer.over{color:var(--red)}
+.dots{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
+.dots span{height:12px;border-radius:6px;background:var(--line)}
+.dots span.now{background:var(--accent);opacity:.45}
+.dots span.ok{background:var(--green)}
+.dots span.re{background:var(--orange)}
+.display{position:relative;background:var(--board);border-radius:20px;padding:14px 16px 16px;color:#fff;box-shadow:inset 0 -6px 0 var(--rim),0 8px 20px rgba(20,40,80,.22);border:4px solid transparent;transition:border-color .15s,background-color .15s}
+.display .qn{font-size:.9rem;opacity:.85}
+.display .q{font-size:clamp(2rem,10vw,3.1rem);line-height:1.2;text-align:center;letter-spacing:.04em;white-space:nowrap;min-height:1.25em;font-variant-numeric:tabular-nums}
+.display .ansRow{display:flex;justify-content:center;margin-top:8px}
+.display .ans{min-width:min(70%,260px);height:clamp(58px,15vw,72px);border-radius:14px;background:var(--well);box-shadow:inset 0 4px 8px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:flex-end;padding:0 16px;font-size:clamp(2rem,10vw,3rem);letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.display .ans .caret{display:inline-block;width:3px;height:.9em;background:#fff;margin-left:4px;opacity:.7}
+.display .hint{text-align:center;margin-top:8px;font-size:1rem;color:#FFE08A;min-height:1.6em}
+.display.ok{border-color:#3FD07E;background:#1F7A4A}
+.display.ng{border-color:#FF6B6B;background:#8A2B33}
+.mark{position:absolute;right:14px;top:8px;font-size:2.4rem;line-height:1;opacity:0}
+.display.ok .mark.o,.display.ng .mark.x{opacity:1}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.pad button{height:clamp(54px,13vw,64px);border:0;border-radius:14px;background:var(--key);box-shadow:0 4px 0 var(--keyEdge);font-size:1.8rem;line-height:1;font-variant-numeric:tabular-nums}
+.pad button:active,.pad button.hit{transform:translateY(3px);box-shadow:0 1px 0 var(--keyEdge)}
+.pad .del{font-size:1.05rem;background:var(--line);box-shadow:0 4px 0 #A9B8CB}
+.pad .ent{font-size:1.05rem;background:var(--board);color:#fff;box-shadow:0 4px 0 var(--rim)}
+.pad[aria-disabled="true"] button{opacity:.55}
+.playFoot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.quit{height:36px;padding:0 14px;border-radius:999px;border:2px solid var(--line);background:var(--panel);font-size:.95rem}
+
+/* result */
+.result{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px 18px 20px;display:flex;flex-direction:column;gap:12px;text-align:center}
+.result h2{margin:0;font-size:1.7rem;font-weight:600;letter-spacing:.06em}
+.result .rmode{margin:-6px 0 0;color:var(--sub)}
+.scoreBox{border-radius:18px;background:var(--board);color:#fff;padding:12px 10px 14px;box-shadow:inset 0 -6px 0 var(--rim)}
+.scoreBox .k{font-size:.95rem;opacity:.85}
+.scoreBox .v{font-size:clamp(2.6rem,13vw,3.6rem);line-height:1.15;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.scoreBox .v small{font-size:.4em;margin-left:4px}
+.newBest{align-self:center;padding:4px 14px;border-radius:999px;background:var(--yellow);color:#1F2A44;font-size:1rem}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.stats div{background:var(--bg);border-radius:12px;padding:6px 4px}
+.stats .k{display:block;font-size:.8rem;color:var(--sub)}
+.stats .v{font-size:1.15rem;font-variant-numeric:tabular-nums}
+.over5{margin:0;color:var(--red);font-size:.9rem}
+.rbtns{display:grid;gap:10px}
+.rbtns .start{height:52px;font-size:1.2rem}
+.btn2{height:48px;border-radius:14px;border:2px solid var(--line);background:var(--panel);font-size:1.05rem;box-shadow:0 3px 0 var(--line)}
+.btn2.retry{border-color:var(--orange);box-shadow:0 3px 0 var(--orange)}
+
+/* back to top */
+.backTop{display:flex;align-items:center;justify-content:center;gap:8px;height:46px;margin-top:8px;border-radius:14px;border:2px solid var(--accent);background:var(--panel);color:var(--accent);text-decoration:none;font-size:17.6px;line-height:1}
+.backTop svg{width:20px;height:20px;flex:0 0 auto}
+
+/* tutorial */
+dialog.tuto{border:0;padding:0;border-radius:20px;width:min(560px,94vw);max-height:88vh;max-height:88dvh;background:var(--panel);color:var(--ink);box-shadow:0 20px 50px rgba(0,0,0,.35);overflow:hidden}
+dialog.tuto[open]{display:flex;flex-direction:column}
+dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
+.tuto .head{display:flex;align-items:center;justify-content:space-between;padding:12px 12px 10px 20px;border-bottom:1px solid var(--line)}
+.tuto .head h2{margin:0;font-size:1.15rem;font-weight:600;outline:none}
+.close{width:42px;height:42px;border-radius:50%;border:0;background:var(--bg);font-size:1.35rem;line-height:1;padding:0}
+.tuto .body{overflow-y:auto;padding:6px 20px 8px}
+.step{padding:12px 0;border-bottom:1px dashed var(--line)}
+.step:last-child{border-bottom:0}
+.step h3{margin:0 0 6px;font-size:1rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.step h3 .n{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--board);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem}
+.step p{margin:4px 0 0;font-size:.92rem}
+.step table{margin-top:6px;border-collapse:collapse;font-size:.88rem;width:100%}
+.step td,.step th{border:1px solid var(--line);padding:4px 8px;font-weight:400;text-align:center}
+.step th{background:var(--bg)}
+.tuto .foot{padding:10px 20px 14px;border-top:1px solid var(--line)}
+.tuto .foot button{width:100%;height:46px;border:0;border-radius:12px;background:var(--board);color:#fff;font-size:1.1rem}
+
+@media (prefers-reduced-motion:no-preference){
+  .display.ng{animation:shake .32s}
+  @keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+  .newBest{animation:pop .5s cubic-bezier(.2,.9,.3,1.4) both}
+  @keyframes pop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+}
+@media (max-width:360px){.mode{gap:6px;padding:0 7px;font-size:.8rem}.mode .sym{width:30px;height:30px;font-size:1.25rem}.pill{padding:0 9px 0 7px;font-size:.85rem!important;gap:4px}h1{font-size:.95rem}.pill svg{width:16px;height:16px}.titlebar{gap:6px}.tabs button{font-size:.98rem;white-space:nowrap}.bestTable{font-size:.82rem}.bestTable th,.bestTable td{padding:7px 5px}}
+
+/* チュートリアルどうが */
+.tvid{padding:14px 0 6px}
+.vbox{position:relative;margin:0 auto;width:min(100%,280px,calc(52vh*.5625));width:min(100%,280px,calc(52dvh*.5625));aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:#E6EFF6;border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.vbox video{display:block;width:100%;height:100%;object-fit:cover;background:#E6EFF6}
+.vplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;height:52px;padding:0 20px 0 16px;border:0;border-radius:999px;background:rgba(31,42,68,.88);color:#fff;font-size:1.05rem;white-space:nowrap;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.vplay svg{width:22px;height:22px}
+.vbox.playing .vplay{display:none}
+.vnext{margin:12px 0 0;text-align:center;font-size:.86rem;color:var(--sub)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="titlebar">
+    <h1>あんざんタイムアタック</h1>
+    <button class="pill" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>あそびかた</button>
+  </div>
+
+  <!-- ===== えらぶ ===== -->
+  <section id="sel" aria-label="アタックモードとむずかしさをえらぶ">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <p class="label">アタックモード</p>
+      <div class="modes" role="group" aria-label="アタックモード">
+        <button class="mode" data-mode="add" style="--c:var(--red)"><span class="sym" aria-hidden="true">＋</span>足し算アタック</button>
+        <button class="mode" data-mode="sub" style="--c:var(--blue)"><span class="sym" aria-hidden="true">−</span>引き算アタック</button>
+        <button class="mode" data-mode="mul" style="--c:var(--green)"><span class="sym" aria-hidden="true">×</span>かけ算アタック</button>
+        <button class="mode" data-mode="div" style="--c:var(--orange)"><span class="sym" aria-hidden="true">÷</span>わり算アタック</button>
+      </div>
+      <p class="label">むずかしさ</p>
+      <div class="tabs" role="group" aria-label="むずかしさ">
+        <button data-dig="1">Normal</button><button data-dig="2">Hard</button><button data-dig="3">Very Hard</button>
+      </div>
+      <div class="bestNow"><span class="k">ベストスコア</span><span class="v" id="bestNow">―</span></div>
+      <button class="start" id="start"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>スタート</button>
+      <div class="sndRow"><button class="snd" data-snd aria-pressed="true"></button></div>
+      <table class="bestTable" aria-label="ベストスコアいちらん">
+        <caption>ベストスコアいちらん</caption>
+        <thead><tr><th scope="col" style="text-align:left">アタックモード</th><th scope="col">Normal</th><th scope="col">Hard</th><th scope="col">Very Hard</th></tr></thead>
+        <tbody id="bestBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===== プレイ ===== -->
+  <section id="play" aria-label="もんだい" hidden>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="hud">
+        <span class="tag" id="playTag"></span>
+        <span class="timer" id="timer" role="timer" aria-live="off">0:00.0</span>
+      </div>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+      <div class="display" id="display">
+        <div class="qn" id="qn"></div>
+        <div class="q" id="q" aria-live="polite"></div>
+        <div class="ansRow"><div class="ans" id="ans" aria-label="こたえ"></div></div>
+        <div class="hint" id="hint" role="status"></div>
+        <span class="mark o" aria-hidden="true">⭕</span><span class="mark x" aria-hidden="true">❌</span>
+      </div>
+      <div class="pad" id="pad" role="group" aria-label="数字キー">
+        <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+        <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+        <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+        <button data-k="del" class="del">けす</button><button data-k="0">0</button><button data-k="ent" class="ent">こたえる</button>
+      </div>
+      <div class="playFoot">
+        <button class="quit" id="quit">やめる</button>
+        <button class="snd" data-snd aria-pressed="true"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== けっか ===== -->
+  <section id="result" aria-label="けっか" hidden>
+    <div class="result">
+      <h2 id="rTitle" tabindex="-1">クリア！</h2>
+      <p class="rmode" id="rMode"></p>
+      <div class="scoreBox" id="scoreBox"><div class="k">スコア</div><div class="v"><span id="rScore">0</span><small>点</small></div></div>
+      <span class="newBest" id="rNew" hidden>ベストスコアこうしん！</span>
+      <div class="stats">
+        <div><span class="k">タイム</span><span class="v" id="rTime"></span></div>
+        <div><span class="k">まちがい</span><span class="v" id="rMiss"></span></div>
+        <div id="rBestWrap"><span class="k">ベスト</span><span class="v" id="rBest"></span></div>
+      </div>
+      <p class="over5" id="rOver" hidden>5分をこえたので、さいていスコアになりました。</p>
+      <div class="rbtns">
+        <button class="start" id="again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>もういちど</button>
+        <button class="btn2 retry" id="retry" hidden>まちがえたもんだいだけれんしゅう</button>
+        <button class="btn2" id="toSel">アタックモードをえらぶ</button>
+      </div>
+    </div>
+  </section>
+
+  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにもどる</a>
+</div>
+
+<dialog class="tuto" id="tuto" aria-labelledby="tutoTitle">
+  <div class="head"><h2 id="tutoTitle" tabindex="-1">あんざんタイムアタックのあそびかた</h2><button class="close" id="closeTuto" aria-label="とじる">✕</button></div>
+  <div class="body">
+    <section class="tvid" aria-label="どうがで見るあそびかた">
+      <div class="vbox" id="vbox">
+        <video id="tutoVideo" src="video/anzan_tutorial.mp4" poster="video/anzan_tutorial.jpg" playsinline muted preload="metadata" controls></video>
+        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">どうがを見る</span></button>
+      </div>
+      <p class="vnext">どうがのあとは、下のくわしいせつめいも見てね</p>
+    </section>
+    <section class="step">
+      <h3><span class="n">1</span>アタックモードとむずかしさをえらぶ</h3>
+      <p>足し算・引き算・かけ算・わり算の4つのアタックモードと、Normal・Hard・Very Hard の3つのむずかしさがあります。</p>
+      <table>
+        <thead><tr><th></th><th>Normal</th><th>Hard</th><th>Very Hard</th></tr></thead>
+        <tbody>
+          <tr><th>＋</th><td>7 + 5</td><td>38 + 46</td><td>425 + 318</td></tr>
+          <tr><th>−</th><td>15 − 8</td><td>104 − 37</td><td>1203 − 458</td></tr>
+          <tr><th>×</th><td>6 × 8</td><td>37 × 6</td><td>248 × 7</td></tr>
+          <tr><th>÷</th><td>42 ÷ 7</td><td>252 ÷ 4</td><td>1872 ÷ 8</td></tr>
+        </tbody>
+      </table>
+      <p>引き算の答えは、Normal は1けた、Hard は1けた〜2けた、Very Hard は1けた〜3けたになります。答えはマイナスになりません。わり算はかならずわり切れます。</p>
+    </section>
+    <section class="step">
+      <h3><span class="n">2</span>数字キーで答えを入れる</h3>
+      <p>答えをさいごのけたまで入れると、その場で○か×が出ます。まちがえたら、同じもんだいにもういちどチャレンジ。3回まちがえると答えが出ます。</p>
+    </section>
+    <section class="step">
+      <h3><span class="n">3</span>まちがえたもんだいだけれんしゅう</h3>
+      <p>まちがえたもんだいがあったときは、けっかがめんからそのもんだいだけをもういちどとけます（スコアはつきません）。</p>
+    </section>
+  </div>
+  <div class="foot"><button id="startTuto">はじめる</button></div>
+</dialog>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const MODES={
+  add:{label:'足し算アタック',sym:'+',c:'var(--red)'},
+  sub:{label:'引き算アタック',sym:'−',c:'var(--blue)'},
+  mul:{label:'かけ算アタック',sym:'×',c:'var(--green)'},
+  div:{label:'わり算アタック',sym:'÷',c:'var(--orange)'}
+};
+// 難易度ごとのスコア設定：fast 秒以内で最高点、300秒(5分)以上で最低点
+const LV={1:{max:1000,min:10,fast:15},2:{max:10000,min:100,fast:30},3:{max:100000,min:1000,fast:60}};
+const LIMIT=300, COUNT=10;
+const LVNAME={1:'Normal',2:'Hard',3:'Very Hard'};
+const KEY_BEST='kousen-anzan-best-v1', KEY_LAST='kousen-anzan-last', KEY_SND='kousen-anzan-sound', KEY_TUTO='kousen-anzan-tutorial-seen';
+
+function load(k,def){try{const v=localStorage.getItem(k);return v===null?def:JSON.parse(v)}catch(e){return def}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+
+let best=load(KEY_BEST,{});
+const last=load(KEY_LAST,{mode:'add',dig:1});
+let mode=MODES[last.mode]?last.mode:'add', dig=[1,2,3].includes(last.dig)?last.dig:1;
+let soundOn=load(KEY_SND,true);
+const fmt=n=>Number(n).toLocaleString('ja-JP');
+
+/* ---------- もんだい ---------- */
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+function range(d){return d===1?[1,9]:[10**(d-1),10**d-1]}
+function gen(m,d){
+  const [lo,hi]=range(d); let a,b,ans;
+  if(m==='add'){a=rnd(lo,hi);b=rnd(lo,hi);ans=a+b}
+  else if(m==='sub'){
+    // 引く数は難易度のけた数、答えは Normal:1けた / Hard:1〜2けた / Very Hard:1〜3けた（例 15−8=7）
+    b=rnd(lo,hi);
+    const W={1:[1],2:[.3,.7],3:[.2,.3,.5]}[d];
+    let r=Math.random(),ad=1;for(let i=0;i<W.length;i++){if(r<W[i]){ad=i+1;break}r-=W[i]}
+    const [alo,ahi]=range(ad);ans=rnd(alo,ahi);a=b+ans}
+  else if(m==='mul'){a=rnd(d===1?1:lo,hi);b=rnd(d===1?1:2,9);ans=a*b}
+  else{const q=rnd(d===1?1:lo,hi);b=rnd(d===1?1:2,9);a=q*b;ans=q}
+  return{m,a,b,ans,key:a+MODES[m].sym+b};
+}
+function makeSet(m,d){
+  const out=[],seen=new Set();let guard=0;
+  while(out.length<COUNT&&guard++<500){const p=gen(m,d);if(seen.has(p.key))continue;seen.add(p.key);out.push(p)}
+  return out;
+}
+
+/* ---------- 音 ---------- */
+let ac=null;
+function audio(){if(!ac){const C=window.AudioContext||window.webkitAudioContext;if(C)ac=new C()}if(ac&&ac.state==='suspended')ac.resume();return ac}
+function tone(f,dur,type='sine',vol=.18,at=0){
+  if(!soundOn)return;const c=audio();if(!c)return;
+  const t=c.currentTime+at,o=c.createOscillator(),g=c.createGain();
+  o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+  o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.02);
+}
+const sfx={
+  ok(){tone(988,.12,'sine',.2);tone(1319,.22,'sine',.2,.09)},
+  ng(){sayNg()},
+  tick(){tone(660,.1,'triangle',.15)},
+  go(){tone(1047,.25,'triangle',.18)},
+  clear(){[523,659,784,1047].forEach((f,i)=>tone(f,.25,'triangle',.18,i*.11))}
+};
+/* まちがえたときの声（端末の日本語音声を、女の子らしい高めの声で読み上げ） */
+const NG_LINES=['おろろ','ゆっくりでいいんだよ','おちついてがんばって'];
+let lastLine=-1, jaVoice=null;
+const S=window.speechSynthesis||null;
+function pickVoice(){
+  if(!S)return;
+  const vs=S.getVoices().filter(v=>/^ja/i.test(v.lang));
+  if(!vs.length)return;
+  const male=/Otoya|Hattori|Ichiro|Keita|Daichi|Naoki|Takumi|Kenta|男性|male/i;
+  const female=[/Kyoko/i,/O-?ren/i,/Nanami/i,/Ayumi/i,/Haruka/i,/Mayu/i,/Mizuki/i,/Shiori/i,/Aoi/i,/女性|female/i,/Google/i];
+  const ok=vs.filter(v=>!male.test(v.name));
+  for(const re of female){const v=ok.find(v=>re.test(v.name));if(v){jaVoice=v;return}}
+  jaVoice=ok[0]||vs[0];
+}
+if(S){pickVoice();if('onvoiceschanged' in S)S.addEventListener('voiceschanged',pickVoice)}
+function sayNg(){
+  if(!soundOn)return;
+  if(!S||typeof SpeechSynthesisUtterance!=='function'){tone(196,.28,'square',.08);return}
+  let i;do{i=Math.floor(Math.random()*NG_LINES.length)}while(i===lastLine);lastLine=i;
+  const u=new SpeechSynthesisUtterance(NG_LINES[i]);
+  u.lang='ja-JP';if(jaVoice)u.voice=jaVoice;
+  u.pitch=1.6;   // 高め＝小学校高学年の女の子くらい
+  u.rate=1.08;u.volume=1;
+  if(S.speaking||S.pending){S.cancel();setTimeout(()=>S.speak(u),60)}else S.speak(u);
+}
+function renderSnd(){
+  document.querySelectorAll('[data-snd]').forEach(b=>{
+    b.setAttribute('aria-pressed',soundOn);
+    b.innerHTML=(soundOn
+      ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>音 ON'
+      :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>音 OFF');
+  });
+}
+document.querySelectorAll('[data-snd]').forEach(b=>b.addEventListener('click',()=>{soundOn=!soundOn;save(KEY_SND,soundOn);renderSnd();if(!soundOn&&S)S.cancel();if(soundOn)sfx.tick()}));
+
+/* ---------- スコア ---------- */
+function calcScore(sec,d){
+  const L=LV[d];
+  if(sec>=LIMIT)return L.min;
+  if(sec<=L.fast)return L.max;
+  const r=(LIMIT-sec)/(LIMIT-L.fast);          // 1(はやい)〜0(5分)
+  return Math.round(L.min+(L.max-L.min)*r*r);    // はやいほど大きく伸びる
+}
+function fmtTime(sec){const m=Math.floor(sec/60),s=sec-m*60;return m+':'+(s<10?'0':'')+s.toFixed(1)}
+
+/* ---------- えらぶがめん ---------- */
+function renderSel(){
+  document.querySelectorAll('.mode').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===mode));
+  document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-pressed',Number(b.dataset.dig)===dig));
+  const v=best[mode+dig];
+  $('bestNow').textContent=v?fmt(v)+' 点':'まだありません';$('bestNow').classList.toggle('empty',!v);
+  $('bestBody').innerHTML=Object.keys(MODES).map(m=>'<tr><th scope="row" style="--c:'+MODES[m].c+'"><i></i>'+MODES[m].label+'</th>'+
+    [1,2,3].map(d=>{const s=best[m+d];return s?'<td>'+fmt(s)+'</td>':'<td class="none">―</td>'}).join('')+'</tr>').join('');
+  save(KEY_LAST,{mode,dig});
+}
+document.querySelectorAll('.mode').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;renderSel()}));
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{dig=Number(b.dataset.dig);renderSel()}));
+
+function show(id){['sel','play','result'].forEach(s=>$(s).hidden=s!==id);window.scrollTo(0,0)}
+
+/* ---------- プレイ ---------- */
+let set=[],idx=0,input='',tries=0,miss=0,wrongs=[],practice=false,locked=true,t0=0,raf=0,timers=[];
+function later(fn,ms){timers.push(setTimeout(fn,ms))}
+function clearTimers(){timers.forEach(clearTimeout);timers=[];cancelAnimationFrame(raf)}
+
+function startGame(list){
+  audio();clearTimers();
+  practice=!!list;
+  set=list?list.map(p=>Object.assign({},p)):makeSet(mode,dig);
+  idx=0;input='';tries=0;miss=0;wrongs=[];locked=true;
+  $('playTag').style.setProperty('--c',MODES[mode].c);
+  $('playTag').innerHTML='<i></i>'+MODES[mode].label+'　'+LVNAME[dig]+(practice?'　れんしゅう':'');
+  $('timer').hidden=practice;$('timer').textContent='0:00.0';$('timer').classList.remove('over');
+  $('dots').innerHTML=set.map(()=>'<span></span>').join('');
+  $('dots').style.gridTemplateColumns='repeat('+set.length+',1fr)';
+  show('play');
+  // 5・4・3・2・1 のカウントダウン（1秒ずつ、5秒）
+  $('qn').textContent='';$('ans').innerHTML='';$('hint').textContent='';
+  $('pad').setAttribute('aria-disabled','true');
+  let n=5;
+  const step=()=>{
+    if(n>0){$('q').textContent=n;sfx.tick();n--;later(step,1000)}
+    else{sfx.go();$('pad').setAttribute('aria-disabled','false');t0=performance.now();loop();showQ()}
+  };
+  step();
+}
+function loop(){
+  if(!practice){
+    const s=(performance.now()-t0)/1000;
+    $('timer').textContent=fmtTime(s);
+    $('timer').classList.toggle('over',s>=LIMIT);
+  }
+  raf=requestAnimationFrame(loop);
+}
+function showQ(){
+  const p=set[idx];
+  $('qn').textContent='だい'+(idx+1)+'もん / '+set.length+'もん';
+  $('q').textContent=p.a+' '+MODES[p.m].sym+' '+p.b+' =';
+  input='';tries=0;$('hint').textContent='';renderAns();
+  [...$('dots').children].forEach((d,i)=>d.classList.toggle('now',i===idx&&!d.classList.contains('ok')&&!d.classList.contains('re')));
+  locked=false;
+}
+function renderAns(){$('ans').innerHTML=input+'<span class="caret" aria-hidden="true"></span>'}
+function flash(cls){const d=$('display');d.classList.remove('ok','ng');void d.offsetWidth;d.classList.add(cls);later(()=>d.classList.remove(cls),cls==='ok'?320:420)}
+
+function press(k){
+  if(locked||$('play').hidden)return;
+  if(k==='del'){input=input.slice(0,-1);renderAns();return}
+  if(k==='ent'){if(input)judge();return}
+  if(input.length>=6)return;
+  if(input===''&&k==='0')return; // 先頭の0は入れない
+  input+=k;renderAns();
+  if(input.length>=String(set[idx].ans).length)judge();
+}
+function judge(){
+  const p=set[idx];locked=true;
+  if(Number(input)===p.ans){
+    sfx.ok();flash('ok');
+    const dot=$('dots').children[idx];dot.classList.remove('now');dot.classList.add(tries?'re':'ok');
+    later(()=>{idx++;if(idx>=set.length)finish();else showQ()},340);
+  }else{
+    sfx.ng();flash('ng');tries++;miss++;
+    if(tries===1)wrongs.push(p);
+    later(()=>{
+      input='';renderAns();
+      $('hint').textContent=tries>=3?'こたえは '+p.ans+' だよ。入れてみよう':'もういちど！';
+      locked=false;
+    },420);
+  }
+}
+document.querySelectorAll('#pad button').forEach(b=>b.addEventListener('click',()=>press(b.dataset.k)));
+document.addEventListener('keydown',e=>{
+  if($('play').hidden||document.querySelector('dialog[open]'))return;
+  let k=null;
+  if(/^[0-9]$/.test(e.key))k=e.key;else if(e.key==='Backspace'||e.key==='Delete')k='del';else if(e.key==='Enter')k='ent';
+  if(!k)return;e.preventDefault();press(k);
+  const b=document.querySelector('#pad [data-k="'+k+'"]');if(b){b.classList.add('hit');setTimeout(()=>b.classList.remove('hit'),110)}
+});
+$('quit').addEventListener('click',()=>{clearTimers();locked=true;renderSel();show('sel')});
+
+/* ---------- けっか ---------- */
+function finish(){
+  cancelAnimationFrame(raf);
+  const sec=(performance.now()-t0)/1000;
+  sfx.clear();
+  $('rMode').textContent=MODES[mode].label+'（'+LVNAME[dig]+'）'+(practice?' れんしゅう':'');
+  $('rTime').textContent=practice?'―':fmtTime(sec);
+  $('rMiss').textContent=miss+'回';
+  $('retry').hidden=wrongs.length===0;
+  $('retry').textContent='まちがえた'+wrongs.length+'もんだけれんしゅう';
+  if(practice){
+    $('rTitle').textContent='れんしゅうおわり！';
+    $('scoreBox').hidden=true;$('rNew').hidden=true;$('rOver').hidden=true;$('rBestWrap').hidden=true;
+  }else{
+    const k=mode+dig, score=calcScore(sec,dig), prev=best[k]||0, isNew=score>prev;
+    if(isNew){best[k]=score;save(KEY_BEST,best)}
+    $('rTitle').textContent='クリア！';
+    $('scoreBox').hidden=false;$('rBestWrap').hidden=false;
+    $('rScore').textContent=fmt(score);
+    $('rBest').textContent=fmt(Math.max(score,prev));
+    $('rNew').hidden=!isNew;
+    $('rOver').hidden=sec<LIMIT;
+  }
+  show('result');$('rTitle').focus({preventScroll:true});
+}
+$('again').addEventListener('click',()=>startGame());
+$('retry').addEventListener('click',()=>startGame(wrongs));
+$('toSel').addEventListener('click',()=>{renderSel();show('sel')});
+$('start').addEventListener('click',()=>startGame());
+
+/* ---------- あそびかた ---------- */
+const dlg=$('tuto');
+function openTuto(){if(typeof dlg.showModal==='function'){if(!dlg.open)dlg.showModal()}else dlg.setAttribute('open','');document.body.classList.add('lock');dlg.querySelector('.body').scrollTop=0;$('tutoTitle').focus()}
+function closeTuto(){if(typeof dlg.close==='function'&&dlg.open)dlg.close();else dlg.removeAttribute('open');document.body.classList.remove('lock');save(KEY_TUTO,1)}
+$('openTuto').addEventListener('click',openTuto);$('closeTuto').addEventListener('click',closeTuto);$('startTuto').addEventListener('click',closeTuto);
+dlg.addEventListener('cancel',e=>{e.preventDefault();closeTuto()});
+dlg.addEventListener('click',e=>{if(e.target===dlg)closeTuto()});
+
+renderSnd();renderSel();
+if(!load(KEY_TUTO,0))openTuto();
+})();
+</script>
+<script>
+if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
+</script>
+<script>
+/* チュートリアルどうが：ひらいたらさいしょから再生、閉じたら止める */
+(function(){
+  const dlg=document.getElementById('tuto'),v=document.getElementById('tutoVideo'),box=document.getElementById('vbox'),
+        btn=document.getElementById('vplay'),lbl=document.getElementById('vplayLabel');
+  if(!dlg||!v)return;
+  const sync=()=>{box.classList.toggle('playing',!v.paused&&!v.ended)};
+  v.addEventListener('play',sync);v.addEventListener('playing',sync);v.addEventListener('pause',sync);
+  v.addEventListener('ended',()=>{lbl.textContent='もういちど見る';sync()});
+  btn.addEventListener('click',()=>{if(v.ended)v.currentTime=0;v.play().catch(()=>{})});
+  function onOpen(){lbl.textContent='どうがを見る';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
+  function onClose(){v.pause()}
+  let was=dlg.open;if(was)onOpen();
+  new MutationObserver(()=>{if(dlg.open&&!was)onOpen();else if(!dlg.open&&was)onClose();was=dlg.open}).observe(dlg,{attributes:true,attributeFilter:['open']});
+})();
+</script>
+</body>
+</html>
