@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>都道府県パズル｜知育Webアプリ KouSen式</title>
+<meta name="theme-color" content="#274F8E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="KouSen式">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#E6EFF6;--ink:#1F2A44;--sub:#5B6782;--board:#274F8E;--rim:#183766;
+  --panel:#FFFFFF;--line:#C9D6E4;--accent:#274F8E;--sea:#D3E6F5;
+  --red:#E23B3B;--orange:#F08A24;--green:#22A55B;--blue:#2F6FE0;
+  --font:"UD Digi Kyokasho NK-R","UD デジタル 教科書体 NK-R","Klee One","Hiragino Maru Gothic ProN","Hiragino Sans","Meiryo",sans-serif;
+  --boldFont:"UD Digi Kyokasho NK-B","UD デジタル 教科書体 NK-B","UD Digi Kyokasho NK-R","UD デジタル 教科書体 NK-R","Klee One","Hiragino Maru Gothic ProN","Hiragino Sans","Meiryo",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141B28;--ink:#E7ECF5;--sub:#9AA7BF;--panel:#1E2738;--line:#33415A;--accent:#8FB2F0;--sea:#1B2B40;
+}}
+:root[data-theme="dark"]{--bg:#141B28;--ink:#E7ECF5;--sub:#9AA7BF;--panel:#1E2738;--line:#33415A;--accent:#8FB2F0;--sea:#1B2B40;}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:400;line-height:1.6}
+body.lock{overflow:hidden}
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;font:inherit;cursor:pointer}
+button,button *,.backTop{font-family:var(--boldFont)!important;font-weight:700!important;font-synthesis:weight}
+button:focus-visible{outline:3px solid #FFB020;outline-offset:2px}
+.wrap{max-width:580px;margin:0 auto;padding:12px 12px 28px;display:flex;flex-direction:column;gap:10px}
+
+.titlebar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+h1{font-family:var(--boldFont);font-size:clamp(1.2rem,4.6vw,1.8rem);font-weight:700;margin:0;letter-spacing:.02em;line-height:1.2;white-space:nowrap}
+h1 .dot{display:inline-block;width:.5em;height:.5em;border-radius:50%;margin-left:.08em;vertical-align:.08em}
+.tutoBtn{flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:6px;height:39px;padding:0 14px;border:2px solid var(--board);background:var(--panel);color:var(--board);border-radius:999px;font-size:15.84px;white-space:nowrap}
+.tutoBtn svg{width:18px;height:18px}
+
+.label{margin:0 0 -4px;font-size:1rem;color:var(--ink)}
+.tabs{display:flex;gap:4px;background:var(--panel);padding:4px;border-radius:999px;border:1px solid var(--line)}
+.tabs button{position:relative;flex:1;min-width:0;border:0;background:transparent;color:var(--ink);padding:7px 2px;border-radius:999px;font-size:.98rem;white-space:nowrap}
+.tabs button small{font-size:.72em;opacity:.75;margin-left:2px}
+.tabs button[aria-pressed="true"]{background:var(--board);color:#fff}
+.tabs.lv{display:grid;grid-template-columns:repeat(4,1fr);border-radius:18px}
+.tabs.lv button{display:flex;flex-direction:column;align-items:center;line-height:1.15;padding:5px 2px;border-radius:14px}
+.tabs.lv button b{font-size:.72rem;opacity:.8}
+.tabs.lv button span{font-size:.86rem}
+.tabs button.done::after{content:"";position:absolute;right:3px;top:3px;width:11px;height:11px;border-radius:50%;background:var(--green);border:2px solid var(--panel)}
+
+.bar{display:flex;align-items:center;gap:6px}
+.left{flex:1 1 auto;white-space:nowrap;font-family:var(--boldFont);font-weight:700;font-size:1rem}
+.left b{font-size:1.3em;color:var(--board)}
+.sbtn{height:38px;padding:0 12px;border-radius:12px;border:2px solid var(--line);background:var(--panel);color:var(--ink);font-size:.95rem;white-space:nowrap}
+.sbtn.next{background:var(--green);border-color:var(--green);color:#fff}
+.sbtn[hidden]{display:none}
+.zoom{display:flex;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel)}
+.zoom button{width:38px;height:34px;border:0;background:transparent;color:var(--ink);font-size:1.25rem;line-height:1}
+.zoom button+button{border-left:2px solid var(--line)}
+.zoom button:disabled{opacity:.35;cursor:default}
+
+.mapWrap{position:relative}
+.mapBox{position:relative;border-radius:18px;background:var(--sea);border:2px solid var(--line);overflow:auto;max-height:clamp(230px,calc(100vh - 400px),640px);max-height:clamp(230px,calc(100dvh - 400px),640px);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.mapBox svg{display:block;width:calc(100% * var(--z,1));height:auto;touch-action:pan-x pan-y;user-select:none;-webkit-user-select:none}
+.slot{fill:#fff;stroke:#9AA7BF;stroke-width:.8;stroke-linejoin:round}
+.other{fill:#DCE3EC;stroke:#B6C2D2;stroke-width:.7;stroke-linejoin:round}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .slot{fill:#2A3650;stroke:#5D6E8C}:root:not([data-theme="light"]) .other{fill:#222C3E;stroke:#3A4862}}
+.slot.hint{animation:hint .45s ease-in-out 6 alternate}
+@keyframes hint{from{fill:#fff;stroke:#9AA7BF;stroke-width:.8}to{fill:#FFE29A;stroke:#F08A24;stroke-width:3}}
+.placed path{stroke:#1F2A44;stroke-width:.9;stroke-linejoin:round}
+.placed.pop{animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{opacity:.2}40%{opacity:1}}
+.lbl{font-family:var(--boldFont);font-weight:700;fill:#1F2A44;stroke:#fff;stroke-linejoin:round;paint-order:stroke;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+
+.msg{margin:0;padding:6px 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:.88rem;line-height:1.4;height:calc(2.8em + 14px);overflow:hidden;display:flex;align-items:center}
+.msg.ok{background:#DFF5E7;color:#135C33;border-color:#B5E3C5}
+.msg.ng{background:#FDE5E3;color:#8A231C;border-color:#F4C2BD}
+
+.dock{position:sticky;bottom:0;z-index:20;margin:0 -12px;padding:4px 12px calc(4px + env(safe-area-inset-bottom,0px));background:linear-gradient(to bottom,rgba(230,239,246,.0),var(--bg) 14px)}
+.trayHead{display:flex;align-items:center;justify-content:space-between;margin:2px 2px -4px;font-size:.88rem;color:var(--sub)}
+.tray{display:flex;gap:8px;overflow-x:auto;padding:6px 4px 10px;scroll-snap-type:x proximity;scrollbar-width:thin}
+.pc{flex:0 0 auto;scroll-snap-align:start;width:86px;height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:14px;border:2px solid var(--line);background:var(--panel);color:var(--ink);padding:4px;touch-action:pan-x;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;position:relative}
+.pc svg{width:62px;height:58px;display:block;pointer-events:none}
+.pc svg path{stroke:#1F2A44;stroke-width:1.2;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.pc .nm{font-size:.74rem;line-height:1.1;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.pc[aria-pressed="true"]{border-color:var(--orange);box-shadow:0 0 0 3px rgba(240,138,36,.35)}
+.pc.lift{opacity:.3}
+.pc.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.pc.gone{animation:gone .3s forwards}
+@keyframes gone{to{transform:scale(.4);opacity:0}}
+.trayEmpty{padding:18px;text-align:center;color:var(--sub);font-size:.9rem;width:100%}
+
+.drag{position:fixed;left:0;top:0;z-index:50;pointer-events:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));transform-origin:0 0}
+.drag svg{display:block;overflow:visible}
+.drag path{stroke:#1F2A44;stroke-width:.9;stroke-linejoin:round}
+.drag.back{transition:transform .35s ease,opacity .35s ease;opacity:0}
+
+/* クリア演出（★と「クリア！」） */
+.clearFx{position:absolute;inset:0;z-index:30;pointer-events:none;overflow:visible;border-radius:18px;--bw:300px}
+.clearFx.out{animation:cfOut .45s ease forwards}
+.cfFlash{position:absolute;inset:0;border-radius:18px;background:radial-gradient(circle at 50% 48%,rgba(255,255,255,.75),rgba(255,255,255,0) 65%);animation:cfFlash .9s ease-out forwards}
+.cfText{position:absolute;z-index:2;left:50%;top:47%;transform:translate(-50%,-50%);font-family:var(--boldFont);font-weight:900;font-synthesis:weight;font-size:calc(var(--bw)*.14);line-height:1.15;letter-spacing:.06em;color:#F6C343;-webkit-text-stroke:.022em #F6C343;white-space:nowrap;text-shadow:0.055em 0.000em 0 #111,0.051em 0.021em 0 #111,0.039em 0.039em 0 #111,0.021em 0.051em 0 #111,0.000em 0.055em 0 #111,-0.021em 0.051em 0 #111,-0.039em 0.039em 0 #111,-0.051em 0.021em 0 #111,-0.055em 0.000em 0 #111,-0.051em -0.021em 0 #111,-0.039em -0.039em 0 #111,-0.021em -0.051em 0 #111,-0.000em -0.055em 0 #111,0.021em -0.051em 0 #111,0.039em -0.039em 0 #111,0.051em -0.021em 0 #111,0 .09em .12em rgba(0,0,0,.4);animation:cfPop .6s cubic-bezier(.2,1.6,.4,1) .12s both}
+.cfText span{display:inline-block;animation:cfHop .5s ease-in-out both;animation-delay:calc(.75s + var(--i)*.07s)}
+.cfStar{position:absolute;z-index:3;width:calc(var(--bw)*var(--s));aspect-ratio:1;transform:translate(-50%,-50%);animation:cfStar .7s cubic-bezier(.2,1.5,.4,1) both;animation-delay:var(--d)}
+.cfStar svg{display:block;width:100%;height:100%;animation:cfTwinkle 1.2s ease-in-out infinite alternate;animation-delay:calc(var(--d) + .7s);filter:drop-shadow(0 3px 0 rgba(0,0,0,.25))}
+.cfSparks{position:absolute;left:50%;top:47%;width:0;height:0}
+.cfSparks i{position:absolute;left:-4px;top:-4px;width:8px;height:8px;border-radius:50%;background:var(--c);opacity:0;animation:cfSpark .9s ease-out .15s forwards;transform:rotate(var(--a)) translateY(0)}
+@keyframes cfFlash{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+@keyframes cfPop{0%{transform:translate(-50%,-50%) scale(0) rotate(-12deg);opacity:0}100%{transform:translate(-50%,-50%) scale(1) rotate(0);opacity:1}}
+@keyframes cfHop{0%,100%{transform:none}50%{transform:translateY(-18%)}}
+@keyframes cfStar{0%{transform:translate(-50%,-50%) scale(0) rotate(-200deg);opacity:0}100%{transform:translate(-50%,-50%) scale(1) rotate(0);opacity:1}}
+@keyframes cfTwinkle{from{transform:scale(1) rotate(-6deg)}to{transform:scale(1.1) rotate(6deg)}}
+@keyframes cfSpark{0%{opacity:1;transform:rotate(var(--a)) translateY(0) scale(1)}100%{opacity:0;transform:rotate(var(--a)) translateY(calc(var(--bw)*-.42)) scale(.4)}}
+@keyframes cfOut{to{opacity:0;transform:scale(.96)}}
+@media (prefers-reduced-motion:reduce){.clearFx *,.clearFx,.slot.hint,.placed.pop{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important}.cfSparks{display:none}}
+
+/* あそびかた */
+dialog.tuto{border:0;padding:0;border-radius:20px;width:min(560px,94vw);max-height:88vh;max-height:88dvh;background:var(--panel);color:var(--ink);box-shadow:0 20px 50px rgba(0,0,0,.35);overflow:hidden}
+dialog.tuto[open]{display:flex;flex-direction:column}
+dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
+.tuto .head{display:flex;align-items:center;justify-content:space-between;padding:12px 12px 10px 20px;border-bottom:1px solid var(--line);flex:0 0 auto}
+.tuto .head h2{margin:0;font-size:1.15rem;font-family:var(--boldFont);font-weight:700}
+.close{width:40px;height:40px;padding:0;border-radius:50%;border:0;background:var(--bg);color:var(--ink);font-size:22.88px;line-height:1}
+.tuto .body{overflow-y:auto;padding:6px 20px 8px;-webkit-overflow-scrolling:touch}
+.tuto .foot{padding:10px 20px 14px;border-top:1px solid var(--line);flex:0 0 auto}
+.tuto .foot .btn{width:100%;height:46px;border:0;border-radius:12px;background:var(--board);color:#fff;font-size:17.6px}
+.step{padding:14px 0;border-bottom:1px dashed var(--line)}
+.step:last-child{border-bottom:0}
+.step h3{margin:0 0 8px;font-size:1rem;font-family:var(--boldFont);font-weight:700;display:flex;align-items:center;gap:8px}
+.step h3 .n{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--board);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem}
+.step p{margin:6px 0 0;font-size:.92rem}
+.fig{display:flex;justify-content:center;margin:6px 0}
+.fig svg{max-width:100%;height:auto;display:block}
+.fig svg text{font-family:var(--boldFont);font-weight:700}
+.tvid{padding:14px 0 6px}
+.vbox{position:relative;margin:0 auto;width:min(100%,280px,calc(52vh*.5625));width:min(100%,280px,calc(52dvh*.5625));aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:#E6EFF6;border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.vbox video{display:block;width:100%;height:100%;object-fit:cover;background:#E6EFF6}
+.vplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;height:52px;padding:0 20px 0 16px;border:0;border-radius:999px;background:rgba(31,42,68,.88);color:#fff;font-size:1.05rem;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.vplay svg{width:22px;height:22px}
+.vbox.playing .vplay{display:none}
+.vnext{margin:12px 0 0;text-align:center;font-size:.86rem;color:var(--sub)}
+
+.backTop{display:flex;align-items:center;justify-content:center;gap:8px;height:46px;margin-top:8px;border-radius:14px;border:2px solid var(--accent);background:var(--panel);color:var(--accent);text-decoration:none;font-size:17.6px;line-height:1;-webkit-tap-highlight-color:transparent}
+.backTop svg{width:20px;height:20px;flex:0 0 auto}
+.backTop:active{transform:translateY(2px)}
+
+@media (max-width:360px){
+  .tabs button{font-size:.88rem}.tabs button small{display:none}.tabs.lv button span{font-size:.74rem}
+  h1{font-size:1.1rem}.tutoBtn{padding:0 9px;font-size:.85rem;gap:4px}.tutoBtn svg{width:16px;height:16px}
+  .sbtn{padding:0 8px;font-size:.85rem}.zoom button{width:32px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="titlebar">
+    <h1>都道府県パズル<span class="dot" style="background:var(--red)"></span><span class="dot" style="background:var(--blue)"></span><span class="dot" style="background:var(--green)"></span></h1>
+    <button class="tutoBtn" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>あそびかた</button>
+  </div>
+
+  <p class="label">レベル</p>
+  <div class="tabs lv" id="tabs" role="group" aria-label="レベル">
+    <button data-area="hokkaido"><b>レベル1</b><span>ほっかいどう</span></button>
+    <button data-area="shikoku"><b>レベル2</b><span>しこく</span></button>
+    <button data-area="chugoku"><b>レベル3</b><span>ちゅうごく</span></button>
+    <button data-area="tohoku"><b>レベル4</b><span>とうほく</span></button>
+    <button data-area="kanto"><b>レベル5</b><span>かんとう</span></button>
+    <button data-area="kinki"><b>レベル6</b><span>きんき</span></button>
+    <button data-area="kyushu"><b>レベル7</b><span>きゅうしゅう</span></button>
+    <button data-area="chubu"><b>レベル8</b><span>ちゅうぶ</span></button>
+  </div>
+
+  <div class="bar">
+    <div class="left" id="left" aria-live="polite">のこり <b id="rest">0</b> こ</div>
+    <div class="zoom" role="group" aria-label="地図の大きさ"><button id="zout" aria-label="小さくする">－</button><button id="zin" aria-label="大きくする">＋</button></div>
+    <button class="sbtn" id="hint">ヒント</button>
+    <button class="sbtn" id="reset">リセット</button>
+    <button class="sbtn next" id="next" hidden>つぎへ ›</button>
+  </div>
+
+  <p class="msg" id="msg" aria-live="polite"></p>
+
+  <div class="mapWrap" id="mapWrap">
+    <div class="mapBox" id="mapBox">
+      <svg id="map" viewBox="0 0 1130 1019" role="img" aria-label="日本の地図"></svg>
+    </div>
+  </div>
+
+  <div class="dock">
+    <div class="trayHead"><span>ピース（よこにスクロールできます）</span></div>
+    <div class="tray" id="tray" role="group" aria-label="ピース"></div>
+  </div>
+
+  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにもどる</a>
+</div>
+
+<dialog class="tuto" id="tuto" aria-labelledby="tutoTitle">
+  <div class="head"><h2 id="tutoTitle" tabindex="-1" style="outline:none">都道府県パズルのあそびかた</h2><button class="close" id="closeTuto" aria-label="とじる">✕</button></div>
+  <div class="body">
+    <section class="tvid" aria-label="どうがで見るあそびかた">
+      <div class="vbox" id="vbox">
+        <video id="tutoVideo" src="video/jp_tutorial.mp4" poster="video/jp_tutorial.jpg" playsinline muted preload="metadata" controls></video>
+        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">どうがを見る</span></button>
+      </div>
+      <p class="vnext">どうがのあとは、下のくわしいせつめいも見てね</p>
+    </section>
+    <section class="step">
+      <h3><span class="n">1</span>レベルをえらぶ</h3>
+      <p>47の都道府県を、8つのレベルに分けてあります。<b>レベル1 ほっかいどう</b>から <b>レベル8 ちゅうぶ</b>まで、じゅんばんにチャレンジしてみよう。すきなレベルからはじめてもだいじょうぶです。</p>
+    </section>
+    <section class="step">
+      <h3><span class="n">2</span>ピースを地図にはめる</h3>
+      <div class="fig">
+        <svg width="280" height="150" viewBox="0 0 280 150" role="img" aria-label="下のピースを、地図の白いばしょまでドラッグしてはめる図">
+          <rect x="1" y="1" width="278" height="148" rx="14" fill="#D3E6F5"/>
+          <path d="M150 18 l60 -6 l30 30 l-14 44 l-50 8 l-30 -26z" fill="#F1D0E3" stroke="#1F2A44" stroke-width="1.5"/>
+          <path d="M136 68 l30 26 l-10 34 l-50 4 l-12 -40z" fill="#fff" stroke="#9AA7BF" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <g transform="translate(24 58)"><path d="M12 10 l30 26 l-10 34 l-50 4 l-12 -40z" transform="translate(30 0)" fill="#FFC9B8" stroke="#1F2A44" stroke-width="1.5"/><text x="36" y="44" font-size="11" text-anchor="middle" fill="#1F2A44">ちば県</text></g>
+          <path d="M92 90 C110 80 118 84 128 96" stroke="#F08A24" stroke-width="3" fill="none" stroke-dasharray="5 4"/><path d="M122 88 l8 9 l-11 2" fill="none" stroke="#F08A24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="190" y="140" font-size="11" fill="#5B6782" text-anchor="middle">白いばしょに、はめよう</text>
+        </svg>
+      </div>
+      <p>下のピースを<b>ゆびでおさえたまま上へうごかす</b>と、ピースがもち上がります。そのまま地図の白いばしょまでうごかして、ゆびをはなします。ばしょが合っていれば、ピタッとはまります。</p>
+      <p>小さいピースは、<b>ピースをタップしてから、地図のはまるばしょをタップ</b>してもはめられます。</p>
+    </section>
+    <section class="step">
+      <h3><span class="n">3</span>こまったときは</h3>
+      <p><b>「＋」</b>で地図を大きくできます（大きくしたら、地図をゆびでうごかして見てね）。<b>「ヒント」</b>をおすと、えらんでいるピースのばしょが光ります。</p>
+    </section>
+    <section class="step">
+      <h3><span class="n">4</span>ぜんぶはめたらクリア</h3>
+      <p>えらんだレベルのピースをぜんぶはめるとクリアです。クリアしたレベルには、みどりのしるしがつきます。</p>
+    </section>
+  </div>
+  <div class="foot"><button class="btn" id="startTuto">はじめる</button></div>
+</dialog>
+
+<script>
+const DATA={"w":1130,"h":1019,"inset":[[-34,879],[65,879],[124,1017],[124,1046]],"pieces":[{"id":0,"t":["ほっかいどう"],"a":"hokkaido","d":"M1099.5,102.5 1095.5,105.5 1092.5,110.5 1086.5,115.5 1078.5,124.5 1071.5,129.5 1064.5,132.5 1054.5,132.5 1043.5,127.5 1042.5,125.5 1039.5,123.5 1039.5,118.5 1035.5,118.5 1032.5,116.5 1015.5,117.5 1012.5,115.5 1012.5,109.5 995.5,99.5 990.5,95.5 987.5,91.5 983.5,89.5 978.5,84.5 977.5,81.5 973.5,79.5 973.5,77.5 970.5,75.5 970.5,73.5 966.5,70.5 958.5,60.5 957.5,56.5 954.5,53.5 954.5,49.5 952.5,46.5 952.5,44.5 949.5,43.5 941.5,34.5 941.5,31.5 935.5,25.5 931.5,18.5 923.5,11.5 922.5,8.5 921.5,8.5 919.5,12.5 916.5,14.5 913.5,14.5 912.5,15.5 908.5,14.5 909.5,18.5 906.5,21.5 906.5,24.5 904.5,27.5 904.5,33.5 907.5,38.5 908.5,43.5 911.5,49.5 912.5,57.5 913.5,58.5 913.5,64.5 914.5,65.5 914.5,71.5 913.5,72.5 913.5,75.5 911.5,77.5 910.5,89.5 908.5,90.5 907.5,93.5 904.5,96.5 905.5,115.5 900.5,124.5 900.5,127.5 886.5,134.5 885.5,145.5 886.5,146.5 887.5,156.5 889.5,160.5 889.5,166.5 882.5,176.5 873.5,181.5 866.5,178.5 863.5,174.5 856.5,176.5 853.5,175.5 848.5,171.5 845.5,170.5 844.5,167.5 841.5,165.5 838.5,161.5 837.5,161.5 836.5,163.5 832.5,164.5 832.5,166.5 830.5,168.5 830.5,172.5 838.5,182.5 838.5,189.5 832.5,193.5 831.5,195.5 826.5,199.5 826.5,203.5 823.5,205.5 820.5,203.5 817.5,203.5 816.5,205.5 808.5,209.5 805.5,209.5 800.5,212.5 799.5,215.5 800.5,217.5 800.5,220.5 799.5,221.5 800.5,225.5 794.5,235.5 795.5,242.5 798.5,243.5 802.5,249.5 804.5,249.5 807.5,251.5 811.5,259.5 810.5,271.5 806.5,273.5 805.5,280.5 803.5,283.5 802.5,289.5 800.5,291.5 800.5,294.5 802.5,295.5 802.5,297.5 805.5,300.5 811.5,301.5 815.5,299.5 815.5,297.5 818.5,295.5 824.5,294.5 825.5,282.5 828.5,280.5 830.5,280.5 831.5,278.5 837.5,273.5 841.5,274.5 843.5,276.5 843.5,278.5 847.5,278.5 853.5,283.5 855.5,283.5 865.5,277.5 864.5,273.5 861.5,273.5 853.5,268.5 852.5,265.5 849.5,262.5 849.5,260.5 844.5,254.5 842.5,253.5 837.5,254.5 831.5,252.5 828.5,247.5 825.5,246.5 821.5,242.5 821.5,234.5 823.5,231.5 823.5,228.5 825.5,224.5 833.5,217.5 836.5,217.5 837.5,218.5 841.5,217.5 848.5,220.5 850.5,225.5 854.5,228.5 856.5,234.5 859.5,236.5 859.5,238.5 861.5,238.5 866.5,232.5 869.5,231.5 883.5,221.5 893.5,218.5 897.5,218.5 900.5,220.5 904.5,220.5 908.5,222.5 909.5,225.5 911.5,225.5 915.5,227.5 919.5,231.5 925.5,233.5 930.5,238.5 933.5,243.5 936.5,244.5 938.5,247.5 941.5,247.5 945.5,250.5 949.5,251.5 952.5,254.5 956.5,255.5 963.5,260.5 967.5,261.5 974.5,266.5 976.5,269.5 980.5,272.5 983.5,268.5 986.5,258.5 985.5,256.5 985.5,248.5 994.5,234.5 994.5,230.5 1001.5,222.5 1004.5,221.5 1013.5,211.5 1020.5,206.5 1037.5,198.5 1043.5,199.5 1046.5,203.5 1054.5,202.5 1055.5,201.5 1061.5,201.5 1064.5,197.5 1068.5,195.5 1071.5,197.5 1071.5,200.5 1072.5,201.5 1076.5,201.5 1085.5,191.5 1090.5,190.5 1097.5,185.5 1104.5,184.5 1108.5,186.5 1109.5,180.5 1107.5,181.5 1102.5,181.5 1101.5,182.5 1097.5,182.5 1094.5,180.5 1094.5,169.5 1092.5,167.5 1090.5,158.5 1088.5,156.5 1088.5,153.5 1082.5,144.5 1082.5,140.5 1084.5,138.5 1085.5,130.5 1092.5,121.5 1092.5,119.5 1095.5,117.5 1095.5,114.5 1097.5,111.5 1097.5,107.5 1099.5,105.5ZM1111.5,178.5 1116.5,177.5 1121.5,174.5 1121.5,173.5 1114.5,173.5 1112.5,174.5Z","cx":948.6,"cy":166.1,"bb":[794,8,328,294],"px":33538,"lx":961.0,"ly":162.8,"fs":22.0,"ang":0,"g":"hokkaido"},{"id":1,"t":["あおもり県"],"a":"tohoku","d":"M878.5,311.5 869.5,312.5 856.5,302.5 852.5,301.5 850.5,298.5 849.5,298.5 849.5,301.5 843.5,313.5 842.5,320.5 840.5,322.5 841.5,325.5 848.5,324.5 852.5,321.5 860.5,321.5 864.5,318.5 870.5,322.5 870.5,328.5 868.5,331.5 867.5,341.5 864.5,345.5 858.5,347.5 852.5,344.5 850.5,342.5 850.5,340.5 846.5,338.5 846.5,344.5 844.5,347.5 839.5,351.5 834.5,348.5 834.5,345.5 832.5,342.5 832.5,338.5 830.5,336.5 831.5,324.5 830.5,324.5 829.5,322.5 826.5,322.5 825.5,323.5 818.5,319.5 817.5,320.5 817.5,324.5 815.5,326.5 817.5,329.5 817.5,333.5 816.5,334.5 816.5,340.5 812.5,351.5 807.5,355.5 795.5,357.5 794.5,360.5 790.5,363.5 790.5,365.5 792.5,366.5 793.5,369.5 793.5,375.5 794.5,376.5 796.5,375.5 799.5,375.5 800.5,376.5 809.5,375.5 811.5,376.5 815.5,373.5 817.5,373.5 824.5,379.5 827.5,376.5 831.5,378.5 832.5,377.5 836.5,377.5 839.5,374.5 841.5,374.5 846.5,380.5 848.5,380.5 850.5,382.5 846.5,390.5 847.5,392.5 853.5,393.5 856.5,389.5 860.5,388.5 866.5,384.5 867.5,384.5 869.5,387.5 871.5,387.5 874.5,384.5 883.5,384.5 883.5,383.5 886.5,380.5 888.5,380.5 888.5,379.5 886.5,378.5 885.5,375.5 882.5,375.5 878.5,372.5 874.5,361.5 874.5,350.5 873.5,349.5 874.5,346.5 873.5,337.5 875.5,333.5 874.5,331.5 874.5,324.5Z","cx":842.8,"cy":353.6,"bb":[790,298,99,96],"px":3942,"lx":833.8,"ly":365.0,"fs":14.2,"ang":0,"g":"tohoku"},{"id":2,"t":["いわて県"],"a":"tohoku","d":"M888.5,381.5 886.5,381.5 883.5,385.5 874.5,385.5 871.5,388.5 869.5,388.5 868.5,386.5 866.5,385.5 862.5,388.5 856.5,390.5 853.5,394.5 847.5,393.5 842.5,398.5 843.5,401.5 841.5,407.5 842.5,409.5 841.5,412.5 842.5,417.5 837.5,420.5 837.5,423.5 839.5,425.5 836.5,431.5 838.5,433.5 838.5,439.5 832.5,444.5 833.5,445.5 832.5,449.5 827.5,454.5 834.5,465.5 836.5,470.5 833.5,476.5 835.5,479.5 834.5,486.5 843.5,492.5 850.5,494.5 856.5,501.5 860.5,501.5 863.5,498.5 865.5,498.5 868.5,501.5 871.5,498.5 872.5,490.5 875.5,487.5 886.5,488.5 886.5,484.5 887.5,483.5 893.5,482.5 893.5,480.5 896.5,478.5 896.5,473.5 899.5,471.5 900.5,463.5 906.5,456.5 906.5,449.5 907.5,447.5 906.5,446.5 906.5,443.5 904.5,442.5 904.5,435.5 907.5,433.5 903.5,423.5 904.5,417.5 903.5,414.5 900.5,412.5 897.5,407.5 898.5,402.5 895.5,400.5 896.5,394.5 894.5,392.5 894.5,390.5 891.5,384.5 889.5,383.5Z","cx":868.4,"cy":441.4,"bb":[827,381,81,121],"px":6774,"lx":869.4,"ly":453.2,"fs":20.2,"ang":-50,"g":"tohoku"},{"id":3,"t":["あきた県"],"a":"tohoku","d":"M796.5,376.5 795.5,377.5 795.5,380.5 797.5,383.5 797.5,389.5 796.5,390.5 795.5,397.5 792.5,401.5 795.5,402.5 797.5,404.5 797.5,406.5 794.5,408.5 793.5,407.5 790.5,407.5 790.5,408.5 784.5,413.5 778.5,413.5 779.5,416.5 789.5,415.5 792.5,413.5 794.5,413.5 797.5,415.5 796.5,423.5 798.5,427.5 798.5,430.5 797.5,431.5 797.5,441.5 795.5,447.5 795.5,452.5 792.5,460.5 786.5,465.5 786.5,470.5 784.5,472.5 784.5,474.5 792.5,472.5 798.5,479.5 800.5,478.5 803.5,480.5 810.5,480.5 818.5,492.5 827.5,491.5 833.5,487.5 834.5,479.5 832.5,476.5 835.5,470.5 833.5,465.5 826.5,454.5 831.5,449.5 832.5,446.5 831.5,444.5 837.5,439.5 837.5,433.5 835.5,431.5 838.5,425.5 836.5,423.5 836.5,420.5 841.5,417.5 840.5,415.5 840.5,412.5 841.5,411.5 840.5,407.5 842.5,403.5 841.5,398.5 846.5,393.5 845.5,390.5 849.5,382.5 846.5,381.5 841.5,375.5 839.5,375.5 836.5,378.5 832.5,378.5 831.5,379.5 827.5,377.5 824.5,380.5 817.5,374.5 815.5,374.5 811.5,377.5 809.5,376.5 803.5,376.5 802.5,377.5Z","cx":815.9,"cy":428.2,"bb":[778,374,72,119],"px":4844,"lx":812.3,"ly":450.5,"fs":14.2,"ang":-50,"g":"tohoku"},{"id":4,"t":["みやぎ県"],"a":"tohoku","d":"M885.5,489.5 875.5,488.5 873.5,490.5 872.5,498.5 868.5,502.5 865.5,499.5 863.5,499.5 860.5,502.5 856.5,502.5 850.5,495.5 845.5,494.5 834.5,487.5 827.5,492.5 820.5,493.5 821.5,498.5 826.5,501.5 824.5,503.5 824.5,508.5 820.5,512.5 819.5,522.5 822.5,526.5 817.5,532.5 818.5,535.5 815.5,538.5 815.5,544.5 807.5,554.5 802.5,554.5 802.5,560.5 808.5,559.5 811.5,561.5 814.5,565.5 817.5,564.5 820.5,566.5 825.5,565.5 827.5,567.5 825.5,571.5 828.5,574.5 831.5,572.5 833.5,572.5 834.5,571.5 834.5,567.5 836.5,565.5 838.5,565.5 839.5,553.5 843.5,545.5 843.5,543.5 847.5,540.5 846.5,538.5 846.5,533.5 849.5,531.5 853.5,532.5 859.5,528.5 865.5,528.5 866.5,527.5 870.5,530.5 870.5,534.5 872.5,534.5 871.5,531.5 871.5,523.5 873.5,522.5 873.5,521.5 871.5,520.5 871.5,511.5 876.5,508.5 875.5,503.5 879.5,500.5 879.5,498.5 881.5,497.5 881.5,495.5 885.5,491.5Z","cx":839.7,"cy":525.1,"bb":[802,487,84,88],"px":3155,"lx":847.0,"ly":517.2,"fs":11.8,"ang":0,"g":"tohoku"},{"id":5,"t":["やま","がた県"],"a":"tohoku","d":"M791.5,473.5 784.5,475.5 784.5,481.5 780.5,487.5 781.5,491.5 779.5,492.5 775.5,499.5 768.5,505.5 764.5,510.5 763.5,514.5 766.5,515.5 767.5,517.5 770.5,516.5 773.5,518.5 773.5,520.5 771.5,521.5 770.5,526.5 773.5,528.5 775.5,528.5 779.5,533.5 778.5,538.5 775.5,541.5 769.5,543.5 763.5,561.5 764.5,564.5 768.5,567.5 779.5,568.5 782.5,569.5 786.5,573.5 799.5,574.5 801.5,572.5 800.5,569.5 801.5,554.5 802.5,553.5 807.5,553.5 814.5,544.5 814.5,538.5 817.5,535.5 816.5,532.5 821.5,526.5 818.5,522.5 819.5,512.5 823.5,508.5 823.5,503.5 825.5,501.5 820.5,498.5 819.5,493.5 816.5,491.5 810.5,481.5 803.5,481.5 800.5,479.5 798.5,480.5 793.5,474.5Z","cx":793.1,"cy":523.9,"bb":[763,473,63,102],"px":4006,"lx":796.8,"ly":513.2,"fs":13.3,"ang":0,"g":"tohoku"},{"id":6,"t":["ふくしま県"],"a":"tohoku","d":"M838.5,566.5 836.5,566.5 835.5,567.5 835.5,571.5 829.5,575.5 824.5,571.5 826.5,567.5 825.5,566.5 822.5,566.5 821.5,567.5 818.5,565.5 814.5,566.5 812.5,563.5 808.5,560.5 801.5,562.5 802.5,572.5 799.5,575.5 786.5,574.5 782.5,570.5 775.5,568.5 769.5,568.5 758.5,581.5 759.5,589.5 757.5,591.5 751.5,590.5 748.5,593.5 741.5,593.5 737.5,595.5 737.5,603.5 734.5,608.5 734.5,610.5 739.5,617.5 738.5,619.5 739.5,622.5 738.5,630.5 741.5,630.5 744.5,633.5 747.5,633.5 750.5,630.5 753.5,630.5 754.5,629.5 757.5,630.5 765.5,623.5 770.5,622.5 774.5,619.5 779.5,618.5 782.5,620.5 789.5,620.5 791.5,621.5 797.5,629.5 798.5,636.5 801.5,636.5 805.5,639.5 809.5,645.5 812.5,645.5 816.5,641.5 816.5,639.5 818.5,637.5 827.5,640.5 834.5,637.5 840.5,633.5 840.5,628.5 842.5,626.5 841.5,615.5 843.5,613.5 844.5,598.5 845.5,597.5 844.5,581.5 842.5,578.5 842.5,575.5 838.5,569.5Z","cx":796.0,"cy":602.0,"bb":[734,560,112,86],"px":6141,"lx":790.8,"ly":606.2,"fs":19.9,"ang":0,"g":"tohoku"},{"id":7,"t":["いばらき県"],"a":"kanto","d":"M798.5,637.5 797.5,640.5 798.5,641.5 798.5,649.5 799.5,651.5 795.5,654.5 796.5,662.5 797.5,663.5 795.5,666.5 795.5,668.5 790.5,673.5 785.5,674.5 780.5,678.5 778.5,678.5 774.5,681.5 772.5,681.5 769.5,685.5 762.5,686.5 761.5,687.5 761.5,690.5 764.5,695.5 766.5,695.5 779.5,709.5 781.5,709.5 784.5,712.5 787.5,712.5 789.5,714.5 792.5,714.5 793.5,713.5 799.5,713.5 801.5,711.5 807.5,712.5 811.5,709.5 815.5,713.5 818.5,714.5 826.5,722.5 828.5,722.5 825.5,716.5 818.5,708.5 814.5,695.5 814.5,682.5 818.5,680.5 817.5,678.5 818.5,666.5 823.5,658.5 825.5,649.5 829.5,644.5 827.5,643.5 826.5,640.5 818.5,638.5 817.5,641.5 812.5,646.5 809.5,646.5 805.5,640.5 801.5,637.5Z","cx":799.2,"cy":681.0,"bb":[761,637,69,86],"px":2729,"lx":796.1,"ly":680.2,"fs":12.1,"ang":-50,"g":"kanto"},{"id":8,"t":["とちぎ県"],"a":"kanto","d":"M789.5,621.5 782.5,621.5 779.5,619.5 774.5,620.5 770.5,623.5 765.5,624.5 757.5,631.5 755.5,630.5 750.5,631.5 747.5,634.5 745.5,634.5 744.5,636.5 746.5,642.5 743.5,645.5 742.5,656.5 747.5,657.5 749.5,660.5 746.5,663.5 746.5,667.5 743.5,673.5 744.5,675.5 750.5,680.5 757.5,681.5 760.5,684.5 760.5,686.5 769.5,684.5 772.5,680.5 774.5,680.5 776.5,678.5 780.5,677.5 785.5,673.5 790.5,672.5 794.5,668.5 794.5,666.5 796.5,664.5 794.5,654.5 798.5,651.5 797.5,649.5 797.5,641.5 796.5,640.5 797.5,638.5 797.5,633.5 796.5,632.5 796.5,629.5 793.5,626.5 793.5,624.5Z","cx":770.3,"cy":651.6,"bb":[742,619,57,68],"px":2820,"lx":771.4,"ly":652.7,"fs":14.8,"ang":-50,"g":"kanto"},{"id":9,"t":["ぐんま県"],"a":"kanto","d":"M741.5,631.5 733.5,631.5 731.5,629.5 731.5,627.5 728.5,626.5 725.5,630.5 722.5,630.5 721.5,631.5 721.5,633.5 716.5,640.5 705.5,644.5 703.5,646.5 697.5,647.5 696.5,648.5 696.5,651.5 694.5,653.5 691.5,653.5 689.5,655.5 687.5,665.5 690.5,667.5 694.5,667.5 697.5,665.5 701.5,669.5 698.5,687.5 700.5,690.5 699.5,695.5 702.5,698.5 704.5,696.5 708.5,696.5 713.5,692.5 717.5,692.5 719.5,690.5 722.5,690.5 723.5,689.5 723.5,684.5 727.5,680.5 730.5,680.5 733.5,683.5 736.5,684.5 741.5,683.5 747.5,688.5 749.5,687.5 755.5,687.5 757.5,688.5 759.5,686.5 759.5,684.5 757.5,682.5 750.5,681.5 746.5,678.5 742.5,673.5 745.5,667.5 745.5,663.5 748.5,659.5 741.5,656.5 742.5,645.5 745.5,642.5 743.5,638.5 744.5,634.5Z","cx":721.0,"cy":662.8,"bb":[687,626,73,73],"px":2726,"lx":719.2,"ly":659.0,"fs":10.9,"ang":0,"g":"kanto"},{"id":10,"t":["さいたま県"],"a":"kanto","d":"M702.5,699.5 703.5,700.5 703.5,705.5 706.5,706.5 709.5,709.5 715.5,710.5 719.5,706.5 721.5,706.5 724.5,710.5 729.5,710.5 735.5,712.5 738.5,716.5 741.5,718.5 743.5,717.5 748.5,717.5 750.5,715.5 753.5,718.5 755.5,718.5 758.5,715.5 763.5,718.5 765.5,717.5 771.5,717.5 772.5,716.5 772.5,714.5 768.5,708.5 768.5,698.5 762.5,694.5 760.5,690.5 760.5,687.5 757.5,689.5 755.5,688.5 749.5,688.5 747.5,689.5 741.5,684.5 736.5,685.5 733.5,684.5 730.5,681.5 727.5,681.5 724.5,684.5 724.5,689.5 722.5,691.5 719.5,691.5 717.5,693.5 713.5,693.5 708.5,697.5 704.5,697.5Z","cx":739.7,"cy":701.1,"bb":[702,681,71,38],"px":1632,"lx":737.0,"ly":700.5,"fs":10.0,"ang":0,"g":"kanto"},{"id":11,"t":["ちば県"],"a":"kanto","d":"M811.5,710.5 807.5,713.5 801.5,712.5 799.5,714.5 789.5,715.5 787.5,713.5 784.5,713.5 781.5,710.5 779.5,710.5 776.5,706.5 769.5,700.5 769.5,708.5 773.5,714.5 773.5,716.5 771.5,718.5 771.5,721.5 772.5,722.5 771.5,728.5 775.5,728.5 778.5,726.5 780.5,727.5 787.5,735.5 787.5,737.5 783.5,740.5 780.5,745.5 776.5,747.5 773.5,747.5 772.5,748.5 773.5,752.5 769.5,754.5 770.5,762.5 767.5,764.5 767.5,775.5 769.5,777.5 769.5,779.5 767.5,780.5 767.5,782.5 769.5,783.5 773.5,782.5 775.5,780.5 775.5,777.5 781.5,773.5 784.5,769.5 796.5,767.5 799.5,765.5 802.5,760.5 802.5,755.5 801.5,754.5 802.5,743.5 807.5,735.5 811.5,732.5 814.5,728.5 818.5,726.5 828.5,725.5 828.5,723.5 826.5,723.5 818.5,715.5 815.5,714.5Z","cx":790.2,"cy":739.0,"bb":[767,700,62,84],"px":2166,"lx":798.2,"ly":722.0,"fs":10.9,"ang":0,"g":"kanto"},{"id":12,"t":["とうきょう都"],"a":"kanto","d":"M716.5,710.5 718.5,717.5 723.5,721.5 727.5,726.5 731.5,726.5 733.5,728.5 739.5,728.5 741.5,729.5 745.5,734.5 746.5,733.5 746.5,730.5 748.5,728.5 752.5,727.5 762.5,736.5 764.5,736.5 762.5,733.5 762.5,729.5 765.5,727.5 766.5,728.5 770.5,728.5 771.5,726.5 770.5,718.5 765.5,718.5 763.5,719.5 758.5,716.5 755.5,719.5 753.5,719.5 750.5,716.5 748.5,718.5 743.5,718.5 741.5,719.5 739.5,718.5 735.5,713.5 729.5,711.5 724.5,711.5 721.5,707.5 719.5,707.5Z","cx":743.5,"cy":721.5,"bb":[716,707,56,30],"px":730,"lx":750.8,"ly":723.0,"fs":6.1,"ang":0,"g":"kanto"},{"id":13,"t":["かながわ県"],"a":"kanto","d":"M715.5,740.5 715.5,742.5 719.5,747.5 719.5,750.5 715.5,754.5 715.5,756.5 719.5,761.5 720.5,765.5 726.5,763.5 727.5,757.5 731.5,753.5 741.5,750.5 742.5,751.5 752.5,753.5 755.5,757.5 755.5,763.5 760.5,759.5 759.5,757.5 755.5,755.5 755.5,752.5 756.5,751.5 756.5,748.5 758.5,746.5 758.5,742.5 762.5,739.5 762.5,737.5 752.5,728.5 748.5,729.5 747.5,730.5 747.5,733.5 745.5,735.5 743.5,732.5 739.5,729.5 733.5,729.5 731.5,727.5 727.5,727.5 727.5,729.5 720.5,737.5Z","cx":737.1,"cy":743.6,"bb":[715,727,48,39],"px":1097,"lx":739.0,"ly":742.0,"fs":7.6,"ang":0,"g":"kanto"},{"id":14,"t":["にいがた県"],"a":"chubu","d":"M770.5,522.5 767.5,521.5 766.5,519.5 764.5,520.5 763.5,519.5 760.5,519.5 755.5,532.5 755.5,541.5 750.5,548.5 743.5,554.5 740.5,555.5 735.5,559.5 730.5,560.5 726.5,563.5 719.5,566.5 715.5,572.5 715.5,576.5 713.5,579.5 713.5,582.5 711.5,583.5 703.5,592.5 702.5,595.5 693.5,602.5 692.5,604.5 683.5,611.5 677.5,614.5 671.5,614.5 666.5,617.5 663.5,617.5 656.5,622.5 654.5,621.5 649.5,624.5 646.5,624.5 648.5,627.5 647.5,630.5 648.5,636.5 649.5,637.5 653.5,636.5 656.5,633.5 656.5,630.5 658.5,628.5 663.5,629.5 667.5,634.5 667.5,636.5 669.5,636.5 672.5,634.5 681.5,633.5 681.5,631.5 690.5,623.5 697.5,622.5 699.5,624.5 699.5,630.5 705.5,634.5 704.5,643.5 707.5,643.5 712.5,640.5 716.5,639.5 717.5,636.5 720.5,633.5 720.5,631.5 722.5,629.5 725.5,629.5 728.5,625.5 730.5,625.5 733.5,630.5 737.5,630.5 738.5,627.5 737.5,619.5 738.5,617.5 733.5,610.5 733.5,608.5 736.5,603.5 736.5,595.5 741.5,592.5 748.5,592.5 751.5,589.5 757.5,590.5 758.5,589.5 757.5,581.5 768.5,568.5 763.5,564.5 762.5,559.5 764.5,557.5 766.5,547.5 770.5,541.5 775.5,540.5 778.5,536.5 777.5,531.5 769.5,526.5ZM699.5,527.5 693.5,529.5 683.5,537.5 678.5,539.5 676.5,546.5 681.5,547.5 682.5,550.5 677.5,556.5 675.5,560.5 676.5,562.5 680.5,562.5 687.5,558.5 689.5,558.5 696.5,546.5 692.5,545.5 690.5,543.5 690.5,540.5 694.5,535.5 697.5,534.5 697.5,531.5 699.5,529.5Z","cx":722.5,"cy":591.7,"bb":[646,519,133,125],"px":4823,"lx":726.5,"ly":590.9,"fs":16.6,"ang":-50,"g":"chubu"},{"id":15,"t":["とやま県"],"a":"chubu","d":"M600.5,622.5 598.5,624.5 599.5,627.5 593.5,638.5 593.5,642.5 590.5,646.5 592.5,649.5 591.5,658.5 590.5,659.5 590.5,667.5 592.5,668.5 592.5,666.5 595.5,664.5 598.5,665.5 600.5,668.5 602.5,668.5 612.5,658.5 615.5,659.5 621.5,658.5 623.5,660.5 626.5,660.5 628.5,662.5 635.5,661.5 637.5,664.5 638.5,664.5 639.5,661.5 645.5,656.5 645.5,654.5 647.5,652.5 647.5,650.5 649.5,647.5 648.5,645.5 648.5,637.5 646.5,634.5 647.5,627.5 645.5,625.5 635.5,626.5 632.5,628.5 630.5,634.5 626.5,638.5 624.5,639.5 617.5,639.5 609.5,636.5 604.5,630.5 604.5,627.5 606.5,623.5Z","cx":618.7,"cy":646.3,"bb":[590,622,60,47],"px":1755,"lx":619.5,"ly":648.8,"fs":12.7,"ang":0,"g":"chubu"},{"id":16,"t":["いしかわ県"],"a":"chubu","d":"M628.5,583.5 623.5,583.5 620.5,585.5 617.5,584.5 614.5,586.5 612.5,586.5 612.5,587.5 608.5,590.5 598.5,591.5 594.5,593.5 593.5,595.5 594.5,599.5 590.5,602.5 590.5,605.5 592.5,607.5 592.5,613.5 594.5,617.5 593.5,630.5 590.5,634.5 587.5,641.5 568.5,663.5 565.5,664.5 560.5,668.5 563.5,671.5 563.5,676.5 564.5,677.5 568.5,676.5 573.5,679.5 576.5,678.5 582.5,684.5 586.5,684.5 588.5,677.5 591.5,673.5 591.5,669.5 589.5,667.5 589.5,659.5 590.5,658.5 591.5,649.5 589.5,646.5 592.5,642.5 592.5,638.5 594.5,635.5 594.5,633.5 598.5,627.5 597.5,624.5 600.5,621.5 606.5,622.5 607.5,621.5 607.5,616.5 598.5,612.5 599.5,605.5 603.5,602.5 609.5,603.5 611.5,602.5 611.5,600.5 614.5,597.5 622.5,594.5 622.5,588.5 625.5,586.5 628.5,586.5Z","cx":590.7,"cy":636.4,"bb":[560,583,69,102],"px":1484,"lx":577.5,"ly":661.3,"fs":6.7,"ang":-50,"g":"chubu"},{"id":17,"t":["ふくい県"],"a":"chubu","d":"M589.5,689.5 586.5,685.5 582.5,685.5 576.5,679.5 573.5,680.5 568.5,677.5 564.5,678.5 562.5,676.5 562.5,671.5 560.5,669.5 558.5,669.5 557.5,671.5 553.5,673.5 553.5,675.5 545.5,682.5 545.5,684.5 543.5,685.5 541.5,688.5 542.5,695.5 544.5,697.5 547.5,704.5 546.5,711.5 537.5,715.5 531.5,714.5 529.5,720.5 524.5,721.5 521.5,723.5 519.5,723.5 516.5,721.5 512.5,722.5 510.5,721.5 509.5,719.5 507.5,720.5 506.5,719.5 506.5,722.5 512.5,729.5 519.5,730.5 520.5,729.5 525.5,729.5 528.5,727.5 531.5,727.5 535.5,722.5 539.5,722.5 542.5,719.5 544.5,719.5 549.5,716.5 547.5,711.5 549.5,708.5 552.5,708.5 556.5,710.5 561.5,703.5 563.5,703.5 565.5,705.5 568.5,705.5 569.5,706.5 572.5,703.5 577.5,703.5 578.5,704.5 582.5,703.5 585.5,704.5 589.5,700.5 587.5,696.5 587.5,694.5 589.5,692.5Z","cx":555.8,"cy":697.9,"bb":[506,669,84,62],"px":1607,"lx":565.0,"ly":691.5,"fs":10.0,"ang":0,"g":"chubu"},{"id":18,"t":["やま","なし県"],"a":"chubu","d":"M682.5,701.5 678.5,707.5 673.5,706.5 671.5,708.5 671.5,711.5 673.5,714.5 670.5,718.5 671.5,719.5 671.5,722.5 673.5,724.5 672.5,727.5 674.5,729.5 672.5,746.5 673.5,747.5 676.5,747.5 680.5,751.5 681.5,758.5 682.5,759.5 685.5,759.5 688.5,757.5 687.5,748.5 688.5,747.5 688.5,741.5 690.5,739.5 693.5,741.5 695.5,741.5 698.5,744.5 714.5,742.5 714.5,740.5 720.5,736.5 726.5,729.5 726.5,725.5 717.5,717.5 715.5,711.5 709.5,710.5 704.5,706.5 701.5,706.5 699.5,708.5 696.5,708.5 693.5,705.5 687.5,705.5 684.5,701.5Z","cx":694.3,"cy":726.6,"bb":[670,701,57,59],"px":1945,"lx":696.2,"ly":725.5,"fs":11.8,"ang":0,"g":"chubu"},{"id":19,"t":["ながの県"],"a":"chubu","d":"M697.5,623.5 690.5,624.5 682.5,631.5 681.5,634.5 672.5,635.5 669.5,637.5 666.5,636.5 666.5,634.5 663.5,630.5 658.5,629.5 657.5,630.5 657.5,633.5 653.5,637.5 649.5,638.5 649.5,645.5 650.5,647.5 648.5,650.5 648.5,652.5 646.5,654.5 646.5,656.5 640.5,661.5 640.5,663.5 637.5,665.5 641.5,670.5 641.5,672.5 637.5,678.5 637.5,681.5 635.5,685.5 636.5,693.5 628.5,702.5 625.5,702.5 619.5,706.5 619.5,708.5 620.5,709.5 623.5,709.5 632.5,719.5 630.5,723.5 631.5,724.5 631.5,727.5 634.5,731.5 635.5,736.5 633.5,738.5 633.5,742.5 630.5,744.5 631.5,747.5 630.5,751.5 631.5,752.5 633.5,752.5 636.5,750.5 641.5,750.5 643.5,752.5 646.5,752.5 652.5,747.5 657.5,747.5 661.5,743.5 664.5,743.5 665.5,742.5 664.5,737.5 666.5,735.5 666.5,730.5 665.5,728.5 670.5,722.5 669.5,717.5 672.5,714.5 670.5,711.5 670.5,708.5 673.5,705.5 678.5,706.5 679.5,703.5 682.5,700.5 684.5,700.5 687.5,704.5 693.5,704.5 696.5,707.5 699.5,707.5 702.5,705.5 702.5,700.5 698.5,695.5 699.5,690.5 697.5,687.5 700.5,669.5 697.5,666.5 694.5,668.5 690.5,668.5 686.5,665.5 688.5,655.5 691.5,652.5 694.5,652.5 695.5,651.5 695.5,648.5 697.5,646.5 704.5,644.5 703.5,643.5 704.5,634.5 698.5,630.5 698.5,624.5Z","cx":663.3,"cy":685.9,"bb":[619,623,86,130],"px":5980,"lx":664.8,"ly":697.2,"fs":18.4,"ang":-50,"g":"chubu"},{"id":20,"t":["ぎふ県"],"a":"chubu","d":"M635.5,662.5 628.5,663.5 626.5,661.5 623.5,661.5 621.5,659.5 618.5,659.5 617.5,660.5 612.5,659.5 602.5,669.5 600.5,669.5 598.5,666.5 595.5,665.5 593.5,666.5 592.5,673.5 589.5,677.5 587.5,683.5 587.5,686.5 590.5,689.5 590.5,692.5 588.5,694.5 590.5,700.5 585.5,705.5 582.5,704.5 579.5,705.5 577.5,704.5 572.5,704.5 569.5,707.5 568.5,706.5 565.5,706.5 563.5,704.5 561.5,704.5 556.5,711.5 556.5,715.5 559.5,719.5 563.5,722.5 562.5,728.5 564.5,730.5 564.5,732.5 562.5,734.5 562.5,739.5 560.5,742.5 561.5,745.5 565.5,743.5 569.5,743.5 571.5,745.5 572.5,749.5 575.5,751.5 578.5,747.5 579.5,742.5 584.5,736.5 587.5,737.5 590.5,736.5 593.5,733.5 594.5,733.5 602.5,742.5 604.5,742.5 607.5,745.5 612.5,744.5 616.5,749.5 619.5,748.5 623.5,749.5 626.5,746.5 628.5,746.5 629.5,744.5 632.5,742.5 632.5,738.5 634.5,735.5 629.5,723.5 631.5,719.5 623.5,710.5 620.5,710.5 618.5,708.5 618.5,706.5 625.5,701.5 628.5,701.5 635.5,693.5 634.5,685.5 636.5,681.5 636.5,678.5 640.5,672.5 640.5,670.5 636.5,666.5 636.5,663.5Z","cx":602.5,"cy":707.2,"bb":[556,659,85,93],"px":4635,"lx":593.5,"ly":721.8,"fs":19.0,"ang":0,"g":"chubu"},{"id":21,"t":["しず","おか県"],"a":"chubu","d":"M626.5,780.5 626.5,781.5 628.5,781.5 633.5,784.5 635.5,790.5 637.5,790.5 640.5,792.5 650.5,791.5 665.5,796.5 665.5,794.5 672.5,786.5 674.5,781.5 679.5,776.5 686.5,773.5 686.5,768.5 697.5,762.5 699.5,762.5 704.5,764.5 709.5,770.5 708.5,773.5 704.5,774.5 703.5,792.5 701.5,794.5 702.5,798.5 707.5,800.5 713.5,797.5 715.5,792.5 717.5,791.5 723.5,780.5 722.5,777.5 723.5,773.5 721.5,772.5 721.5,769.5 719.5,768.5 719.5,763.5 714.5,756.5 714.5,754.5 718.5,750.5 718.5,747.5 715.5,743.5 698.5,745.5 695.5,742.5 693.5,742.5 690.5,740.5 689.5,741.5 689.5,747.5 688.5,748.5 689.5,757.5 685.5,760.5 682.5,760.5 680.5,758.5 679.5,751.5 676.5,748.5 673.5,748.5 671.5,746.5 673.5,729.5 671.5,727.5 672.5,724.5 670.5,723.5 666.5,728.5 667.5,730.5 667.5,735.5 665.5,737.5 666.5,742.5 664.5,744.5 661.5,744.5 657.5,748.5 652.5,748.5 647.5,752.5 645.5,755.5 646.5,758.5 641.5,763.5 639.5,769.5 635.5,772.5 632.5,776.5 629.5,777.5Z","cx":676.6,"cy":767.4,"bb":[626,723,98,78],"px":3270,"lx":661.3,"ly":769.4,"fs":13.0,"ang":-50,"g":"chubu"},{"id":22,"t":["あいち県"],"a":"chubu","d":"M584.5,737.5 580.5,742.5 579.5,747.5 576.5,750.5 576.5,752.5 580.5,756.5 581.5,755.5 582.5,756.5 587.5,756.5 590.5,758.5 590.5,762.5 587.5,765.5 585.5,770.5 585.5,773.5 587.5,777.5 587.5,782.5 589.5,784.5 591.5,784.5 588.5,780.5 588.5,775.5 591.5,773.5 596.5,776.5 597.5,780.5 606.5,780.5 610.5,778.5 615.5,782.5 615.5,787.5 612.5,789.5 610.5,789.5 607.5,791.5 607.5,792.5 613.5,791.5 617.5,789.5 622.5,789.5 623.5,788.5 623.5,783.5 625.5,782.5 625.5,780.5 629.5,776.5 632.5,775.5 633.5,773.5 638.5,769.5 640.5,763.5 645.5,758.5 644.5,756.5 645.5,753.5 643.5,753.5 641.5,751.5 636.5,751.5 633.5,753.5 631.5,753.5 629.5,751.5 630.5,748.5 629.5,746.5 626.5,747.5 623.5,750.5 621.5,749.5 616.5,750.5 612.5,745.5 607.5,746.5 604.5,743.5 602.5,743.5 594.5,734.5 587.5,738.5Z","cx":609.2,"cy":761.2,"bb":[576,734,70,61],"px":2075,"lx":614.0,"ly":763.5,"fs":11.5,"ang":0,"g":"chubu"},{"id":23,"t":["みえ県"],"a":"kinki","d":"M569.5,744.5 565.5,744.5 562.5,746.5 564.5,750.5 561.5,755.5 560.5,762.5 554.5,769.5 549.5,771.5 545.5,768.5 541.5,768.5 540.5,771.5 536.5,774.5 536.5,778.5 538.5,780.5 538.5,784.5 535.5,789.5 537.5,791.5 540.5,791.5 545.5,796.5 545.5,799.5 543.5,801.5 538.5,801.5 537.5,802.5 537.5,815.5 536.5,816.5 536.5,822.5 534.5,829.5 532.5,831.5 530.5,831.5 525.5,836.5 522.5,837.5 519.5,840.5 519.5,846.5 525.5,852.5 527.5,852.5 531.5,844.5 535.5,840.5 539.5,839.5 539.5,836.5 540.5,835.5 544.5,834.5 542.5,828.5 545.5,826.5 545.5,823.5 552.5,818.5 557.5,818.5 561.5,816.5 562.5,814.5 566.5,813.5 570.5,810.5 572.5,811.5 573.5,813.5 577.5,813.5 578.5,812.5 583.5,813.5 585.5,810.5 585.5,807.5 583.5,806.5 583.5,802.5 575.5,798.5 568.5,792.5 564.5,790.5 565.5,781.5 569.5,777.5 570.5,773.5 573.5,771.5 574.5,763.5 577.5,761.5 579.5,756.5 571.5,749.5Z","cx":553.5,"cy":796.1,"bb":[519,744,67,109],"px":2498,"lx":556.5,"ly":794.3,"fs":12.7,"ang":50,"g":"kinki"},{"id":24,"t":["しが県"],"a":"kinki","d":"M552.5,709.5 549.5,709.5 548.5,710.5 550.5,715.5 548.5,718.5 542.5,720.5 539.5,723.5 535.5,723.5 531.5,728.5 526.5,729.5 524.5,732.5 527.5,736.5 526.5,739.5 527.5,750.5 525.5,753.5 525.5,760.5 527.5,762.5 526.5,765.5 531.5,769.5 534.5,769.5 536.5,773.5 539.5,771.5 539.5,769.5 541.5,767.5 545.5,767.5 549.5,770.5 554.5,768.5 558.5,764.5 560.5,755.5 563.5,750.5 559.5,744.5 559.5,742.5 561.5,739.5 561.5,734.5 563.5,732.5 563.5,730.5 561.5,728.5 562.5,722.5 558.5,719.5 555.5,715.5 555.5,711.5Z","cx":544.2,"cy":743.4,"bb":[524,709,40,65],"px":1761,"lx":544.7,"ly":742.2,"fs":12.7,"ang":-50,"g":"kinki"},{"id":25,"t":["きょうと府"],"a":"kinki","d":"M470.5,705.5 470.5,707.5 473.5,710.5 474.5,713.5 479.5,713.5 482.5,716.5 482.5,722.5 478.5,726.5 474.5,725.5 473.5,726.5 473.5,729.5 479.5,734.5 484.5,733.5 486.5,735.5 486.5,740.5 488.5,742.5 491.5,741.5 499.5,748.5 499.5,751.5 497.5,754.5 507.5,763.5 511.5,761.5 513.5,763.5 515.5,768.5 518.5,771.5 517.5,774.5 520.5,777.5 523.5,778.5 529.5,777.5 532.5,779.5 534.5,779.5 535.5,778.5 534.5,770.5 531.5,770.5 525.5,765.5 526.5,762.5 524.5,760.5 524.5,753.5 526.5,750.5 526.5,746.5 525.5,745.5 526.5,736.5 523.5,733.5 524.5,730.5 520.5,730.5 519.5,731.5 512.5,730.5 505.5,722.5 504.5,716.5 501.5,717.5 500.5,720.5 498.5,721.5 494.5,718.5 494.5,716.5 490.5,714.5 490.5,712.5 497.5,706.5 495.5,701.5 488.5,701.5 484.5,704.5 480.5,704.5 477.5,706.5 471.5,706.5Z","cx":503.7,"cy":738.6,"bb":[470,701,66,79],"px":1970,"lx":502.7,"ly":740.6,"fs":10.3,"ang":50,"g":"kinki"},{"id":26,"t":["おおさか府"],"a":"kinki","d":"M511.5,762.5 507.5,764.5 501.5,759.5 501.5,766.5 500.5,767.5 500.5,770.5 501.5,771.5 501.5,777.5 500.5,778.5 501.5,779.5 500.5,782.5 501.5,788.5 496.5,792.5 493.5,797.5 486.5,802.5 479.5,805.5 482.5,804.5 489.5,805.5 491.5,803.5 494.5,803.5 495.5,802.5 503.5,803.5 505.5,801.5 510.5,801.5 511.5,799.5 511.5,790.5 512.5,789.5 511.5,784.5 513.5,782.5 512.5,778.5 517.5,772.5Z","cx":504.2,"cy":784.1,"bb":[479,759,39,47],"px":645,"lx":502.5,"ly":790.0,"fs":6.7,"ang":-50,"g":"kinki"},{"id":27,"t":["ひょうご県"],"a":"kinki","d":"M445.5,706.5 444.5,707.5 445.5,717.5 448.5,722.5 448.5,729.5 445.5,732.5 441.5,732.5 440.5,733.5 440.5,737.5 437.5,742.5 433.5,746.5 433.5,749.5 431.5,751.5 432.5,754.5 431.5,760.5 433.5,762.5 433.5,767.5 438.5,767.5 439.5,766.5 441.5,767.5 446.5,767.5 447.5,766.5 451.5,766.5 456.5,768.5 460.5,768.5 462.5,769.5 471.5,779.5 474.5,780.5 483.5,779.5 485.5,776.5 490.5,774.5 499.5,778.5 500.5,777.5 500.5,771.5 499.5,770.5 500.5,758.5 496.5,754.5 498.5,751.5 498.5,748.5 491.5,742.5 488.5,743.5 485.5,740.5 485.5,735.5 484.5,734.5 479.5,735.5 472.5,729.5 472.5,726.5 474.5,724.5 478.5,725.5 481.5,722.5 481.5,716.5 479.5,714.5 474.5,714.5 469.5,707.5 469.5,705.5 467.5,704.5 463.5,704.5 462.5,705.5 461.5,704.5 451.5,703.5 449.5,705.5ZM472.5,785.5 470.5,785.5 460.5,791.5 457.5,796.5 451.5,801.5 451.5,804.5 454.5,806.5 454.5,809.5 458.5,809.5 465.5,806.5 463.5,800.5 464.5,793.5 467.5,791.5Z","cx":465.4,"cy":745.2,"bb":[431,703,70,107],"px":3358,"lx":465.0,"ly":753.5,"fs":12.1,"ang":0,"g":"kinki"},{"id":28,"t":["なら県"],"a":"kinki","d":"M516.5,774.5 513.5,778.5 514.5,782.5 512.5,784.5 513.5,787.5 512.5,790.5 512.5,799.5 510.5,802.5 510.5,806.5 514.5,809.5 514.5,812.5 512.5,814.5 509.5,814.5 508.5,817.5 504.5,820.5 502.5,824.5 506.5,828.5 506.5,834.5 504.5,836.5 505.5,838.5 507.5,836.5 509.5,836.5 510.5,837.5 515.5,837.5 519.5,839.5 522.5,836.5 525.5,835.5 530.5,830.5 533.5,829.5 535.5,822.5 535.5,816.5 536.5,815.5 536.5,802.5 538.5,800.5 543.5,800.5 544.5,799.5 544.5,796.5 540.5,792.5 537.5,792.5 534.5,789.5 537.5,784.5 537.5,780.5 536.5,779.5 532.5,780.5 529.5,778.5 523.5,779.5 520.5,778.5Z","cx":522.4,"cy":807.7,"bb":[502,774,43,66],"px":1616,"lx":520.4,"ly":816.5,"fs":11.2,"ang":-50,"g":"kinki"},{"id":29,"t":["わかやま県"],"a":"kinki","d":"M477.5,807.5 479.5,810.5 479.5,812.5 482.5,815.5 482.5,817.5 477.5,820.5 477.5,828.5 475.5,829.5 475.5,834.5 480.5,838.5 480.5,841.5 483.5,844.5 489.5,847.5 490.5,852.5 488.5,853.5 488.5,854.5 492.5,858.5 492.5,861.5 506.5,868.5 512.5,868.5 518.5,865.5 518.5,864.5 523.5,860.5 523.5,857.5 525.5,855.5 525.5,853.5 518.5,846.5 518.5,840.5 515.5,838.5 510.5,838.5 509.5,837.5 507.5,837.5 505.5,839.5 503.5,837.5 505.5,834.5 505.5,828.5 501.5,824.5 503.5,820.5 507.5,817.5 507.5,815.5 509.5,813.5 512.5,813.5 513.5,812.5 513.5,809.5 509.5,806.5 509.5,802.5 505.5,802.5 503.5,804.5 495.5,803.5 494.5,804.5 491.5,804.5 489.5,806.5 482.5,805.5Z","cx":498.4,"cy":835.3,"bb":[475,802,51,67],"px":1960,"lx":498.8,"ly":844.2,"fs":10.3,"ang":50,"g":"kinki"},{"id":30,"t":["とっとり県"],"a":"chugoku","d":"M364.5,734.5 365.5,735.5 370.5,734.5 372.5,736.5 374.5,734.5 378.5,734.5 379.5,733.5 379.5,730.5 381.5,728.5 384.5,728.5 393.5,717.5 401.5,720.5 405.5,725.5 407.5,725.5 409.5,723.5 412.5,723.5 416.5,719.5 419.5,724.5 422.5,724.5 426.5,727.5 425.5,731.5 427.5,734.5 432.5,732.5 435.5,733.5 437.5,731.5 439.5,732.5 445.5,731.5 447.5,729.5 447.5,722.5 444.5,717.5 443.5,707.5 442.5,708.5 441.5,707.5 435.5,708.5 432.5,710.5 429.5,710.5 428.5,709.5 426.5,710.5 421.5,710.5 420.5,709.5 406.5,710.5 403.5,708.5 398.5,708.5 395.5,706.5 391.5,706.5 388.5,707.5 383.5,711.5 381.5,710.5 376.5,711.5 375.5,720.5 373.5,722.5 368.5,722.5 365.5,724.5 367.5,727.5 367.5,729.5 364.5,732.5Z","cx":408.8,"cy":719.3,"bb":[364,706,84,31],"px":1432,"lx":419.2,"ly":715.0,"fs":7.6,"ang":0,"g":"chugoku"},{"id":31,"t":["しまね県"],"a":"chugoku","d":"M371.5,700.5 366.5,698.5 361.5,701.5 352.5,702.5 349.5,704.5 340.5,706.5 340.5,712.5 337.5,714.5 336.5,716.5 324.5,722.5 320.5,727.5 317.5,728.5 314.5,732.5 301.5,739.5 299.5,742.5 288.5,748.5 286.5,751.5 275.5,754.5 274.5,755.5 275.5,756.5 275.5,761.5 272.5,764.5 272.5,766.5 274.5,770.5 276.5,769.5 278.5,771.5 276.5,775.5 279.5,778.5 282.5,778.5 283.5,777.5 287.5,778.5 289.5,776.5 290.5,772.5 297.5,764.5 299.5,758.5 301.5,756.5 300.5,752.5 302.5,750.5 305.5,750.5 307.5,748.5 318.5,749.5 320.5,747.5 322.5,748.5 332.5,747.5 333.5,746.5 333.5,743.5 336.5,740.5 339.5,740.5 346.5,733.5 347.5,730.5 350.5,730.5 352.5,732.5 355.5,732.5 356.5,733.5 363.5,732.5 366.5,729.5 366.5,727.5 364.5,724.5 368.5,721.5 373.5,721.5 374.5,720.5 375.5,712.5 374.5,711.5 370.5,711.5 366.5,708.5 366.5,703.5 369.5,701.5 371.5,701.5Z","cx":325.6,"cy":735.2,"bb":[272,698,104,81],"px":2446,"lx":340.5,"ly":724.6,"fs":13.9,"ang":-35,"g":"chugoku"},{"id":32,"t":["おか","やま県"],"a":"chugoku","d":"M393.5,718.5 384.5,729.5 381.5,729.5 380.5,730.5 380.5,733.5 378.5,735.5 374.5,735.5 373.5,736.5 373.5,739.5 374.5,740.5 373.5,743.5 373.5,751.5 376.5,756.5 376.5,759.5 374.5,762.5 376.5,764.5 376.5,771.5 378.5,774.5 378.5,777.5 382.5,778.5 383.5,780.5 388.5,780.5 393.5,776.5 398.5,780.5 399.5,783.5 402.5,782.5 406.5,784.5 407.5,780.5 404.5,778.5 404.5,775.5 408.5,772.5 413.5,773.5 414.5,772.5 419.5,776.5 425.5,771.5 426.5,768.5 432.5,767.5 432.5,762.5 430.5,760.5 431.5,757.5 430.5,751.5 432.5,749.5 432.5,746.5 436.5,742.5 439.5,737.5 439.5,733.5 437.5,732.5 435.5,734.5 432.5,733.5 427.5,735.5 424.5,731.5 425.5,727.5 422.5,725.5 419.5,725.5 416.5,720.5 412.5,724.5 409.5,724.5 407.5,726.5 405.5,726.5 401.5,721.5Z","cx":402.8,"cy":750.2,"bb":[373,718,67,67],"px":2997,"lx":399.5,"ly":753.2,"fs":15.1,"ang":0,"g":"chugoku"},{"id":33,"t":["ひろしま県"],"a":"chugoku","d":"M372.5,737.5 370.5,735.5 365.5,736.5 363.5,733.5 356.5,734.5 355.5,733.5 352.5,733.5 350.5,731.5 347.5,731.5 347.5,733.5 339.5,741.5 336.5,741.5 334.5,743.5 334.5,746.5 332.5,748.5 329.5,749.5 322.5,749.5 320.5,748.5 318.5,750.5 307.5,749.5 305.5,751.5 302.5,751.5 301.5,752.5 302.5,756.5 300.5,758.5 298.5,764.5 294.5,768.5 295.5,771.5 294.5,776.5 298.5,782.5 298.5,786.5 300.5,788.5 302.5,788.5 307.5,782.5 312.5,779.5 315.5,779.5 322.5,782.5 321.5,785.5 322.5,792.5 324.5,791.5 326.5,792.5 329.5,790.5 334.5,790.5 339.5,786.5 340.5,787.5 343.5,787.5 346.5,785.5 352.5,786.5 353.5,784.5 356.5,782.5 363.5,782.5 366.5,780.5 369.5,782.5 369.5,785.5 372.5,787.5 373.5,780.5 377.5,778.5 377.5,774.5 375.5,771.5 375.5,764.5 373.5,762.5 375.5,759.5 375.5,756.5 372.5,751.5 372.5,743.5 373.5,742.5Z","cx":338.9,"cy":763.5,"bb":[294,731,84,62],"px":3389,"lx":336.5,"ly":770.0,"fs":14.5,"ang":0,"g":"chugoku"},{"id":34,"t":["やまぐち県"],"a":"chugoku","d":"M302.5,792.5 301.5,789.5 297.5,786.5 297.5,782.5 293.5,776.5 294.5,774.5 294.5,771.5 293.5,770.5 291.5,772.5 290.5,776.5 287.5,779.5 284.5,778.5 279.5,779.5 275.5,775.5 277.5,771.5 276.5,770.5 274.5,771.5 271.5,766.5 271.5,764.5 274.5,761.5 274.5,756.5 273.5,755.5 270.5,755.5 262.5,762.5 256.5,769.5 251.5,770.5 248.5,772.5 246.5,771.5 245.5,769.5 242.5,770.5 240.5,769.5 238.5,766.5 231.5,767.5 231.5,770.5 229.5,771.5 228.5,773.5 225.5,774.5 225.5,783.5 224.5,784.5 225.5,789.5 223.5,791.5 223.5,796.5 230.5,792.5 232.5,793.5 234.5,796.5 237.5,797.5 238.5,799.5 241.5,800.5 242.5,802.5 246.5,802.5 248.5,800.5 248.5,797.5 251.5,795.5 259.5,799.5 263.5,799.5 266.5,797.5 272.5,796.5 278.5,799.5 280.5,801.5 280.5,805.5 285.5,809.5 290.5,809.5 293.5,807.5 297.5,808.5 299.5,806.5 300.5,796.5Z","cx":263.0,"cy":784.8,"bb":[223,755,80,55],"px":2345,"lx":264.2,"ly":786.8,"fs":12.1,"ang":0,"g":"chugoku"},{"id":35,"t":["とくしま県"],"a":"shikoku","d":"M444.5,808.5 441.5,808.5 440.5,809.5 436.5,807.5 434.5,809.5 432.5,809.5 430.5,807.5 428.5,807.5 427.5,808.5 418.5,808.5 415.5,811.5 411.5,811.5 408.5,814.5 406.5,814.5 403.5,811.5 398.5,812.5 396.5,814.5 393.5,813.5 390.5,816.5 388.5,816.5 386.5,825.5 390.5,828.5 394.5,828.5 398.5,832.5 401.5,831.5 406.5,832.5 409.5,837.5 408.5,842.5 409.5,843.5 413.5,842.5 415.5,844.5 414.5,851.5 416.5,853.5 422.5,853.5 425.5,852.5 428.5,848.5 432.5,847.5 439.5,841.5 448.5,838.5 448.5,837.5 446.5,836.5 446.5,833.5 448.5,831.5 448.5,827.5 444.5,825.5 444.5,822.5 443.5,821.5 443.5,818.5 446.5,812.5Z","cx":420.8,"cy":826.7,"bb":[386,807,63,47],"px":1824,"lx":418.0,"ly":822.5,"fs":10.0,"ang":0,"g":"shikoku"},{"id":36,"t":["かがわ県"],"a":"shikoku","d":"M385.5,814.5 386.5,815.5 390.5,815.5 393.5,812.5 396.5,813.5 398.5,811.5 401.5,811.5 402.5,810.5 406.5,813.5 408.5,813.5 411.5,810.5 415.5,810.5 418.5,807.5 427.5,807.5 428.5,806.5 430.5,806.5 432.5,808.5 435.5,807.5 424.5,799.5 424.5,795.5 420.5,793.5 416.5,793.5 411.5,795.5 407.5,792.5 405.5,792.5 404.5,794.5 397.5,797.5 395.5,799.5 391.5,801.5 388.5,801.5 388.5,809.5Z","cx":407.5,"cy":803.5,"bb":[385,792,51,24],"px":661,"lx":408.2,"ly":803.5,"fs":6.7,"ang":0,"g":"shikoku"},{"id":37,"t":["えひめ県"],"a":"shikoku","d":"M387.5,816.5 383.5,815.5 381.5,818.5 377.5,820.5 374.5,820.5 371.5,818.5 364.5,818.5 363.5,819.5 356.5,820.5 352.5,817.5 346.5,805.5 344.5,805.5 344.5,806.5 339.5,810.5 334.5,812.5 334.5,816.5 329.5,819.5 329.5,825.5 325.5,831.5 321.5,835.5 317.5,837.5 314.5,837.5 306.5,843.5 306.5,845.5 308.5,846.5 307.5,857.5 310.5,859.5 310.5,861.5 312.5,863.5 312.5,865.5 308.5,867.5 308.5,876.5 310.5,881.5 310.5,883.5 308.5,884.5 308.5,886.5 311.5,885.5 315.5,886.5 318.5,884.5 318.5,880.5 317.5,879.5 318.5,874.5 325.5,867.5 326.5,864.5 329.5,861.5 333.5,861.5 334.5,860.5 334.5,858.5 330.5,853.5 332.5,851.5 342.5,851.5 345.5,847.5 344.5,844.5 346.5,841.5 346.5,839.5 353.5,834.5 355.5,829.5 364.5,828.5 368.5,826.5 370.5,827.5 376.5,827.5 380.5,824.5 385.5,825.5Z","cx":335.1,"cy":839.9,"bb":[306,805,82,82],"px":2116,"lx":331.9,"ly":838.1,"fs":13.9,"ang":-50,"g":"shikoku"},{"id":38,"t":["こうち県"],"a":"shikoku","d":"M420.5,854.5 416.5,854.5 413.5,851.5 414.5,844.5 413.5,843.5 409.5,844.5 407.5,842.5 408.5,837.5 406.5,833.5 403.5,832.5 398.5,833.5 394.5,829.5 390.5,829.5 386.5,826.5 382.5,826.5 381.5,825.5 376.5,828.5 370.5,828.5 368.5,827.5 364.5,829.5 355.5,830.5 354.5,834.5 350.5,838.5 347.5,839.5 347.5,841.5 345.5,844.5 346.5,847.5 342.5,852.5 332.5,852.5 331.5,853.5 335.5,858.5 335.5,860.5 333.5,862.5 329.5,862.5 326.5,867.5 319.5,874.5 318.5,877.5 319.5,884.5 315.5,887.5 319.5,888.5 321.5,890.5 321.5,892.5 317.5,894.5 317.5,897.5 323.5,900.5 328.5,900.5 329.5,899.5 330.5,900.5 334.5,900.5 334.5,895.5 336.5,894.5 336.5,891.5 339.5,887.5 339.5,883.5 342.5,881.5 344.5,882.5 346.5,881.5 347.5,878.5 351.5,875.5 351.5,873.5 355.5,869.5 355.5,863.5 357.5,862.5 359.5,859.5 363.5,858.5 363.5,857.5 366.5,855.5 369.5,855.5 372.5,853.5 377.5,853.5 384.5,850.5 388.5,850.5 390.5,851.5 391.5,853.5 397.5,854.5 401.5,858.5 401.5,860.5 405.5,865.5 408.5,867.5 409.5,872.5 412.5,874.5 414.5,871.5 414.5,867.5 416.5,865.5 417.5,860.5 419.5,858.5Z","cx":364.2,"cy":856.2,"bb":[315,825,106,80],"px":3019,"lx":380.5,"ly":841.0,"fs":12.7,"ang":0,"g":"shikoku"},{"id":39,"t":["ふくおか県"],"a":"kyushu","d":"M224.5,803.5 221.5,802.5 218.5,804.5 215.5,804.5 213.5,803.5 212.5,801.5 208.5,801.5 207.5,800.5 202.5,803.5 197.5,802.5 194.5,805.5 193.5,810.5 189.5,813.5 189.5,819.5 187.5,821.5 181.5,822.5 179.5,821.5 176.5,817.5 173.5,817.5 172.5,818.5 173.5,822.5 167.5,825.5 167.5,826.5 171.5,826.5 177.5,828.5 185.5,834.5 187.5,834.5 190.5,832.5 193.5,834.5 193.5,837.5 183.5,845.5 181.5,845.5 178.5,848.5 178.5,849.5 181.5,851.5 181.5,853.5 184.5,855.5 183.5,863.5 186.5,863.5 186.5,860.5 189.5,857.5 195.5,857.5 198.5,854.5 199.5,854.5 201.5,857.5 204.5,857.5 207.5,859.5 210.5,856.5 206.5,851.5 211.5,846.5 209.5,841.5 212.5,838.5 213.5,835.5 218.5,831.5 227.5,831.5 228.5,832.5 231.5,831.5 231.5,826.5 226.5,823.5 226.5,820.5 225.5,820.5 223.5,817.5 222.5,807.5 224.5,806.5Z","cx":201.4,"cy":828.4,"bb":[167,800,65,64],"px":1952,"lx":203.8,"ly":834.7,"fs":9.7,"ang":-50,"g":"kyushu"},{"id":40,"t":["さが県"],"a":"kyushu","d":"M153.5,822.5 152.5,827.5 154.5,828.5 154.5,832.5 150.5,835.5 145.5,834.5 146.5,836.5 146.5,842.5 147.5,844.5 153.5,849.5 152.5,852.5 157.5,856.5 161.5,861.5 168.5,864.5 167.5,858.5 164.5,855.5 163.5,851.5 172.5,845.5 177.5,848.5 181.5,844.5 183.5,844.5 192.5,837.5 192.5,834.5 190.5,833.5 187.5,835.5 185.5,835.5 179.5,830.5 171.5,827.5 161.5,828.5 156.5,825.5 156.5,822.5Z","cx":165.4,"cy":840.3,"bb":[145,822,48,43],"px":925,"lx":168.5,"ly":838.8,"fs":9.4,"ang":0,"g":"kyushu"},{"id":41,"t":["ながさき県"],"a":"kyushu","d":"M137.5,830.5 137.5,835.5 135.5,836.5 135.5,837.5 138.5,840.5 139.5,846.5 143.5,847.5 144.5,848.5 144.5,851.5 151.5,854.5 154.5,858.5 153.5,864.5 156.5,867.5 156.5,869.5 153.5,871.5 150.5,869.5 147.5,870.5 143.5,869.5 142.5,868.5 143.5,858.5 140.5,853.5 137.5,854.5 137.5,856.5 135.5,859.5 135.5,863.5 137.5,865.5 138.5,869.5 141.5,870.5 143.5,875.5 146.5,877.5 146.5,880.5 144.5,881.5 143.5,883.5 144.5,883.5 150.5,876.5 152.5,875.5 156.5,876.5 160.5,874.5 167.5,879.5 167.5,881.5 162.5,884.5 164.5,887.5 169.5,887.5 174.5,885.5 174.5,883.5 176.5,881.5 174.5,873.5 164.5,874.5 161.5,872.5 161.5,869.5 166.5,866.5 168.5,866.5 168.5,865.5 161.5,862.5 158.5,858.5 151.5,852.5 152.5,849.5 148.5,846.5 145.5,842.5 145.5,836.5 144.5,835.5 145.5,832.5 143.5,832.5 140.5,830.5Z","cx":152.3,"cy":862.6,"bb":[135,830,42,58],"px":723,"lx":164.2,"ly":874.8,"fs":6.1,"ang":35,"g":"kyushu"},{"id":42,"t":["くまもと県"],"a":"kyushu","d":"M221.5,855.5 218.5,856.5 217.5,859.5 218.5,863.5 215.5,866.5 208.5,860.5 204.5,858.5 201.5,858.5 199.5,855.5 195.5,858.5 189.5,858.5 187.5,860.5 187.5,863.5 186.5,864.5 183.5,864.5 183.5,868.5 188.5,871.5 189.5,874.5 193.5,878.5 191.5,885.5 188.5,887.5 185.5,891.5 189.5,891.5 190.5,890.5 193.5,892.5 193.5,894.5 188.5,899.5 188.5,902.5 186.5,903.5 186.5,906.5 179.5,914.5 179.5,916.5 176.5,918.5 173.5,923.5 170.5,925.5 172.5,928.5 174.5,928.5 176.5,926.5 180.5,927.5 184.5,924.5 188.5,930.5 193.5,931.5 196.5,933.5 200.5,930.5 206.5,931.5 209.5,928.5 213.5,930.5 214.5,926.5 211.5,922.5 214.5,919.5 216.5,919.5 216.5,915.5 213.5,910.5 213.5,903.5 217.5,898.5 219.5,898.5 221.5,896.5 221.5,894.5 233.5,883.5 230.5,875.5 230.5,872.5 227.5,867.5 228.5,863.5Z","cx":203.5,"cy":893.0,"bb":[170,855,64,79],"px":2685,"lx":204.9,"ly":898.4,"fs":12.7,"ang":-50,"g":"kyushu"},{"id":43,"t":["おおいた県"],"a":"kyushu","d":"M216.5,833.5 210.5,841.5 212.5,846.5 207.5,851.5 211.5,856.5 208.5,859.5 214.5,865.5 217.5,863.5 216.5,860.5 217.5,856.5 219.5,854.5 221.5,854.5 229.5,863.5 228.5,867.5 231.5,872.5 233.5,881.5 236.5,885.5 243.5,884.5 247.5,890.5 253.5,890.5 254.5,891.5 256.5,891.5 260.5,887.5 263.5,887.5 266.5,890.5 267.5,893.5 269.5,890.5 273.5,889.5 273.5,886.5 275.5,885.5 277.5,882.5 275.5,882.5 271.5,879.5 271.5,875.5 273.5,874.5 273.5,873.5 269.5,871.5 269.5,868.5 267.5,867.5 267.5,864.5 270.5,862.5 272.5,859.5 267.5,859.5 264.5,857.5 254.5,857.5 252.5,856.5 249.5,852.5 249.5,849.5 253.5,846.5 257.5,847.5 266.5,842.5 266.5,836.5 267.5,834.5 262.5,827.5 257.5,826.5 252.5,830.5 252.5,832.5 249.5,834.5 245.5,832.5 240.5,832.5 233.5,826.5 232.5,826.5 232.5,831.5 230.5,833.5 227.5,832.5 218.5,832.5Z","cx":243.3,"cy":857.6,"bb":[207,826,71,68],"px":2669,"lx":240.9,"ly":861.7,"fs":12.4,"ang":50,"g":"kyushu"},{"id":44,"t":["みやざき県"],"a":"kyushu","d":"M263.5,888.5 260.5,888.5 256.5,892.5 254.5,892.5 253.5,891.5 247.5,891.5 243.5,885.5 240.5,885.5 239.5,886.5 236.5,886.5 234.5,884.5 231.5,885.5 230.5,887.5 222.5,894.5 222.5,896.5 219.5,899.5 217.5,899.5 214.5,903.5 214.5,910.5 217.5,915.5 217.5,919.5 212.5,922.5 215.5,926.5 214.5,930.5 212.5,931.5 209.5,929.5 206.5,932.5 200.5,931.5 197.5,934.5 189.5,931.5 189.5,934.5 193.5,939.5 194.5,944.5 200.5,948.5 200.5,950.5 198.5,952.5 198.5,955.5 201.5,956.5 207.5,961.5 207.5,967.5 210.5,967.5 216.5,971.5 216.5,974.5 212.5,979.5 212.5,983.5 215.5,984.5 216.5,986.5 218.5,987.5 218.5,989.5 222.5,990.5 224.5,987.5 224.5,984.5 233.5,969.5 233.5,964.5 234.5,963.5 233.5,953.5 237.5,945.5 237.5,942.5 239.5,941.5 240.5,937.5 243.5,934.5 244.5,929.5 250.5,919.5 250.5,914.5 253.5,912.5 256.5,912.5 254.5,909.5 255.5,904.5 259.5,902.5 259.5,901.5 263.5,898.5 267.5,897.5 267.5,894.5Z","cx":226.8,"cy":930.3,"bb":[189,884,79,107],"px":3429,"lx":229.1,"ly":925.6,"fs":12.7,"ang":-50,"g":"kyushu"},{"id":45,"t":["かご","しま県"],"a":"kyushu","d":"M184.5,925.5 180.5,928.5 176.5,927.5 174.5,929.5 172.5,929.5 170.5,927.5 166.5,929.5 163.5,927.5 161.5,927.5 161.5,930.5 159.5,934.5 160.5,937.5 159.5,948.5 157.5,949.5 156.5,952.5 159.5,954.5 162.5,961.5 164.5,963.5 164.5,968.5 160.5,976.5 158.5,978.5 153.5,980.5 154.5,982.5 153.5,987.5 156.5,990.5 159.5,990.5 160.5,989.5 164.5,990.5 169.5,993.5 172.5,998.5 174.5,998.5 177.5,996.5 178.5,993.5 174.5,989.5 174.5,987.5 172.5,985.5 172.5,980.5 171.5,979.5 172.5,973.5 179.5,967.5 179.5,962.5 180.5,960.5 183.5,958.5 188.5,958.5 194.5,963.5 192.5,969.5 187.5,973.5 186.5,979.5 187.5,979.5 189.5,982.5 190.5,994.5 187.5,998.5 187.5,1002.5 178.5,1007.5 178.5,1010.5 186.5,1006.5 194.5,1005.5 198.5,1002.5 199.5,999.5 205.5,996.5 205.5,992.5 202.5,989.5 202.5,987.5 208.5,982.5 211.5,983.5 211.5,979.5 215.5,974.5 215.5,971.5 214.5,970.5 212.5,970.5 210.5,968.5 207.5,968.5 206.5,967.5 206.5,961.5 197.5,955.5 197.5,952.5 199.5,950.5 199.5,948.5 193.5,944.5 192.5,939.5 189.5,936.5 188.5,931.5 185.5,928.5Z","cx":181.6,"cy":964.5,"bb":[153,925,63,86],"px":2570,"lx":175.0,"ly":946.0,"fs":9.1,"ang":0,"g":"kyushu"},{"id":46,"t":["おきなわ県"],"a":"kyushu","d":"M38.5,972.5 32.5,972.5 29.5,970.5 29.5,968.5 25.5,967.5 25.5,970.5 29.5,973.5 29.5,975.5 27.5,976.5 24.5,980.5 20.5,981.5 20.5,983.5 18.5,986.5 13.5,988.5 13.5,992.5 16.5,995.5 16.5,997.5 11.5,1000.5 11.5,1002.5 8.5,1004.5 10.5,1010.5 14.5,1007.5 13.5,1003.5 18.5,998.5 18.5,996.5 21.5,992.5 19.5,989.5 19.5,986.5 23.5,983.5 27.5,984.5 28.5,981.5 31.5,979.5 32.5,976.5 34.5,975.5 38.5,976.5ZM49.5,956.5 48.5,956.5 48.5,960.5 43.5,964.5 41.5,970.5 47.5,969.5 50.5,966.5 50.5,958.5Z","cx":21.4,"cy":987.1,"bb":[8,956,43,55],"px":261,"lx":19.6,"ly":991.1,"fs":8.2,"ang":-50,"g":"kyushu"}]};
+const COL={hokkaido:'#BDF5C4',tohoku:'#BFEFEA',kanto:'#FFC9B8',chubu:'#FFE2A0',kinki:'#C4D2FF',chugoku:'#EBCBAA',shikoku:'#E3C2F2',kyushu:'#FFD2EC'};
+const AREAS=["hokkaido", "shikoku", "chugoku", "tohoku", "kanto", "kinki", "kyushu", "chubu"];
+const AREA_NAME={hokkaido:'ほっかいどう',shikoku:'しこく',chugoku:'ちゅうごく',tohoku:'とうほく',kanto:'かんとう',kinki:'きんき',kyushu:'きゅうしゅう',chubu:'ちゅうぶ'};
+const LVNO={hokkaido:1,shikoku:2,chugoku:3,tohoku:4,kanto:5,kinki:6,kyushu:7,chubu:8};
+const KEY='kousen-jp-clear', KEY_TUTO='kousen-jp-tutorial-seen', KEY_AREA='kousen-jp-area';
+const $=id=>document.getElementById(id);
+const NS='http://www.w3.org/2000/svg';
+const map=$('map'), mapBox=$('mapBox'), tray=$('tray');
+const P=DATA.pieces; const byId={}; P.forEach(p=>byId[p.id]=p);
+const nameOf=p=>p.t.join('');
+let area='hokkaido', placed=new Set(), sel=null, zoom=1, cleared=load(KEY,{});
+function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function inArea(p){return p.a===area}
+
+/* ---- 地図をつくる ---- */
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function labelEl(p,parent,scale){
+  const s=scale||1, fs=p.fs*s, lh=fs*1.18, n=p.t.length;
+  const t=el('text',{class:'lbl','font-size':fs.toFixed(2),'stroke-width':(fs*.2).toFixed(2),transform:`rotate(${p.ang} ${p.lx*s} ${p.ly*s})`},parent);
+  p.t.forEach((line,i)=>{const ts=el('tspan',{x:(p.lx*s).toFixed(1),y:(p.ly*s-(n-1)*lh/2+i*lh).toFixed(1)},t);ts.textContent=line});
+  return t;
+}
+const slotEls={}, placedLayer=el('g',{}), slotLayer=el('g',{});
+function buildMap(){
+  map.innerHTML='';
+  el('polyline',{points:DATA.inset.map(q=>q.join(',')).join(' '),fill:'none',stroke:'#8FA3BF','stroke-width':1.2},map);
+  const others=el('g',{},map);
+  map.appendChild(slotLayer);slotLayer.innerHTML='';
+  map.appendChild(placedLayer);placedLayer.innerHTML='';
+  P.forEach(p=>{
+    if(inArea(p)){
+      const s=el('path',{d:p.d,class:'slot','data-id':p.id},slotLayer);slotEls[p.id]=s;
+    }else{
+      const g=el('g',{class:'placed'},others);
+      el('path',{d:p.d,fill:COL[p.g],opacity:.55},g);
+    }
+  });
+}
+function drawPlaced(p,anim){
+  const g=el('g',{class:'placed'+(anim?' pop':''),'data-id':p.id},placedLayer);
+  el('path',{d:p.d,fill:COL[p.g]},g);
+  labelEl(p,g);
+}
+
+/* ---- トレイ ---- */
+function pieceSVG(p,box,withLabel,scale){
+  const [x,y,w,h]=p.bb, pad=2;
+  const svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('viewBox',`${x-pad} ${y-pad} ${w+pad*2} ${h+pad*2}`);
+  if(box){svg.setAttribute('preserveAspectRatio','xMidYMid meet')}
+  else{svg.setAttribute('width',((w+pad*2)*scale).toFixed(1));svg.setAttribute('height',((h+pad*2)*scale).toFixed(1))}
+  el('path',{d:p.d,fill:COL[p.g]},svg);
+  if(withLabel)labelEl(p,svg);
+  return svg;
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function buildTray(){
+  tray.innerHTML='';
+  shuffle(P.filter(inArea).map(p=>p.id)).forEach(id=>{
+    const p=byId[id];
+    const b=document.createElement('button');b.className='pc';b.dataset.id=id;b.setAttribute('aria-pressed','false');b.setAttribute('aria-label',nameOf(p));
+    b.appendChild(pieceSVG(p,true,false));
+    const nm=document.createElement('span');nm.className='nm';nm.textContent=nameOf(p);b.appendChild(nm);
+    bindPiece(b);tray.appendChild(b);
+  });
+}
+
+/* ---- じょうたい ---- */
+function rest(){return P.filter(p=>inArea(p)&&!placed.has(p.id)).length}
+function setMsg(t,k){const m=$('msg');m.textContent=t;m.className='msg'+(k?' '+k:'')}
+function updateBar(){
+  $('rest').textContent=rest();
+  document.querySelectorAll('#tabs button').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.area===area);b.classList.toggle('done',!!cleared[b.dataset.area])});
+}
+function start(a){
+  area=a;save(KEY_AREA,a);placed=new Set();sel=null;clearFx();
+  buildMap();buildTray();updateBar();$('next').hidden=true;$('hint').hidden=false;fitArea();
+  setMsg(`レベル${LVNO[a]}「${AREA_NAME[a]}」のピースを、地図の白いばしょにはめよう。`);
+}
+function select(id){
+  sel=id;
+  tray.querySelectorAll('.pc').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.id===id)));
+  if(id!=null)setMsg(`「${nameOf(byId[id])}」をえらんだよ。地図のはまるばしょをタップするか、ドラッグしてね。`);
+}
+function place(id,anim=true){
+  const p=byId[id];if(!p||placed.has(id))return;
+  placed.add(id);
+  const s=slotEls[id];if(s)s.remove();
+  drawPlaced(p,anim);
+  const b=tray.querySelector(`.pc[data-id="${id}"]`);
+  if(b){b.classList.add('gone');setTimeout(()=>{b.remove();if(!tray.children.length)tray.innerHTML='<div class="trayEmpty">ピースはぜんぶはまったよ</div>'},300)}
+  if(sel===id)sel=null;
+  updateBar();
+  if(rest()===0)win();
+  else setMsg(`ピタッ！「${nameOf(p)}」がはまったよ。`,'ok');
+}
+function win(){
+  cleared[area]=true;save(KEY,cleared);updateBar();
+  setMsg(area==='chubu'?'クリア！これで、47の都道府県がぜんぶそろったよ。':`クリア！レベル${LVNO[area]}「${AREA_NAME[area]}」のピースがぜんぶはまったよ。`,'ok');
+  const order=AREAS;const n=order[order.indexOf(area)+1];
+  $('next').hidden=!n;$('hint').hidden=true;
+  celebrate();
+}
+function miss(b,why){
+  setMsg(why||'そこじゃないみたい。もういちど！','ng');
+  if(b){b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
+}
+
+/* ---- 地図のざひょう ---- */
+function mapScale(){return map.getBoundingClientRect().width/DATA.w}
+function toMap(cx,cy){const r=map.getBoundingClientRect(),s=r.width/DATA.w;return{x:(cx-r.left)/s,y:(cy-r.top)/s,inside:cx>=mapBox.getBoundingClientRect().left&&cx<=mapBox.getBoundingClientRect().right&&cy>=mapBox.getBoundingClientRect().top&&cy<=mapBox.getBoundingClientRect().bottom}}
+function tol(p){return Math.max(14,Math.min(34,.45*Math.sqrt(p.px)))}
+function hits(p,x,y){
+  const s=slotEls[p.id];
+  try{if(s&&s.isPointInFill&&s.isPointInFill(new DOMPoint(x,y)))return true}catch(e){}
+  return Math.hypot(x-p.cx,y-p.cy)<=tol(p)*.8;
+}
+
+/* ---- ドラッグ・タップ ---- */
+let drag=null;
+function bindPiece(b){
+  b.addEventListener('pointerdown',e=>{
+    if(e.button&&e.button!==0)return;
+    drag={b,id:+b.dataset.id,x0:e.clientX,y0:e.clientY,on:false,pid:e.pointerId,touch:e.pointerType!=='mouse'};
+  });
+}
+window.addEventListener('pointermove',e=>{
+  if(!drag||e.pointerId!==drag.pid)return;
+  const dx=e.clientX-drag.x0, dy=e.clientY-drag.y0;
+  if(!drag.on){
+    const far=Math.hypot(dx,dy)>8;
+    if(!far)return;
+    if(drag.touch&&Math.abs(dx)>Math.abs(dy))return; // よこはスクロール
+    startDrag(e);
+  }
+  e.preventDefault();moveDrag(e.clientX,e.clientY);
+},{passive:false});
+window.addEventListener('pointerup',e=>{
+  if(!drag||e.pointerId!==drag.pid)return;
+  const d=drag;drag=null;
+  if(!d.on){ // タップ
+    select(sel===d.id?null:d.id);if(sel===null)setMsg('ピースをえらんでね。');return;
+  }
+  endDrag(d,e.clientX,e.clientY);
+});
+window.addEventListener('pointercancel',e=>{if(drag&&e.pointerId===drag.pid){if(drag.on)cancelDrag(drag);drag=null}});
+function startDrag(e){
+  const p=byId[drag.id],s=mapScale();
+  select(drag.id);
+  drag.on=true;drag.off=drag.touch?-Math.max(40,p.bb[3]*s*.6):0;
+  const f=document.createElement('div');f.className='drag';
+  f.appendChild(pieceSVG(p,false,true,s));
+  document.body.appendChild(f);drag.f=f;drag.s=s;
+  drag.b.classList.add('lift');
+  try{drag.b.setPointerCapture(e.pointerId)}catch(_){}
+}
+function moveDrag(cx,cy){
+  const p=byId[drag.id],s=drag.s,pad=2;
+  // ピースの中心（cx,cy）が指の少し上にくるように
+  const left=cx-((p.cx-p.bb[0]+pad)*s), top=cy+drag.off-((p.cy-p.bb[1]+pad)*s);
+  drag.f.style.transform=`translate(${left}px,${top}px)`;drag.pos={x:cx,y:cy+drag.off};
+}
+function endDrag(d,cx,cy){
+  const p=byId[d.id];const pt=d.pos||{x:cx,y:cy};const m=toMap(pt.x,pt.y);
+  if(m.inside&&Math.hypot(m.x-p.cx,m.y-p.cy)<=tol(p)){d.f.remove();d.b.classList.remove('lift');place(d.id);return}
+  cancelDrag(d,true);
+}
+function cancelDrag(d,wrong){
+  const r=d.b.getBoundingClientRect();d.f.classList.add('back');
+  d.f.style.transform=`translate(${r.left}px,${r.top}px) scale(.3)`;
+  setTimeout(()=>{d.f.remove();d.b.classList.remove('lift')},360);
+  if(wrong)miss(d.b);
+}
+map.addEventListener('click',e=>{
+  if(sel==null){
+    const t=e.target.closest&&e.target.closest('.slot');
+    if(t)setMsg('下のピースをえらんでから、ここをタップしてね。');
+    return;
+  }
+  const p=byId[sel];const m=toMap(e.clientX,e.clientY);
+  if(hits(p,m.x,m.y))place(sel);
+  else miss(tray.querySelector(`.pc[data-id="${sel}"]`));
+});
+
+/* ---- ヒント・ズーム・ボタン ---- */
+$('hint').onclick=()=>{
+  let id=sel;
+  if(id==null){const f=tray.querySelector('.pc');if(!f)return;id=+f.dataset.id;select(id)}
+  const s=slotEls[id];if(!s)return;
+  s.classList.remove('hint');void s.getBoundingClientRect();s.classList.add('hint');
+  setTimeout(()=>s.classList.remove('hint'),2800);
+  if(zoom>1){const p=byId[id],sc=mapScale();mapBox.scrollTo({left:mapOff().x+p.cx*sc-mapBox.clientWidth/2,top:mapOff().y+p.cy*sc-mapBox.clientHeight/2,behavior:'smooth'})}
+  setMsg(`光っているところが「${nameOf(byId[id])}」のばしょだよ。`);
+};
+const ZS=[1,1.5,2,2.5,3,4,5];
+function mapOff(){const a=map.getBoundingClientRect(),b=mapBox.getBoundingClientRect();return{x:a.left-b.left-mapBox.clientLeft+mapBox.scrollLeft,y:a.top-b.top-mapBox.clientTop+mapBox.scrollTop}}
+function fitArea(){
+  const ps=P.filter(inArea);let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  ps.forEach(p=>{x0=Math.min(x0,p.bb[0]);y0=Math.min(y0,p.bb[1]);x1=Math.max(x1,p.bb[0]+p.bb[2]);y1=Math.max(y1,p.bb[1]+p.bb[3])});
+  const need=Math.min(DATA.w/((x1-x0)*1.12),(mapBox.clientHeight/(mapBox.clientWidth/DATA.w))/((y1-y0)*1.12));
+  let z=ZS[0];ZS.forEach(v=>{if(v<=need)z=v});
+  setZoom(z);
+  requestAnimationFrame(()=>{const sc=mapScale();mapBox.scrollTo({left:mapOff().x+(x0+x1)/2*sc-mapBox.clientWidth/2,top:mapOff().y+(y0+y1)/2*sc-mapBox.clientHeight/2})});
+}
+function setZoom(z,cx,cy){
+  const old=zoom;zoom=z;
+  const r=mapBox.getBoundingClientRect();
+  const fx=cx==null?mapBox.clientWidth/2:cx-r.left, fy=cy==null?mapBox.clientHeight/2:cy-r.top;
+  const ax=(mapBox.scrollLeft+fx)/old, ay=(mapBox.scrollTop+fy)/old;
+  map.style.setProperty('--z',z);map.style.margin=z>1?Math.round(mapBox.clientHeight*.45)+'px 0':'0';
+  mapBox.scrollLeft=ax*z-fx;mapBox.scrollTop=ay*z-fy;
+  $('zout').disabled=z===ZS[0];$('zin').disabled=z===ZS[ZS.length-1];
+}
+$('zin').onclick=()=>setZoom(ZS[Math.min(ZS.length-1,ZS.indexOf(zoom)+1)]);
+$('zout').onclick=()=>setZoom(ZS[Math.max(0,ZS.indexOf(zoom)-1)]);
+$('reset').onclick=()=>start(area);
+$('next').onclick=()=>{start(AREAS[AREAS.indexOf(area)+1]||AREAS[0])};
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>start(b.dataset.area));
+
+/* ---- クリア演出 ---- */
+let fxTimer=0;
+const FX_STAR='<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4l8.2 17.6 19.3 2.2-14.3 13.1 3.9 19L32 46.3 14.9 55.9l3.9-19L4.5 23.8l19.3-2.2z" fill="#F6C343" stroke="#1F2A44" stroke-width="3.5" stroke-linejoin="round"/><circle cx="25" cy="24" r="3.4" fill="#fff" opacity=".8"/></svg>';
+function clearFx(){clearTimeout(fxTimer);const e=$('clearFx');if(e)e.remove()}
+function celebrate(){
+  clearFx();
+  const b=$('mapWrap');const fx=document.createElement('div');
+  fx.className='clearFx';fx.id='clearFx';fx.setAttribute('aria-hidden','true');
+  fx.style.setProperty('--bw',Math.min(b.clientWidth,b.clientHeight*1.6,560)+'px');
+  const cols=['#E23B3B','#F08A24','#F6C343','#22A55B','#2F6FE0','#8E5BD8'];
+  const sparks=Array.from({length:14},(_,i)=>`<i style="--a:${i*360/14}deg;--c:${cols[i%cols.length]}"></i>`).join('');
+  const stars=[[-.4,.07,.17,.3],[0,-.22,.22,.45],[.4,.07,.17,.6]].map(([x,y,s,d])=>`<div class="cfStar" style="left:calc(50% + var(--bw)*${x});top:calc(47% + var(--bw)*${y});--s:${s};--d:${d}s">${FX_STAR}</div>`).join('');
+  const txt=[...'クリア！'].map((c,i)=>`<span style="--i:${i}">${c}</span>`).join('');
+  fx.innerHTML=`<div class="cfFlash"></div><div class="cfSparks">${sparks}</div>${stars}<div class="cfText">${txt}</div>`;
+  b.appendChild(fx);
+  fxTimer=setTimeout(()=>{fx.classList.add('out');fxTimer=setTimeout(()=>fx.remove(),460)},3000);
+}
+
+/* ---- あそびかた ---- */
+const dlg=$('tuto');
+function openTuto(){if(typeof dlg.showModal==='function'){if(!dlg.open)dlg.showModal()}else dlg.setAttribute('open','');document.body.classList.add('lock');dlg.querySelector('.body').scrollTop=0;$('tutoTitle').focus()}
+function closeTuto(){if(typeof dlg.close==='function'&&dlg.open)dlg.close();else dlg.removeAttribute('open');document.body.classList.remove('lock');save(KEY_TUTO,1)}
+$('openTuto').onclick=openTuto;$('closeTuto').onclick=closeTuto;$('startTuto').onclick=closeTuto;
+dlg.addEventListener('cancel',e=>{e.preventDefault();closeTuto()});
+dlg.addEventListener('click',e=>{if(e.target===dlg)closeTuto()});
+
+setZoom(1);
+start(AREAS.includes(load(KEY_AREA,'hokkaido'))?load(KEY_AREA,'hokkaido'):'hokkaido');
+if(!load(KEY_TUTO,0))openTuto();
+</script>
+<script>
+if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
+</script>
+<script>
+/* あそびかたのどうが：ひらいたら、さいしょから見せる */
+(function(){
+  const dlg=document.getElementById('tuto'),v=document.getElementById('tutoVideo'),box=document.getElementById('vbox'),
+        btn=document.getElementById('vplay'),lbl=document.getElementById('vplayLabel');
+  if(!dlg||!v)return;
+  const sync=()=>{box.classList.toggle('playing',!v.paused&&!v.ended)};
+  v.addEventListener('play',sync);v.addEventListener('playing',sync);v.addEventListener('pause',sync);
+  v.addEventListener('ended',()=>{lbl.textContent='もういちど見る';sync()});
+  btn.addEventListener('click',()=>{if(v.ended)v.currentTime=0;v.play().catch(()=>{})});
+  function onOpen(){lbl.textContent='どうがを見る';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
+  function onClose(){v.pause()}
+  let was=dlg.open;if(was)onOpen();
+  new MutationObserver(()=>{if(dlg.open&&!was)onOpen();else if(!dlg.open&&was)onClose();was=dlg.open}).observe(dlg,{attributes:true,attributeFilter:['open']});
+})();
+</script>
+</body>
+</html>

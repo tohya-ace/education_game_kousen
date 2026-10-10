@@ -1,6 +1,6 @@
 // 知育Webアプリ KouSen式 Service Worker
 // ファイルを更新したら VERSION を上げてください（古いキャッシュが入れ替わります）
-const VERSION = 'v20';
+const VERSION = 'v23';
 const CACHE = 'kousen-' + VERSION;
 const FONT_CACHE = 'kousen-fonts';
 const ASSETS = [
@@ -9,7 +9,9 @@ const ASSETS = [
   './korokoro_puzzle.html',
   './korokoro_craft.html',
   './anzan_timeattack.html',
+  './yamakawa_timeattack.html',
   './chiba_puzzle.html',
+  './japan_puzzle.html',
   './food_jigsaw.html',
   './manifest.webmanifest',
   './img/puzzle.webp',
@@ -20,6 +22,10 @@ const ASSETS = [
   './img/keisan.png',
   './img/chiba.webp',
   './img/chiba.png',
+  './img/japan.webp',
+  './img/japan.png',
+  './img/yamakawa.webp',
+  './img/yamakawa.png',
   './img/openchat_qr.png',
   './img/food.webp',
   './img/food.png',
@@ -32,6 +38,8 @@ const ASSETS = [
   './video/craft_tutorial.jpg',
   './video/anzan_tutorial.jpg',
   './video/chiba_tutorial.jpg',
+  './video/jp_tutorial.jpg',
+  './video/yamakawa_tutorial.jpg',
   './video/food_tutorial.jpg'
 ];
 

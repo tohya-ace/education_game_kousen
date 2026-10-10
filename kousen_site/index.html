@@ -60,7 +60,11 @@ h1 .kicker{display:block;font-size:.42em;letter-spacing:.12em;color:var(--sub);m
 .game.puzzle{--tint:#FBE7A1;--edge:#C9961B}
 .game.craft{--tint:#CDEFD9;--edge:#2E9A5E}
 .game.keisan{--tint:#DCD2FA;--edge:#7A5CC9}
+.game.yamakawa{--tint:#D9F0E0;--edge:#2E8B57}
+.game.yamakawa .plate{max-width:min(70%,330px)}
+.game.yamakawa .plate .name{font-size:clamp(1.05rem,4.7vw,1.5rem)}
 .game.chiba{--tint:#FFE3C8;--edge:#E07B39}
+.game.japan{--tint:#DCEBFA;--edge:#3D7CC9}
 .game.food{--tint:#E4F5CF;--edge:#5FA330}
 .game.food .plate{max-width:min(68%,330px)}
 .game.food .plate .name{font-size:clamp(.82rem,4.05vw,1.4rem)}
@@ -176,11 +180,31 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
       </a>
     </li>
     <li>
+      <a class="game yamakawa" href="yamakawa_timeattack.html">
+        <picture class="art"><source srcset="img/yamakawa.webp" type="image/webp"><img src="img/yamakawa.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="name">やまかわタイムアタック</span>
+          <span class="desc">日本の山や川、へいや、はんとうを10もん。はやくこたえるほど高い点になるよ</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li>
       <a class="game chiba" href="chiba_puzzle.html">
         <picture class="art"><source srcset="img/chiba.webp" type="image/webp"><img src="img/chiba.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">ちばけんパズル</span>
           <span class="desc">市町村のピースを、ちばけんの地図にはめよう</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li>
+      <a class="game japan" href="japan_puzzle.html">
+        <picture class="art"><source srcset="img/japan.webp" type="image/webp"><img src="img/japan.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="name">都道府県パズル</span>
+          <span class="desc">47の都道府県のピースを、日本の地図にはめよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
