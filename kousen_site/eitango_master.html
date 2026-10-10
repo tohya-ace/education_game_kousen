@@ -323,7 +323,7 @@ function speak(text,lang,opt){
   return true;
 }
 function sayWord(w,force){if(!soundOn&&!force)return;speak(w,'en-US',{rate:.85,pitch:1.05,volume:1})}
-const NG_LINES=['おろろ','ざんねん','つぎはがんばろう'];
+const NG_LINES=['おろろ','およよ','つぎはがんばろう'];
 function sayNg(){
   if(!soundOn)return;
   let i;do{i=Math.floor(Math.random()*NG_LINES.length)}while(i===lastLine);lastLine=i;
@@ -426,7 +426,7 @@ function finish(all){
   const isNew=streak>best;
   if(isNew){best=streak;save(KEY_BEST,best)}
   hist.unshift({n:streak,t:Date.now()});hist=hist.slice(0,5);save(KEY_HIST,hist);
-  $('rTitle').textContent=all?'ぜんもん正かい！':(isNew?'じこベスト！':'ざんねん！');
+  $('rTitle').textContent=streak>600?'英単語master！！':streak>100?'あなた天才！':streak>50?'すごいね！！':'がんばったね！';
   $('rScore').textContent=streak;
   $('rNew').hidden=!isNew;
   $('rBest').innerHTML=best+'<small>もん</small>';

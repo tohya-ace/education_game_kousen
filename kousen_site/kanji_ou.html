@@ -355,7 +355,7 @@ const DATA={"G":{"1":"一右雨円王音下火花貝学気九休玉金空月犬�
 const $=id=>document.getElementById(id);
 const GCOL={1:'#E23B3B',2:'#F08A24',3:'#22A55B',4:'#2F6FE0',5:'#8E5BD8',6:'#C2477A'};
 // スコア：fast 秒以内で最高点、300秒(5分)以上で最低点
-const MAX=10000, MIN=100, FAST=40, LIMIT=300, COUNT=10;
+const MAX=10000, MIN=100, FAST=25, LIMIT=300, COUNT=10;
 const KEY_BEST='kousen-kanji-best-v1', KEY_TIME='kousen-kanji-time-v1', KEY_LAST='kousen-kanji-last', KEY_SND='kousen-kanji-sound', KEY_TUTO='kousen-kanji-tutorial-seen';
 function load(k,def){try{const v=localStorage.getItem(k);return v===null?def:JSON.parse(v)}catch(e){return def}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
