@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>フラッシュ英単語｜知育Webアプリ KouSen式</title>
+<meta name="theme-color" content="#2F5FA8">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="KouSen式">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Nunito:wght@800&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --font:"UD Digi Kyokasho NK-R","UD デジタル 教科書体 NK-R","UDDigiKyokashoNK-R","Klee One","Hiragino Maru Gothic ProN","Hiragino Sans","Meiryo",sans-serif;
+  --boldFont:"UD Digi Kyokasho NK-B","UD デジタル 教科書体 NK-B","UDDigiKyokashoNK-B","UD Digi Kyokasho NK-R","UD デジタル 教科書体 NK-R","Klee One","Hiragino Maru Gothic ProN","Hiragino Sans","Meiryo",sans-serif;
+  --en:"Nunito","Arial Rounded MT Bold","Helvetica Neue",Arial,sans-serif;
+  --bg:#EAF0F8;--bgL:#EAF0F8;--ink:#1D2638;--sub:#5E6A80;--panel:#FFFFFF;--line:#CCD8EA;--board:#2F5FA8;--accent:#2F5FA8;--edge:#7C9CCB;
+  --red:#E23B3B;--orange:#F08A24;--green:#22A55B;--blue:#2F6FE0;--yellow:#F6C343;
+  --onC:#C2410C;--kunC:#1D6FB8;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121826;--ink:#E6ECF5;--sub:#9DA9BE;--panel:#1C2436;--line:#2F3B52;--accent:#9DBBEA;--edge:#4A6A9C;--onC:#FDBA74;--kunC:#93C5FD}}
+:root[data-theme="dark"]{--bg:#121826;--ink:#E6ECF5;--sub:#9DA9BE;--panel:#1C2436;--line:#2F3B52;--accent:#9DBBEA;--edge:#4A6A9C;--onC:#FDBA74;--kunC:#93C5FD}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:400;font-synthesis:none;line-height:1.6}
+body.lock{overflow:hidden}
+button,a{font:inherit;color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+button,button *,.backTop{font-family:var(--boldFont)!important;font-weight:700!important;font-synthesis:weight}
+button rt{font-family:var(--font)!important;font-weight:400!important}
+ruby{ruby-position:over}
+rt{font-size:.5em;letter-spacing:0;font-family:var(--font);font-weight:400}
+button:focus-visible,a:focus-visible,.card:focus-visible{outline:3px solid #FFB020;outline-offset:2px}
+[hidden]{display:none!important}
+.wrap{max-width:580px;margin:0 auto;padding:12px 12px 28px;display:flex;flex-direction:column;gap:12px}
+.titlebar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+h1{margin:0;font-size:clamp(1.15rem,5.2vw,1.7rem);font-weight:600;line-height:1.2;letter-spacing:.02em;white-space:nowrap}
+.pill{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;height:39px;padding:0 14px 0 10px;border-radius:999px;border:2px solid var(--accent);background:var(--panel);color:var(--accent);font-size:15px;white-space:nowrap}
+.pill svg{width:18px;height:18px}
+
+/* えらぶ */
+.label{margin:2px 0 -4px;font-size:1rem}
+.grades{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.gr{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:80px;padding:0 6px;border-radius:16px;border:2px solid var(--line);background:var(--panel);box-shadow:0 4px 0 var(--line);min-width:0}
+.gr b{font-size:1.65rem;line-height:1;color:var(--c)}
+.gr b small{font-size:.62em;margin-left:1px}
+.gr span{font-size:.78rem;line-height:1;color:var(--sub);white-space:nowrap}
+.gr i{position:absolute;left:10px;right:10px;bottom:7px;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.gr i::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--p,0%);background:var(--c)}
+.gr[aria-pressed="true"]{border-color:var(--c);box-shadow:0 4px 0 var(--c);background:color-mix(in srgb,var(--c) 11%,var(--panel))}
+.cats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.ct{position:relative;display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:48px;padding:3px 10px 7px;border-radius:14px;border:2px solid var(--line);background:var(--panel);box-shadow:0 3px 0 var(--line);text-align:left;font-size:1rem;line-height:1.5;min-width:0}
+.ct small{flex:0 0 auto;font-size:.75rem;color:var(--sub)}
+.ct i{position:absolute;left:10px;right:10px;bottom:5px;height:3px;border-radius:2px;background:var(--line);overflow:hidden}
+.ct i::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--p,0%);background:var(--accent)}
+.ct[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 3px 0 var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--panel))}
+.tabs{display:flex;gap:4px;background:var(--panel);padding:4px;border-radius:999px;border:1px solid var(--line)}
+.tabs button{flex:1;height:42px;border:0;background:transparent;border-radius:999px;font-size:1.05rem;white-space:nowrap}
+.tabs button[aria-pressed="true"]{background:var(--board);color:#fff}
+.secs{display:flex;align-items:center;gap:10px}
+.secs .tabs{flex:1}
+.secs .k{flex:0 0 auto;font-size:.95rem;color:var(--sub)}
+.seenNow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-radius:14px;background:var(--panel);border:1px solid var(--line);font-size:.95rem}
+.seenNow b{font-size:1.25rem;font-variant-numeric:tabular-nums}
+.seenNow .rs{flex:0 0 auto;white-space:nowrap;height:30px;padding:0 10px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);font-size:.8rem;color:var(--sub)}
+.sel .start,#start{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:5}
+.start{height:58px;border:0;border-radius:16px;background:var(--green);color:#fff;font-size:1.4rem;box-shadow:0 5px 0 #17773F;display:flex;align-items:center;justify-content:center;gap:10px}
+.start svg{width:24px;height:24px}
+.start:active{transform:translateY(3px);box-shadow:0 2px 0 #17773F}
+
+/* プレイ */
+.hud{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tag{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:2px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:.92rem;white-space:nowrap;line-height:1.5}
+.tag i{flex:0 0 auto;display:inline-block;width:.7em;height:.7em;border-radius:50%;background:var(--c,var(--board))}
+.count{font-size:1.4rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.count small{font-size:.65em;color:var(--sub)}
+.dots{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
+.dots span{height:10px;border-radius:5px;background:var(--line)}
+.dots span.done{background:var(--accent)}
+.dots span.now{background:var(--accent);opacity:.45}
+.card{position:relative;display:flex;flex-direction:column;border-radius:22px;background:var(--panel);border:3px solid var(--edge);box-shadow:0 6px 0 var(--edge),0 10px 24px rgba(0,0,0,.08);padding:12px 12px 34px;min-height:clamp(400px,64vh,540px);cursor:pointer;user-select:none;-webkit-user-select:none;overflow:hidden}
+.card:active{transform:translateY(2px);box-shadow:0 4px 0 var(--edge)}
+.card .bar{position:absolute;left:0;right:0;bottom:0;height:7px;background:color-mix(in srgb,var(--edge) 22%,transparent)}
+.card .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--edge)}
+.card .hintTap{position:absolute;right:14px;bottom:11px;font-size:.78rem;color:var(--sub);display:flex;align-items:center;gap:4px}
+.card .hintTap svg{width:16px;height:16px}
+.cin{flex:1;display:flex;flex-direction:column;min-height:0}
+.card.flip .cin{animation:cardIn .28s ease-out}
+@keyframes cardIn{from{opacity:0;transform:translateX(24px) scale(.98)}to{opacity:1;transform:none}}
+.ctl{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ctl .mid{display:flex;gap:8px}
+.cbtn{display:inline-flex;align-items:center;gap:5px;height:40px;padding:0 12px;border-radius:999px;border:2px solid var(--line);background:var(--panel);font-size:.9rem;white-space:nowrap}
+.cbtn svg{width:18px;height:18px}
+.cbtn.main{border-color:var(--accent);color:var(--accent)}
+
+/* かん字カード */
+.kgrid{flex:1;display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:6px;min-height:0}
+.side{display:flex;flex-direction:column;align-items:center;min-width:0}
+.side .lbl{font-size:.78rem;line-height:1.2;padding:3px 8px;border-radius:999px;white-space:nowrap;margin-bottom:6px}
+.side.kun .lbl{background:color-mix(in srgb,var(--kunC) 14%,transparent);color:var(--kunC)}
+.side.on .lbl{background:color-mix(in srgb,var(--onC) 14%,transparent);color:var(--onC)}
+.rd{flex:1;width:100%;min-height:200px;display:block;font-family:var(--boldFont);font-weight:700;line-height:1.12;overflow:hidden}
+.rd.kun{writing-mode:vertical-rl;color:var(--kunC)}
+.rd.on{writing-mode:vertical-lr;color:var(--onC)}
+.rd>span{display:block;padding-block:0 .3em;margin-inline:.07em;white-space:nowrap}
+.rd.flow>span{display:inline-block;padding-block:0 .55em;margin-inline:.06em}
+.rd span .o{color:var(--sub);font-size:.82em;font-weight:400;font-family:var(--font)}
+.rd span .o::before{content:"";}
+.rd .none{color:var(--sub);font-family:var(--font);font-weight:400;font-size:.9rem}
+.kc{display:flex;align-items:center;justify-content:center;padding:0 2px}
+.kc .kj{font-family:var(--font);font-size:clamp(6rem,31vw,10rem);line-height:1;color:var(--ink)}
+.sup{margin-top:10px;padding:8px 10px 6px;border-radius:14px;background:var(--bg);font-size:.95rem;text-align:center;min-height:48px}
+.sup .t{display:block;font-size:.75rem;color:var(--sub);margin-bottom:2px}
+.sup .ex{display:inline-block;margin:0 .3em;font-family:var(--boldFont);font-weight:700;font-size:1.25rem;line-height:1.9}
+.sup .ex rt{color:var(--kunC);font-size:.5em}
+.sup .no{color:var(--sub);font-size:.85rem}
+
+/* 英たんごカード */
+.ecard{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;padding:6px 4px 10px}
+.ecard .ka{font-size:clamp(1.15rem,5.6vw,1.6rem);color:var(--onC);font-family:var(--boldFont);font-weight:700;letter-spacing:.04em;line-height:1.3}
+.ecard .w{font-family:var(--en);font-weight:800;font-size:clamp(2.6rem,14vw,4.4rem);line-height:1.1;color:var(--ink);overflow-wrap:anywhere}
+.ecard .w.long{font-size:clamp(1.8rem,9vw,3rem)}
+.ecard .w.xl{font-size:clamp(1.5rem,7.4vw,2.4rem)}
+.ecard .line{width:60%;height:3px;border-radius:2px;background:var(--line);margin:4px 0}
+.ecard .ms{display:flex;flex-direction:column;gap:2px;font-size:clamp(1.25rem,6vw,1.7rem);line-height:1.8;color:var(--kunC);font-family:var(--boldFont);font-weight:700}
+.ecard .ms.many{font-size:clamp(1.05rem,5vw,1.4rem);line-height:1.7}
+.ecard .ms rt{font-family:var(--font);font-weight:400}
+.say{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:999px;border:2px solid var(--line);background:var(--panel);font-size:.95rem}
+.say svg{width:18px;height:18px}
+
+/* クリア */
+.result{position:relative;overflow:hidden;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px 18px 20px;display:flex;flex-direction:column;gap:12px;text-align:center}
+.result h2{margin:0;font-size:2rem;font-weight:600;letter-spacing:.08em;color:var(--accent)}
+.result .rmode{margin:-8px 0 0;color:var(--sub)}
+.seenGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.seenGrid span{display:flex;align-items:center;justify-content:center;aspect-ratio:1;border-radius:12px;background:var(--bg);font-size:1.9rem;line-height:1}
+.seenList{display:grid;grid-template-columns:1fr 1fr;gap:6px;text-align:left}
+.seenList span{padding:6px 10px;border-radius:10px;background:var(--bg);font-family:var(--en);font-weight:800;font-size:1rem;overflow-wrap:anywhere}
+.prog{margin:0;font-size:.95rem}
+.prog b{font-size:1.2rem}
+.prog.all{color:#B7791F}
+.rbtns{display:grid;gap:10px}
+.rbtns .start{height:52px;font-size:1.2rem}
+.btn2{height:48px;border-radius:14px;border:2px solid var(--line);background:var(--panel);font-size:1.05rem;box-shadow:0 3px 0 var(--line)}
+
+.backTop{display:flex;align-items:center;justify-content:center;gap:8px;height:46px;margin-top:8px;border-radius:14px;border:2px solid var(--accent);background:var(--panel);color:var(--accent);text-decoration:none;font-size:17.6px;line-height:1}
+.backTop svg{width:20px;height:20px;flex:0 0 auto}
+
+/* あそびかた */
+dialog.tuto{border:0;padding:0;border-radius:20px;width:min(560px,94vw);max-height:88vh;max-height:88dvh;background:var(--panel);color:var(--ink);box-shadow:0 20px 50px rgba(0,0,0,.35);overflow:hidden}
+dialog.tuto[open]{display:flex;flex-direction:column}
+dialog.tuto::backdrop{background:rgba(15,20,30,.55)}
+.tuto .head{display:flex;align-items:center;justify-content:space-between;padding:12px 12px 10px 20px;border-bottom:1px solid var(--line)}
+.tuto .head h2{margin:0;font-size:clamp(.98rem,4.4vw,1.15rem);font-weight:600;outline:none}
+.close{width:42px;height:42px;border-radius:50%;border:0;background:var(--bg);font-size:1.35rem;line-height:1;padding:0}
+.tuto .body{overflow-y:auto;padding:6px 20px 8px}
+.step{padding:12px 0;border-bottom:1px dashed var(--line)}
+.step:last-child{border-bottom:0}
+.step h3{margin:0 0 6px;font-size:1rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.step h3 .n{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--board);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem}
+.step p{margin:4px 0 0;font-size:.92rem;line-height:1.9}
+.step svg.fig{display:block;width:100%;max-width:420px;height:auto;margin:8px auto 2px}
+.tuto .foot{padding:10px 20px 14px;border-top:1px solid var(--line)}
+.tuto .foot button{width:100%;height:46px;border:0;border-radius:12px;background:var(--board);color:#fff;font-size:1.1rem}
+.tvid{padding:14px 0 6px}
+.vbox{position:relative;margin:0 auto;width:min(100%,280px,calc(52vh*.5625));width:min(100%,280px,calc(52dvh*.5625));aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:var(--bgL);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.vbox video{display:block;width:100%;height:100%;object-fit:cover;background:var(--bgL)}
+.vplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;height:52px;padding:0 20px 0 16px;border:0;border-radius:999px;background:rgba(30,35,50,.88);color:#fff;font-size:1.05rem;white-space:nowrap;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.vplay svg{width:22px;height:22px}
+.vbox.playing .vplay{display:none}
+.vnext{margin:12px 0 0;text-align:center;font-size:.86rem;color:var(--sub)}
+
+.figCard{flex-wrap:wrap;display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 0 4px}
+.figCard .card.fc{min-height:0;width:230px;flex:0 0 auto;padding:8px 8px 10px;cursor:default;box-shadow:0 3px 0 var(--edge)}
+.figCard .card.fc:active{transform:none}
+.fcL{flex:0 0 auto;display:flex;align-items:center}
+.fl{font-size:.78rem;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.fl.kun{background:color-mix(in srgb,var(--kunC) 14%,transparent);color:var(--kunC)}
+.fl.on{background:color-mix(in srgb,var(--onC) 14%,transparent);color:var(--onC)}
+.fl.kun::after{content:" →"}.fl.on::before{content:"← "}
+/* クリアえんしゅつ */
+.clearFx{position:absolute;inset:0;z-index:30;pointer-events:none;overflow:visible;--bw:300px}
+.clearFx.out{animation:cfOut .45s ease forwards}
+.cfFlash{position:absolute;inset:0;background:radial-gradient(circle at 50% 16%,rgba(255,255,255,.75),rgba(255,255,255,0) 65%);animation:cfFlash .9s ease-out forwards}
+.cfStar{position:absolute;z-index:3;width:calc(var(--bw)*var(--s));aspect-ratio:1;transform:translate(-50%,-50%);animation:cfStar .7s cubic-bezier(.2,1.5,.4,1) both;animation-delay:var(--d)}
+.cfStar svg{display:block;width:100%;height:100%;animation:cfTwinkle 1.2s ease-in-out infinite alternate;animation-delay:calc(var(--d) + .7s);filter:drop-shadow(0 3px 0 rgba(0,0,0,.25))}
+.cfSparks{position:absolute;left:50%;top:44px;width:0;height:0}
+.cfSparks i{position:absolute;left:-4px;top:-4px;width:8px;height:8px;border-radius:50%;background:var(--c);opacity:0;animation:cfSpark .9s ease-out .15s forwards;transform:rotate(var(--a)) translateY(0)}
+@keyframes cfFlash{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+@keyframes cfStar{0%{transform:translate(-50%,-50%) scale(0) rotate(-200deg);opacity:0}100%{transform:translate(-50%,-50%) scale(1) rotate(0);opacity:1}}
+@keyframes cfTwinkle{from{transform:scale(1) rotate(-6deg)}to{transform:scale(1.1) rotate(6deg)}}
+@keyframes cfSpark{0%{opacity:1;transform:rotate(var(--a)) translateY(0) scale(1)}100%{opacity:0;transform:rotate(var(--a)) translateY(calc(var(--bw)*-.42)) scale(.4)}}
+@keyframes cfOut{to{opacity:0;transform:scale(.96)}}
+@media (prefers-reduced-motion:reduce){.clearFx *,.clearFx{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important}.cfSparks{display:none}.card.flip .cin{animation:none}}
+@media (max-width:360px){.pill{padding:0 9px 0 7px;font-size:.85rem!important;gap:4px}h1{font-size:1.05rem}.pill svg{width:16px;height:16px}.tabs button{font-size:.92rem}.ct{font-size:.92rem;padding:4px 9px 8px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="titlebar">
+    <h1>フラッシュ英単語</h1>
+    <button class="pill" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>あそびかた</button>
+  </div>
+
+  <section id="sel" aria-label="えらぶ">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <p class="label">なかまをえらぶ</p>
+      <div id="pick" role="group" aria-label="なかまをえらぶ"></div>
+      <div class="seenNow"><span id="seenNow"></span><button class="rs" id="reset" type="button">きろくをけす</button></div>
+      <p class="label">すすめかた</p>
+      <div class="tabs" id="modeTabs" role="group" aria-label="すすめかた"><button data-mode="tap">タップですすむ</button><button data-mode="auto">オートですすむ</button></div>
+      <div class="secs" id="secRow"><span class="k">オートのはやさ</span><div class="tabs" role="group" aria-label="オートのはやさ"><button data-sec="3">3びょう</button><button data-sec="5">5びょう</button><button data-sec="7">7びょう</button></div></div>
+      <button class="start" id="start"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>スタート</button>
+    </div>
+  </section>
+
+  <section id="play" aria-label="フラッシュカード" hidden>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="hud"><span class="tag" id="playTag"></span><span class="count"><b id="cNow">1</b><small> / <span id="cAll">10</span></small></span></div>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+      <div class="card" id="card" role="button" tabindex="0" aria-label="タップでつぎへ">
+        <div class="cin" id="cin"></div>
+        <div class="hintTap" id="hintTap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10m0-1.5a1.5 1.5 0 0 1 3 0V11m0-1a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1-6 6h-.5a6 6 0 0 1-5-2.7L4.6 14a1.5 1.5 0 0 1 2.4-1.8L9 14"/></svg>タップでつぎへ</div>
+        <div class="bar" id="bar" hidden><i id="barIn"></i></div>
+      </div>
+      <div class="ctl">
+        <button class="cbtn" id="quit">やめる</button>
+        <div class="mid"><button class="cbtn" id="say" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><span>はつおん</span></button><button class="cbtn main" id="pause" hidden></button></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="result" aria-label="クリア" hidden>
+    <div class="result" id="resultBox">
+      <h2 id="rTitle" tabindex="-1">クリア！</h2>
+      <p class="rmode" id="rMode"></p>
+      <div id="rSeen"></div>
+      <p class="prog" id="rProg"></p>
+      <div class="rbtns">
+        <button class="start" id="again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>つぎの10もん</button>
+        <button class="btn2" id="toSel">なかまをえらぶ</button>
+      </div>
+    </div>
+  </section>
+
+  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにもどる</a>
+</div>
+
+<dialog class="tuto" id="tuto" aria-labelledby="tutoTitle">
+  <div class="head"><h2 id="tutoTitle" tabindex="-1">フラッシュ英単語のあそびかた</h2><button class="close" id="closeTuto" aria-label="とじる">✕</button></div>
+  <div class="body">
+    <section class="tvid" aria-label="どうがで見るあそびかた">
+      <div class="vbox" id="vbox">
+        <video id="tutoVideo" src="video/flashe_tutorial.mp4" poster="video/flashe_tutorial.jpg" playsinline muted preload="metadata" controls></video>
+        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">どうがを見る</span></button>
+      </div>
+      <p class="vnext">どうがのあとは、下のくわしいせつめいも見てね</p>
+    </section>
+    <section class="step"><h3><span class="n">1</span><span>なかまをえらぶ</span></h3><p>色・<ruby>動物<rt>どうぶつ</rt></ruby>・食べ<ruby>物<rt>もの</rt></ruby>などの なかまをえらびます。10こずつ、ランダムに出ます。そのなかまの<ruby>英<rt>えい</rt></ruby>たんごを ぜんぶ見おわるまで、同じたんごは出ません（10こより少ない なかまは、ぜんぶ出ます）。</p></section><section class="step"><h3><span class="n">2</span><span>カードの見方</span></h3><svg class="fig" viewBox="0 0 400 230" role="img" aria-label="カードの見方：上がカタカナのはつおん、まん中が英たんご、下がいみ">
+<rect x="70" y="8" width="260" height="214" rx="18" fill="#fff" stroke="#1F6F78" stroke-width="3"/>
+<text x="200" y="50" text-anchor="middle" font-size="22" fill="#C2410C" style="font-family:'UD Digi Kyokasho NK-B','Klee One','Hiragino Maru Gothic ProN',sans-serif;font-weight:700">アップル</text>
+<text x="200" y="118" text-anchor="middle" font-size="62" fill="#1D2E33" style="font-family:Nunito,Arial,sans-serif;font-weight:800">apple</text>
+<rect x="125" y="138" width="150" height="3" rx="1.5" fill="#C5DEDC"/>
+<text x="200" y="182" text-anchor="middle" font-size="24" fill="#1D6FB8" style="font-family:'UD Digi Kyokasho NK-B','Klee One','Hiragino Maru Gothic ProN',sans-serif;font-weight:700">りんご</text>
+<g font-size="13" style="font-family:'UD Digi Kyokasho NK-B','Klee One','Hiragino Maru Gothic ProN',sans-serif;font-weight:700"><rect x="0" y="30" width="64" height="26" rx="13" fill="#FDE8DA"/><text x="32" y="48" text-anchor="middle" fill="#C2410C">はつおん</text>
+<rect x="0" y="92" width="64" height="26" rx="13" fill="#E6EEF0"/><text x="32" y="110" text-anchor="middle" fill="#1D2E33">たんご</text>
+<rect x="0" y="162" width="64" height="26" rx="13" fill="#DCEBFA"/><text x="32" y="180" text-anchor="middle" fill="#1D6FB8">いみ</text></g>
+</svg><p>上はカタカナの読み方、まん中は<ruby>英<rt>えい</rt></ruby>たんご、下はいみです。いみが いくつもあるときは、ぜんぶ出ます。「はつおん ON」にすると、<ruby>英語<rt>えいご</rt></ruby>の読み方も きこえます。</p></section><section class="step"><h3><span class="n">3</span><span>声に出して読もう</span></h3><svg class="fig" viewBox="0 0 400 210" role="img" aria-label="声に出して読もう"><g transform="translate(0,0)"><circle cx="70" cy="120" r="44" fill="#FFDDBF" stroke="#3A2A20" stroke-width="3"/>
+<path d="M28 108c4-30 30-44 52-40 22 3 36 20 34 40-10-12-30-18-48-14-14 3-28 8-38 14z" fill="#3A2A20"/>
+<circle cx="55" cy="122" r="4.5" fill="#3A2A20"/><circle cx="86" cy="122" r="4.5" fill="#3A2A20"/>
+<circle cx="46" cy="136" r="6" fill="#FFB3A7" opacity=".8"/><circle cx="95" cy="136" r="6" fill="#FFB3A7" opacity=".8"/>
+<ellipse cx="71" cy="143" rx="10" ry="8" fill="#B5383F" stroke="#3A2A20" stroke-width="2.5"/>
+<path d="M30 200c6-24 22-34 40-34s34 10 40 34" fill="#5AA9E6" stroke="#3A2A20" stroke-width="3"/>
+<path d="M122 112l12-6M124 126h14M122 140l12 6" stroke="#F08A24" stroke-width="3.5" stroke-linecap="round"/>
+<g transform="translate(150,34)"><rect x="0" y="0" width="246" height="92" rx="20" fill="#fff" stroke="#3A2A20" stroke-width="3"/><path d="M8 64L-14 90 30 78z" fill="#fff" stroke="#3A2A20" stroke-width="3" stroke-linejoin="round"/><path d="M10 66L30 77" stroke="#fff" stroke-width="6"/><text x="123" y="44" text-anchor="middle" font-size="28" fill="#C2410C" style="font-family:'UD Digi Kyokasho NK-B','Klee One','Hiragino Maru Gothic ProN',sans-serif;font-weight:700">アップル！</text><text x="123" y="80" text-anchor="middle" font-size="24" fill="#1D6FB8" style="font-family:'UD Digi Kyokasho NK-B','Klee One','Hiragino Maru Gothic ProN',sans-serif;font-weight:700">りんご！</text></g></g></svg><p>カードが出たら、<ruby>英<rt>えい</rt></ruby>たんごと いみを 声に出して読んでみよう。</p></section><section class="step"><h3><span class="n">4</span><span>すすめかた</span></h3><p><b>タップですすむ</b>：カードのどこをタップしても、つぎへすすみます。<br><b>オートですすむ</b>：3びょう・5びょう・7びょうから えらぶと、じどうで つぎへすすみます。「とめる」で一時ていしもできます。</p></section><section class="step"><h3><span class="n">5</span><span>10もんでクリア！</span></h3><p>10こ ぜんぶ見たらクリア！「つぎの10もん」で、まだ見ていないたんごがつづきます。</p></section>
+  </div>
+  <div class="foot"><button id="startTuto">はじめる</button></div>
+</dialog>
+
+<script>
+const KIND='en';
+const DATA=[{"id":"num","name":"数","w":[["number","ナンバー",["数"]],["zero","ズィロウ",["0"]],["one","ワン",["1"]],["two","トゥー",["2"]],["three","スリー",["3"]],["four","フォー",["4"]],["five","ファイブ",["5"]],["six","スィックス",["6"]],["seven","セブン",["7"]],["eight","エイト",["8"]],["nine","ナイン",["9"]],["ten","テン",["10"]],["eleven","イレブン",["11"]],["twelve","トゥウェルブ",["12"]],["thirteen","サーティーン",["13"]],["fourteen","フォーティーン",["14"]],["fifteen","フィフティーン",["15"]],["sixteen","スィックスティーン",["16"]],["seventeen","セブンティーン",["17"]],["eighteen","エイティーン",["18"]],["nineteen","ナインティーン",["19"]],["twenty","トゥエンティ",["20"]],["thirty","サーティ",["30"]],["forty","フォーティ",["40"]],["fifty","フィフティ",["50"]],["sixty","スィックスティ",["60"]],["seventy","セブンティ",["70"]],["eighty","エイティ",["80"]],["ninety","ナインティ",["90"]],["hundred","ハンドレッド",["100"]],["first","ファースト",["1番目"]],["second","セカンド",["2番目"]],["third","サード",["3番目"]],["fourth","フォース",["4番目"]],["fifth","フィフス",["5番目"]],["sixth","スィックスス",["6番目"]],["seventh","セブンス",["7番目"]],["eighth","エイス",["8番目"]],["ninth","ナインス",["9番目"]],["tenth","テンス",["10番目"]],["eleventh","イレブンス",["11番目"]],["twelfth","トゥウェルフス",["12番目"]],["thirteenth","サーティーンス",["13番目"]],["fourteenth","フォーティーンス",["14番目"]],["fifteenth","フィフティーンス",["15番目"]],["sixteenth","スィックスティーンス",["16番目"]],["seventeenth","セブンティーンス",["17番目"]],["eighteenth","エイティーンス",["18番目"]],["nineteenth","ナインティーンス",["19番目"]],["twentieth","トゥエンティエス",["20番目"]],["thirtieth","サーティエス",["30番目"]]]},{"id":"time","name":"時間・日・曜日・月","w":[["minute","ミニット",["分"]],["time","タイム",["時間"]],["day","デイ",["日"]],["week","ウィーク",["週"]],["month","マンス",["月"]],["year","イヤー",["年"]],["Monday","マンデイ",["月曜日"]],["Tuesday","チューズデイ",["火曜日"]],["Wednesday","ウェンズデイ",["水曜日"]],["Thursday","サーズデイ",["木曜日"]],["Friday","フライデイ",["金曜日"]],["Saturday","サタデイ",["土曜日"]],["Sunday","サンデイ",["日曜日"]],["January","ジャニュアリー",["1月"]],["February","フェブルエリー",["2月"]],["March","マーチ",["3月"]],["April","エイプリル",["4月"]],["May","メイ",["5月"]],["June","ジューン",["6月"]],["July","ジュライ",["7月"]],["August","オーガスト",["8月"]],["September","セプテンバー",["9月"]],["October","オクトウバー",["10月"]],["November","ノウベンバー",["11月"]],["December","ディセンバー",["12月"]]]},{"id":"season","name":"<ruby>季節<rt>きせつ</rt></ruby>・方角","w":[["spring","スプリング",["春"]],["summer","サマー",["夏"]],["autumn / fall","オータム ／ フォール",["秋"]],["winter","ウィンター",["冬"]],["east","イースト",["東"]],["west","ウェスト",["西"]],["south","サウス",["南"]],["north","ノース",["北"]]]},{"id":"color","name":"色","w":[["color","カラー",["色"]],["white","ホワイト",["白"]],["black","ブラック",["黒"]],["red","レッド",["赤"]],["blue","ブルー",["青"]],["yellow","イエロウ",["黄色"]],["green","グリーン",["みどり色"]],["orange","オーレンジ",["オレンジ色"]],["pink","ピンク",["ピンク色"]],["brown","ブラウン",["茶色"]],["purple","パープル",["むらさき色"]]]},{"id":"shape","name":"形","w":[["shape","シェイプ",["形"]],["circle","サークル",["円"]],["triangle","トライアングル",["三角形"]],["square","スクウェア",["正方形"]],["rectangle","レクタングル",["長方形"]],["diamond","ダイアモンド",["ひし形"]],["heart","ハート",["ハート形"]],["star","スター",["星","星形"]],["cross","クロス",["十字形"]]]},{"id":"people","name":"人","w":[["man","マン",["男の人","人"]],["woman","ウーマン",["女の人"]],["boy","ボーイ",["男の子"]],["girl","ガール",["女の子"]],["father","ファーザー",["父"]],["mother","マザー",["母"]],["brother","ブラザー",["兄","弟"]],["sister","スィスター",["姉","妹"]],["grandfather","グランドファーザー",["おじいさん","<ruby>祖父<rt>そふ</rt></ruby>"]],["grandmother","グランドマザー",["おばあさん","<ruby>祖母<rt>そぼ</rt></ruby>"]],["friend","フレンド",["友だち"]]]},{"id":"body","name":"体","w":[["eye","アイ",["目"]],["ear","イア",["耳"]],["nose","ノウズ",["<ruby>鼻<rt>はな</rt></ruby>"]],["mouth","マウス",["口"]],["teeth","ティース",["<ruby>歯<rt>は</rt></ruby>（tooth が2つ<ruby>以上<rt>いじょう</rt></ruby>のとき）"]],["face","フェイス",["顔"]],["head","ヘッド",["頭"]],["hand","ハンド",["手（手首から先）"]],["shoulder","ショウルダー",["<ruby>肩<rt>かた</rt></ruby>"]],["knee","ニー",["ひざ"]],["leg","レッグ",["あし（足首から上）"]],["toe","トウ",["つまさき"]]]},{"id":"school","name":"学校","w":[["English","イングリッシュ",["<ruby>英<rt>えい</rt></ruby>語"]],["Japanese","ジャパニーズ",["国語","日本語","日本人"]],["math","マス",["算数"]],["music","ミューズィック",["音楽"]],["P.E.","ピーイー",["<ruby>体育<rt>たいいく</rt></ruby>"]],["science","サイエンス",["理科","<ruby>科学<rt>かがく</rt></ruby>"]],["social studies","ソウシャル スタディズ",["社会科"]],["arts and crafts","アーツ アンド クラフツ",["図画工作"]],["calligraphy","カリグラフィー",["<ruby>習<rt>しゅう</rt></ruby>字"]],["home economics","ホウム エコノミクス",["<ruby>家庭<rt>かてい</rt></ruby>科"]],["moral education","モーラル エデュケイション",["<ruby>道徳<rt>どうとく</rt></ruby>"]],["homeroom activities","ホウムルーム アクティビティズ",["<ruby>学級活動<rt>がっきゅうかつどう</rt></ruby>"]],["class","クラス",["<ruby>授業<rt>じゅぎょう</rt></ruby>","組","クラス"]],["school","スクール",["学校"]],["elementary school","エレメンタリー スクール",["小学校"]],["junior high school","ジューニア ハイ スクール",["中学校"]],["(senior) high school","（スィーニア）ハイ スクール",["<ruby>高等<rt>こうとう</rt></ruby>学校"]],["classroom","クラスルーム",["教室"]],["computer room","コンピューター ルーム",["コンピューター室"]],["cooking room","クッキング ルーム",["<ruby>家庭<rt>かてい</rt></ruby>科室"]],["entrance","エントランス",["<ruby>入<rt>い</rt></ruby>り口","しょうこう口"]],["gym","ジム",["<ruby>体育館<rt>たいいくかん</rt></ruby>"]],["library","ライブラリー",["図書室","図書<ruby>館<rt>かん</rt></ruby>"]],["playground","プレイグラウンド",["<ruby>校庭<rt>こうてい</rt></ruby>"]],["restroom","レストルーム",["トイレ"]],["school principal's office","スクール プリンスィパルズ オフィス",["校長室"]],["school nurse's office","スクール ナースィズ オフィス",["<ruby>保健<rt>ほけん</rt></ruby>室"]],["crayon","クレイアン",["クレヨン"]],["eraser","イレイサー",["<ruby>消<rt>け</rt></ruby>しゴム"]],["glue stick","グルー スティック",["スティックのり"]],["ink","インク",["インク"]],["magnet","マグネット",["じしゃく"]],["marker","マーカー",["マーカー"]],["notebook","ノウトブック",["ノート"]],["pen","ペン",["ペン"]],["pencil","ペンスル",["えんぴつ"]],["pencil case","ペンスル ケイス",["ふでばこ"]],["pencil sharpener","ペンスル シャープナー",["えんぴつけずり"]],["ruler","ルーラー",["じょうぎ"]],["scissors","スィザーズ",["はさみ"]],["stapler","ステイプラー",["ホッチキス"]],["drama festival","ドラーマ フェスティバル",["<ruby>学芸会<rt>がくげいかい</rt></ruby>"]],["entrance ceremony","エントランス セレモウニー",["<ruby>入学式<rt>にゅうがくしき</rt></ruby>"]],["field trip","フィールド トリップ",["遠足"]],["graduation ceremony","グラジュエイション セレモウニー",["<ruby>卒業式<rt>そつぎょうしき</rt></ruby>"]],["music festival","ミューズィック フェスティバル",["音楽会"]],["school trip","スクール トリップ",["<ruby>修学旅行<rt>しゅうがくりょこう</rt></ruby>"]],["sports festival","スポーツ フェスティバル",["<ruby>運動会<rt>うんどうかい</rt></ruby>"]],["swimming meet","スウィミング ミート",["<ruby>水泳大会<rt>すいえいたいかい</rt></ruby>"]],["volunteer day","ボランティア デイ",["ボランティアの日"]]]},{"id":"sport","name":"スポーツ・しゅみ","w":[["sport","スポート",["スポーツ"]],["soccer","サッカー",["サッカー"]],["baseball","ベイスボール",["<ruby>野球<rt>やきゅう</rt></ruby>"]],["basketball","バスケットボール",["バスケットボール"]],["volleyball","バリボール",["バレーボール"]],["dodgeball","ダッジボール",["ドッジボール"]],["swimming","スウィミング",["<ruby>水泳<rt>すいえい</rt></ruby>"]],["table tennis","テイブル テニス",["<ruby>卓球<rt>たっきゅう</rt></ruby>"]],["badminton","バドミントン",["バドミントン"]],["tennis","テニス",["テニス"]],["marathon","マラソン",["マラソン"]],["gymnastics","ジムナスティックス",["<ruby>体操<rt>たいそう</rt></ruby>"]],["track and field","トラック アンド フィールド",["<ruby>陸上競技<rt>りくじょうきょうぎ</rt></ruby>"]],["cycling","サイクリング",["サイクリング"]],["rugby","ラグビー",["ラグビー"]],["football","フットボール",["フットボール"]],["boxing","ボクシング",["ボクシング"]],["wrestling","レスリング",["レスリング"]],["weightlifting","ウェイトリフティング",["<ruby>重量挙<rt>じゅうりょうあ</rt></ruby>げ"]],["surfing","サーフィング",["サーフィン"]],["sailing","セイリング",["セーリング"]],["canoe","カヌー",["カヌー"]],["archery","アーチェリー",["アーチェリー"]],["climbing","クライミング",["<ruby>登山<rt>とざん</rt></ruby>"]],["bat","バット",["バット"]],["athletics","アスレティックス",["<ruby>運動競技<rt>うんどうきょうぎ</rt></ruby>"]],["ball","ボール",["ボール"]],["racket","ラケット",["ラケット"]],["camping","キャンピング",["キャンプ"]],["fishing","フィッシング",["魚つり"]],["hiking","ハイキング",["ハイキング"]],["jogging","ジョギング",["ジョギング"]],["jump rope","ジャンプ ロウプ",["なわとび"]],["yo-yo","ヨウヨウ",["ヨーヨー"]],["tag","タグ",["おにごっこ"]],["playing","プレイイング",["あそぶこと"]],["reading","リーディング",["読書"]],["shopping","ショッピング",["買い<ruby>物<rt>もの</rt></ruby>"]],["vacation","ベイケイション",["休み","<ruby>休暇<rt>きゅうか</rt></ruby>"]],["piano","ピアノウ",["ピアノ"]],["guitar","ギター",["ギター"]],["violin","バイオリン",["バイオリン"]],["drum","ドラム",["ドラム"]],["recorder","リコーダー",["リコーダー"]]]},{"id":"animal","name":"<ruby>動物<rt>どうぶつ</rt></ruby>","w":[["animal","アニマル",["<ruby>動物<rt>どうぶつ</rt></ruby>"]],["cat","キャット",["ネコ"]],["dog","ドッグ",["犬"]],["fish","フィッシュ",["魚"]],["bear","ベア",["クマ"]],["elephant","エレファント",["ゾウ"]],["panda","パンダ",["パンダ"]],["lion","ライオン",["ライオン"]],["pig","ピッグ",["ブタ"]],["monkey","マンキー",["サル"]],["mouse","マウス",["ネズミ"]],["horse","ホース",["馬"]],["chicken","チキン",["ニワトリ"]],["gorilla","ゴリラ",["ゴリラ"]],["sheep","シープ",["ヒツジ"]],["tiger","タイガー",["トラ"]],["rabbit","ラビット",["ウサギ"]],["koala","コウアーラ",["コアラ"]],["duck","ダック",["アヒル"]],["fox","フォックス",["キツネ"]],["frog","フロッグ",["カエル"]],["snake","スネイク",["ヘビ"]],["wolf","ウルフ",["オオカミ"]],["goat","ゴウト",["ヤギ"]],["ant","アント",["アリ"]],["cow","カウ",["めすの牛"]],["ox","オックス",["おすの牛"]],["spider","スパイダー",["クモ"]],["jaguar","ジャグワー",["ジャガー","ヒョウ"]],["zebra","ズィーブラ",["シマウマ"]],["seal","スィール",["アザラシ","アシカ","オットセイ"]],["yak","ヤック",["ヤク"]],["iguana","イグワーナ",["イグアナ"]],["newt","ニュート",["イモリ"]],["vulture","バルチャー",["ハゲワシ","コンドル"]],["quail","クウェイル",["ウズラ"]]]},{"id":"food","name":"食べ<ruby>物<rt>もの</rt></ruby>","w":[["food","フード",["食べ<ruby>物<rt>もの</rt></ruby>"]],["fruit","フルート",["くだもの"]],["apple","アップル",["りんご"]],["banana","バナナ",["バナナ"]],["peach","ピーチ",["もも"]],["strawberry","ストローベリー",["いちご"]],["grape","グレイプ",["ぶどう"]],["orange","オーレンジ",["オレンジ"]],["melon","メロン",["メロン"]],["pineapple","パイナップル",["パイナップル"]],["cherry","チェリー",["さくらんぼ"]],["lemon","レモン",["レモン"]],["kiwi fruit","キーウィー フルート",["キウイフルーツ"]],["watermelon","ウォーターメロン",["すいか"]],["vegetable","ベジタブル",["やさい"]],["tomato","トメイトウ",["トマト"]],["carrot","キャロット",["にんじん"]],["onion","アニオン",["たまねぎ"]],["potato","ポテイトウ",["じゃがいも"]],["green pepper","グリーン ペパー",["ピーマン"]],["cucumber","キューカンバー",["きゅうり"]],["lettuce","レタス",["レタス"]],["cabbage","キャベッジ",["キャベツ"]],["corn","コーン",["とうもろこし"]],["mushroom","マッシュルーム",["きのこ"]],["nut","ナット",["木の<ruby>実<rt>み</rt></ruby>","ナッツ"]],["broccoli","ブロッコリー",["ブロッコリー"]],["radish","ラディッシュ",["はつかだいこん"]],["zucchini","ズキーニ",["ズッキーニ"]],["breakfast","ブレックファスト",["朝ごはん"]],["lunch","ランチ",["昼ごはん"]],["dinner","ディナー",["夕ごはん"]],["rice","ライス",["<ruby>米<rt>こめ</rt></ruby>","ごはん"]],["rice ball","ライス ボール",["おにぎり"]],["miso","ミーソウ",["みそ"]],["miso soup","ミーソウ スープ",["みそしる"]],["noodle","ヌードル",["めん"]],["bread","ブレッド",["パン"]],["jam","ジャム",["ジャム"]],["egg","エッグ",["たまご"]],["fish","フィッシュ",["魚（食べもの）"]],["curry and rice","カーリー アンド ライス",["カレーライス"]],["ramen","ラーメン",["ラーメン"]],["sandwich","サンドウィッチ",["サンドイッチ"]],["spaghetti","スパゲティ",["スパゲッティ"]],["pizza","ピーツァ",["ピザ"]],["hamburger","ハンバーガー",["ハンバーガー"]],["hot dog","ホット ドッグ",["ホットドッグ"]],["salad","サラッド",["サラダ"]],["pie","パイ",["パイ"]],["fried chicken","フライド チキン",["フライドチキン"]],["French fries","フレンチ フライズ",["フライドポテト"]],["soup","スープ",["スープ"]],["corn soup","コーン スープ",["コーンスープ"]],["sausage","ソーセッジ",["ソーセージ"]],["beefsteak","ビーフステイク",["ビーフステーキ"]],["omelet","オムレット",["オムレツ"]],["grilled fish","グリルド フィッシュ",["<ruby>焼<rt>や</rt></ruby>き魚"]],["namul","ナムル",["ナムル"]],["dessert","ディザート",["デザート"]],["ice cream","アイス クリーム",["アイスクリーム"]],["cake","ケイク",["ケーキ"]],["cupcake","カップケイク",["カップケーキ"]],["chocolate","チョコレット",["チョコレート"]],["donut","ドウナット",["ドーナツ"]],["popcorn","ポップコーン",["ポップコーン"]],["daifuku","ダイフク",["大ふく"]],["pudding","プディング",["プリン"]],["parfait","パーフェイ",["パフェ"]],["shaved ice","シェイブド アイス",["かき<ruby>氷<rt>ごおり</rt></ruby>"]],["gum","ガム",["ガム"]],["snack","スナック",["おやつ","<ruby>軽食<rt>けいしょく</rt></ruby>"]]]},{"id":"drink","name":"<ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby>","w":[["water","ウォーター",["水"]],["milk","ミルク",["牛にゅう"]],["juice","ジュース",["ジュース（くだもの100%）"]],["coffee","コーフィー",["コーヒー"]],["tea","ティー",["<ruby>紅茶<rt>こうちゃ</rt></ruby>"]],["green tea","グリーン ティー",["<ruby>緑茶<rt>りょくちゃ</rt></ruby>"]],["mineral water","ミネラル ウォーター",["ミネラルウォーター"]],["soda pop","ソウダ ポップ",["<ruby>炭酸<rt>たんさん</rt></ruby><ruby>飲料<rt>いんりょう</rt></ruby>"]]]},{"id":"country","name":"国","w":[["country","カントリー",["国"]],["Argentina","アージェンティーナ",["アルゼンチン"]],["Bolivia","ボリビア",["ボリビア"]],["Brazil","ブラズィル",["ブラジル"]],["Britain","ブリトゥン",["イギリス"]],["Canada","キャナダ",["カナダ"]],["China","チャイナ",["中国"]],["Denmark","デンマーク",["デンマーク"]],["Egypt","イージプト",["エジプト"]],["Finland","フィンランド",["フィンランド"]],["France","フランス",["フランス"]],["Germany","ジャーマニー",["ドイツ"]],["Ghana","ガーナ",["ガーナ"]],["Hungary","ハンガリー",["ハンガリー"]],["India","インディア",["インド"]],["Italy","イタリー",["イタリア"]],["Japan","ジャパン",["日本"]],["Kenya","ケニア",["ケニア"]],["Laos","ラウス",["ラオス"]],["Mongolia","モンゴウリア",["モンゴル"]],["Norway","ノーウェイ",["ノルウェー"]],["Oman","オウマーン",["オマーン"]],["Peru","ペルー",["ペルー"]],["Qatar","カタール",["カタール"]],["Russia","ラシャ",["ロシア"]],["Singapore","スィンガポール",["シンガポール"]],["Spain","スペイン",["スペイン"]],["Turkey","ターキー",["トルコ"]],["Thailand","タイランド",["タイ"]],["America","アメリカ",["アメリカ","アメリカ<ruby>合衆国<rt>がっしゅうこく</rt></ruby>"]],["Vietnam","ビエトナーム",["ベトナム"]],["Mexico","メクスィコウ",["メキシコ"]],["Yemen","イエメン",["イエメン"]],["Zambia","ザンビア",["ザンビア"]],["world","ワールド",["<ruby>世界<rt>せかい</rt></ruby>"]]]},{"id":"job","name":"しごと","w":[["job","ジョブ",["しごと"]],["teacher","ティーチャー",["先生"]],["doctor","ドクター",["<ruby>医者<rt>いしゃ</rt></ruby>"]],["police officer","ポリース オフィサー",["<ruby>警察官<rt>けいさつかん</rt></ruby>"]],["fire fighter","ファイア ファイター",["<ruby>消防士<rt>しょうぼうし</rt></ruby>"]],["dentist","デンティスト",["<ruby>歯医者<rt>はいしゃ</rt></ruby>"]],["pilot","パイロット",["パイロット"]],["flight attendant","フライト アテンダント",["<ruby>客室乗務員<rt>きゃくしつじょうむいん</rt></ruby>"]],["bus driver","バス ドライバー",["バスの<ruby>運転手<rt>うんてんしゅ</rt></ruby>"]],["baker","ベイカー",["パン<ruby>屋<rt>や</rt></ruby>さん"]],["florist","フローリスト",["花<ruby>屋<rt>や</rt></ruby>さん"]],["cook","クック",["コック","<ruby>料理人<rt>りょうりにん</rt></ruby>"]],["farmer","ファーマー",["<ruby>農家<rt>のうか</rt></ruby>の人"]],["artist","アーティスト",["<ruby>芸術家<rt>げいじゅつか</rt></ruby>"]],["astronaut","アストロノート",["<ruby>宇宙飛行士<rt>うちゅうひこうし</rt></ruby>"]],["vet","ベット",["<ruby>獣医<rt>じゅうい</rt></ruby>"]],["zookeeper","ズーキーパー",["<ruby>動物園<rt>どうぶつえん</rt></ruby>の<ruby>飼育員<rt>しいくいん</rt></ruby>"]],["soccer player","サッカー プレイヤー",["サッカー<ruby>選手<rt>せんしゅ</rt></ruby>"]],["baseball player","ベイスボール プレイヤー",["<ruby>野球選手<rt>やきゅうせんしゅ</rt></ruby>"]],["figure skater","フィギュア スケイター",["フィギュアスケート<ruby>選手<rt>せんしゅ</rt></ruby>"]],["singer","スィンガー",["歌手"]],["comedian","コミーディアン",["コメディアン"]],["hero","ヒーロウ",["ヒーロー"]],["king","キング",["王さま"]],["queen","クウィーン",["<ruby>女王<rt>じょおう</rt></ruby>"]]]},{"id":"facility","name":"しせつ・たてもの","w":[["house","ハウス",["家"]],["hospital","ホスピタル",["<ruby>病院<rt>びょういん</rt></ruby>"]],["police station","ポリース ステイション",["<ruby>警察署<rt>けいさつしょ</rt></ruby>"]],["fire station","ファイア ステイション",["<ruby>消防署<rt>しょうぼうしょ</rt></ruby>"]],["post office","ポウスト オフィス",["<ruby>郵便局<rt>ゆうびんきょく</rt></ruby>"]],["post","ポウスト",["ポスト"]],["station","ステイション",["<ruby>駅<rt>えき</rt></ruby>"]],["park","パーク",["公園"]],["street","ストリート",["通り","道"]],["library","ライブラリー",["図書<ruby>館<rt>かん</rt></ruby>","図書室"]],["museum","ミューズィーアム",["<ruby>博物館<rt>はくぶつかん</rt></ruby>","<ruby>美術館<rt>びじゅつかん</rt></ruby>"]],["zoo","ズー",["<ruby>動物園<rt>どうぶつえん</rt></ruby>"]],["aquarium","アクウェアリアム",["<ruby>水族館<rt>すいぞくかん</rt></ruby>"]],["amusement park","アミューズメント パーク",["<ruby>遊園地<rt>ゆうえんち</rt></ruby>"]],["convenience store","コンビーニエンス ストア",["コンビニ"]],["supermarket","スーパーマーケット",["スーパーマーケット"]],["department store","ディパートメント ストア",["デパート"]],["restaurant","レストラント",["レストラン"]],["bookstore","ブックストア",["本<ruby>屋<rt>や</rt></ruby>"]],["flower shop","フラワー ショップ",["花<ruby>屋<rt>や</rt></ruby>"]],["gas station","ギャス ステイション",["ガソリンスタンド"]],["shrine","シュライン",["<ruby>神社<rt>じんじゃ</rt></ruby>"]],["temple","テンプル",["寺"]],["castle","キャッスル",["<ruby>城<rt>しろ</rt></ruby>"]]]},{"id":"nature","name":"しぜん","w":[["sun","サン",["<ruby>太陽<rt>たいよう</rt></ruby>"]],["river","リバー",["川"]],["sea","スィー",["海"]],["beach","ビーチ",["はまべ"]],["lake","レイク",["<ruby>湖<rt>みずうみ</rt></ruby>"]],["mountain","マウンテン",["山"]],["tree","トゥリー",["木"]],["flower","フラワー",["花"]],["rainbow","レインボウ",["にじ"]]]},{"id":"life","name":"くらし","w":[["birthday","バースデイ",["<ruby>誕生日<rt>たんじょうび</rt></ruby>"]],["New Year's Day","ニュー イヤーズ デイ",["元日"]],["New Year's Eve","ニュー イヤーズ イーブ",["大みそか"]],["festival","フェスティバル",["おまつり"]],["Snow Festival","スノウ フェスティバル",["雪まつり"]],["Star Festival","スター フェスティバル",["七夕"]],["Children's Day","チルドレンズ デイ",["こどもの日"]],["Doll's Festival","ドールズ フェスティバル",["ひなまつり"]],["bus","バス",["バス"]],["jet","ジェット",["ジェット<ruby>機<rt>き</rt></ruby>"]],["taxi","タクスィー",["タクシー"]],["bicycle","バイスィクル",["<ruby>自転車<rt>じてんしゃ</rt></ruby>"]],["unicycle","ユーニサイクル",["一<ruby>輪<rt>りん</rt></ruby>車"]],["wheelchair","ウィールチェア",["車いす"]],["desk","デスク",["つくえ"]],["table","テイブル",["テーブル"]],["chair","チェア",["いす"]],["bed","ベッド",["ベッド"]],["TV","ティービー",["テレビ"]],["bath","バス",["おふろ"]],["box","ボックス",["<ruby>箱<rt>はこ</rt></ruby>"]],["book","ブック",["本"]],["bag","バッグ",["かばん"]],["umbrella","アンブレラ",["かさ"]],["clock","クロック",["時計"]],["watch","ウォッチ",["うで時計"]],["telephone","テレフォウン",["電話"]],["computer","コンピューター",["コンピューター"]],["cup","カップ",["カップ","茶わん"]],["dish","ディッシュ",["<ruby>皿<rt>さら</rt></ruby>"]],["lunch box","ランチ ボックス",["お<ruby>弁当箱<rt>べんとうばこ</rt></ruby>"]],["calendar","キャレンダー",["カレンダー"]],["fan","ファン",["うちわ","せんぷうき","ファン"]],["newspaper","ニューズペイパー",["<ruby>新聞<rt>しんぶん</rt></ruby>"]],["garbage","ガーベッジ",["ごみ"]],["card","カード",["カード"]],["fireworks","ファイアワークス",["花火"]],["net","ネット",["ネット","あみ"]],["treasure","トレジャー",["<ruby>宝物<rt>たからもの</rt></ruby>"]],["homework","ホウムワーク",["<ruby>宿題<rt>しゅくだい</rt></ruby>"]],["TV program","ティービー プロウグラム",["テレビ<ruby>番組<rt>ばんぐみ</rt></ruby>"]],["cap","キャップ",["ぼうし（ふちのないもの）"]],["hat","ハット",["ぼうし（ふちのあるもの）"]],["gloves","グラブズ",["てぶくろ"]],["shirt","シャート",["シャツ"]],["T-shirt","ティーシャート",["Tシャツ"]],["sweater","スウェター",["セーター"]],["vest","ベスト",["ベスト"]],["pants","パンツ",["ズボン"]],["shorts","ショーツ",["<ruby>半<rt>はん</rt></ruby>ズボン"]],["boots","ブーツ",["ブーツ"]],["morning","モーニング",["朝","<ruby>午前<rt>ごぜん</rt></ruby>"]],["afternoon","アフタヌーン",["午後"]],["night","ナイト",["夜"]],["today","トゥデイ",["今日"]],["tomorrow","トゥモロウ",["<ruby>明日<rt>あした</rt></ruby>"]],["right","ライト",["右"]],["left","レフト",["左"]]]},{"id":"verb","name":"<ruby>動詞<rt>どうし</rt></ruby>","w":[["is","イズ",["〜です","〜にいる","〜にある"]],["am","アム",["〜です","〜にいる"]],["are","アー",["〜です","〜にいる","〜にある"]],["do","ドゥー",["〜する"]],["does","ダズ",["〜する"]],["speak","スピーク",["話す"]],["read","リード",["読む"]],["study","スタディ",["<ruby>勉強<rt>べんきょう</rt></ruby>する"]],["like","ライク",["<ruby>好<rt>す</rt></ruby>きだ"]],["want","ウォント",["ほしい"]],["look","ルック",["見る","〜に見える"]],["walk","ウォーク",["歩く","さんぽさせる"]],["run","ラン",["走る"]],["eat","イート",["食べる"]],["drink","ドリンク",["<ruby>飲<rt>の</rt></ruby>む"]],["sing","スィング",["歌う"]],["jump","ジャンプ",["ジャンプする"]],["dance","ダンス",["おどる"]],["stop","ストップ",["止まる"]],["buy","バイ",["買う"]],["see","スィー",["見える","会う","わかる"]],["cook","クック",["<ruby>料理<rt>りょうり</rt></ruby>する"]],["watch","ウォッチ",["じっと見る","見はる"]],["teach","ティーチ",["教える"]],["meet","ミート",["会う"]],["play","プレイ",["（スポーツを）する","（がっきを）<ruby>演奏<rt>えんそう</rt></ruby>する","あそぶ"]],["get","ゲット",["手に入れる","もらう","<ruby>着<rt>つ</rt></ruby>く"]],["make","メイク",["作る"]],["put","プット",["<ruby>置<rt>お</rt></ruby>く"]],["sound","サウンド",["聞こえる","音"]],["clean","クリーン",["そうじする","きれいにする"]],["wash","ウォッシュ",["<ruby>洗<rt>あら</rt></ruby>う"]],["leave","リーブ",["出かける","<ruby>去<rt>さ</rt></ruby>る","<ruby>出発<rt>しゅっぱつ</rt></ruby>する"]],["ride","ライド",["<ruby>乗<rt>の</rt></ruby>る"]],["turn","ターン",["<ruby>曲<rt>ま</rt></ruby>がる","回る"]],["check","チェック",["たしかめる","<ruby>調<rt>しら</rt></ruby>べる"]],["brush","ブラッシュ",["みがく","ブラシ"]],["practice","プラクティス",["<ruby>練習<rt>れんしゅう</rt></ruby>する"]],["swim","スウィム",["<ruby>泳<rt>およ</rt></ruby>ぐ"]],["ski","スキー",["スキーをする"]],["skate","スケイト",["スケートをする"]]]},{"id":"adj","name":"<ruby>形容詞<rt>けいようし</rt></ruby>","w":[["good","グッド",["よい","上手な"]],["fine","ファイン",["元気な","けっこうな","晴れた"]],["nice","ナイス",["すてきな"]],["great","グレイト",["すばらしい"]],["wonderful","ワンダフル",["すばらしい"]],["fantastic","ファンタスティック",["すばらしい"]],["big","ビッグ",["大きい"]],["small","スモール",["小さい"]],["long","ロング",["長い"]],["short","ショート",["<ruby>短<rt>みじか</rt></ruby>い","せが<ruby>低<rt>ひく</rt></ruby>い"]],["high","ハイ",["高い"]],["hard","ハード",["むずかしい","かたい","一生けんめいに"]],["soft","ソフト",["やわらかい"]],["new","ニュー",["新しい"]],["old","オウルド",["古い","年をとった"]],["many","メニー",["たくさんの（数）"]],["much","マッチ",["たくさんの（<ruby>量<rt>りょう</rt></ruby>）"]],["special","スペシャル",["<ruby>特別<rt>とくべつ</rt></ruby>な"]],["beautiful","ビューティフル",["<ruby>美<rt>うつく</rt></ruby>しい"]],["exciting","イクサイティング",["わくわくする"]],["fun","ファン",["楽しい","おもしろい","楽しみ"]],["hot","ホット",["<ruby>暑<rt>あつ</rt></ruby>い","<ruby>熱<rt>あつ</rt></ruby>い","からい"]],["cold","コウルド",["<ruby>寒<rt>さむ</rt></ruby>い","<ruby>冷<rt>つめ</rt></ruby>たい","かぜ"]],["cool","クール",["すずしい"]],["happy","ハッピー",["<ruby>幸<rt>しあわ</rt></ruby>せな"]],["sorry","ソーリー",["ごめんなさい","すまないと思う","ざんねんな"]],["sad","サッド",["<ruby>悲<rt>かな</rt></ruby>しい"]],["sleepy","スリーピー",["ねむい"]],["tired","タイアード",["つかれた"]],["hungry","ハングリー",["おなかがすいた"]],["busy","ビズィー",["いそがしい"]],["kind","カインド",["親切な"]],["friendly","フレンドリー",["したしみやすい"]],["gentle","ジェントル",["やさしい"]],["active","アクティブ",["<ruby>活動的<rt>かつどうてき</rt></ruby>な"]],["brave","ブレイブ",["<ruby>勇<rt>ゆう</rt></ruby>かんな"]],["delicious","デリシャス",["とてもおいしい"]],["yummy","ヤミー",["おいしい"]],["sweet","スウィート",["<ruby>甘<rt>あま</rt></ruby>い"]],["salty","ソールティ",["しおからい"]],["sour","サウア",["すっぱい"]],["bitter","ビター",["<ruby>苦<rt>にが</rt></ruby>い"]],["cloudy","クラウディ",["くもりの"]],["rainy","レイニー",["雨の"]],["snowy","スノウイ",["雪の"]],["sunny","サニー",["晴れの"]]]},{"id":"adv","name":"<ruby>副詞<rt>ふくし</rt></ruby>","w":[["not","ノット",["〜でない"]],["up","アップ",["上へ"]],["down","ダウン",["下へ"]],["right","ライト",["右へ","右に","正しい"]],["left","レフト",["左へ","左に"]],["here","ヒア",["ここで"]],["outside","アウトサイド",["外で"]],["straight","ストレイト",["まっすぐに"]],["very","ベリー",["とても"]],["so","ソウ",["そのように","とても","だから"]],["well","ウェル",["上手に","よく"]],["always","オールウェイズ",["いつも"]],["usually","ユージュアリー",["たいてい","ふつうは"]],["sometimes","サムタイムズ",["ときどき"]],["never","ネバー",["けっして〜ない"]],["together","トゥゲザー",["いっしょに"]],["then","ゼン",["そのとき","それなら","それから"]],["when","ウェン",["いつ"]],["where","ウェア",["どこ"]],["how","ハウ",["どのように"]],["why","ワイ",["なぜ"]]]},{"id":"prep","name":"<ruby>前置詞<rt>ぜんちし</rt></ruby>","w":[["for","フォー",["〜のために","〜の<ruby>間<rt>あいだ</rt></ruby>"]],["from","フロム",["〜から"]],["in","イン",["〜の中に","〜の中で"]],["on","オン",["〜の上に","〜に"]],["under","アンダー",["〜の下に"]],["about","アバウト",["〜について","およそ"]],["by","バイ",["〜によって","〜のそばに","〜までに"]]]},{"id":"pron","name":"<ruby>代名詞<rt>だいめいし</rt></ruby>","w":[["I","アイ",["<ruby>私<rt>わたし</rt></ruby>は","<ruby>私<rt>わたし</rt></ruby>が"]],["my","マイ",["<ruby>私<rt>わたし</rt></ruby>の"]],["me","ミー",["<ruby>私<rt>わたし</rt></ruby>を"]],["you","ユー",["あなたは","あなたたちは"]],["your","ユア",["あなたの"]],["we","ウィー",["<ruby>私<rt>わたし</rt></ruby>たち"]],["our","アウア",["<ruby>私<rt>わたし</rt></ruby>たちの"]],["us","アス",["<ruby>私<rt>わたし</rt></ruby>たちを"]],["you","ユー",["あなたを","あなたに"]],["he","ヒー",["<ruby>彼<rt>かれ</rt></ruby>は","<ruby>彼<rt>かれ</rt></ruby>が"]],["his","ヒズ",["<ruby>彼<rt>かれ</rt></ruby>の"]],["him","ヒム",["<ruby>彼<rt>かれ</rt></ruby>を"]],["she","シー",["<ruby>彼女<rt>かのじょ</rt></ruby>は","<ruby>彼女<rt>かのじょ</rt></ruby>が"]],["her","ハー",["<ruby>彼女<rt>かのじょ</rt></ruby>の"]],["they","ゼイ",["<ruby>彼<rt>かれ</rt></ruby>らは","<ruby>彼<rt>かれ</rt></ruby>らが","それらは"]],["their","ゼア",["<ruby>彼<rt>かれ</rt></ruby>らの"]],["them","ゼム",["<ruby>彼<rt>かれ</rt></ruby>らを"]],["her","ハー",["<ruby>彼女<rt>かのじょ</rt></ruby>を"]],["it","イット",["それは","それを"]],["this","ズィス",["これ"]],["that","ザット",["あれ"]],["what","ワット",["何"]],["who","フー",["だれ"]]]},{"id":"other","name":"そのほか","w":[["hi","ハイ",["やあ"]],["hello","ハロウ",["こんにちは"]],["yes","イエス",["はい","そうです"]],["no","ノウ",["いいえ"]],["oh","オウ",["おや"]],["wow","ワウ",["わあ"]],["well","ウェル",["ええと","さて"]],["OK","オウケイ",["いいよ","オーケー"]],["bye","バイ",["さようなら"]],["goodbye","グッドバイ",["さようなら"]],["let's","レッツ",["〜しよう"]],["and","アンド",["〜と"]],["but","バット",["しかし"]],["can","キャン",["〜できる","〜してもよい"]]]}];
+</script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const P='kousen-flash-'+KIND+'-';
+function load(k,def){try{const v=localStorage.getItem(P+k);return v===null?def:JSON.parse(v)}catch(e){return def}}
+function save(k,v){try{localStorage.setItem(P+k,JSON.stringify(v))}catch(e){}}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const COUNT=10;
+
+/* ---------- グループ ---------- */
+const GCOL={1:'#E23B3B',2:'#F08A24',3:'#22A55B',4:'#2F6FE0',5:'#8E5BD8',6:'#C2477A'};
+const GROUPS=KIND==='kanji'
+  ?[1,2,3,4,5,6].map(g=>({id:String(g),name:g+'年のかん字',short:g+'<small>年</small>',items:DATA[g],c:GCOL[g]}))
+  :DATA.map(c=>({id:c.id,name:c.name,items:c.w,c:null}));
+const byId=id=>GROUPS.find(g=>g.id===id);
+let cur=load('last',GROUPS[0].id);if(!byId(cur))cur=GROUPS[0].id;
+let mode=load('mode','tap');if(!['tap','auto'].includes(mode))mode='tap';
+let sec=load('sec',5);if(![3,5,7].includes(sec))sec=5;
+
+/* まだ見ていないものの山（ぜんぶ見るまで同じものは出ない） */
+function deck(g){
+  let d=load('deck-'+g.id,null);
+  const n=g.items.length;
+  if(!Array.isArray(d)||d.some(i=>typeof i!=='number'||i<0||i>=n))d=shuffle([...Array(n).keys()]);
+  return d;
+}
+function seenCount(g){return g.items.length-deck(g).length}
+function draw(g){
+  let d=deck(g);const out=[];let looped=false;
+  const k=Math.min(COUNT,g.items.length);
+  while(out.length<k){
+    if(!d.length){d=shuffle([...Array(g.items.length).keys()].filter(i=>!out.includes(i)));looped=true}
+    out.push(d.shift());
+  }
+  return {list:out,looped};
+}
+function markSeen(g,i,upcoming){
+  let d=deck(g);const j=d.indexOf(i);if(j>=0)d.splice(j,1);
+  if(!d.length){save('round-'+g.id,(load('round-'+g.id,0)||0)+1);d=shuffle([...Array(g.items.length).keys()].filter(x=>x!==i&&!upcoming.includes(x)));if(!d.length)d=shuffle([...Array(g.items.length).keys()])}
+  save('deck-'+g.id,d);
+}
+
+/* ---------- えらぶ ---------- */
+function renderPick(){
+  const p=$('pick');
+  if(KIND==='kanji'){
+    p.className='grades';
+    p.innerHTML=GROUPS.map(g=>{const s=seenCount(g),n=g.items.length;return '<button class="gr" data-g="'+g.id+'" style="--c:'+g.c+';--p:'+Math.round(s/n*100)+'%" aria-pressed="'+(g.id===cur)+'"><b>'+g.short+'</b><span>'+n+'字</span><i></i></button>'}).join('');
+  }else{
+    p.className='cats';
+    p.innerHTML=GROUPS.map(g=>{const s=seenCount(g),n=g.items.length;return '<button class="ct" data-g="'+g.id+'" style="--p:'+Math.round(s/n*100)+'%" aria-pressed="'+(g.id===cur)+'"><span>'+g.name+'</span><small>'+n+'こ</small><i></i></button>'}).join('');
+  }
+  const g=byId(cur),s=seenCount(g),r=load('round-'+g.id,0)||0;
+  $('seenNow').innerHTML=(KIND==='kanji'?g.id+'年':'このなかま')+'：<b>'+g.items.length+'</b>'+(KIND==='kanji'?'字':'こ')+'中 <b>'+s+'</b> 見たよ'+(r?'（'+r+'しゅう目クリア）':'');
+  document.querySelectorAll('#modeTabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===mode));
+  document.querySelectorAll('[data-sec]').forEach(b=>b.setAttribute('aria-pressed',Number(b.dataset.sec)===sec));
+  $('secRow').style.opacity=mode==='auto'?'1':'.45';
+  save('last',cur);save('mode',mode);save('sec',sec);
+}
+$('pick').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b)return;cur=b.dataset.g;renderPick()});
+document.querySelectorAll('#modeTabs button').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;renderPick()}));
+document.querySelectorAll('[data-sec]').forEach(b=>b.addEventListener('click',()=>{sec=Number(b.dataset.sec);mode='auto';renderPick()}));
+$('reset').addEventListener('click',()=>{const g=byId(cur);try{localStorage.removeItem(P+'deck-'+g.id);localStorage.removeItem(P+'round-'+g.id)}catch(e){}renderPick()});
+function show(id){['sel','play','result'].forEach(s=>$(s).hidden=s!==id);window.scrollTo(0,0)}
+
+/* ---------- カード ---------- */
+function kunSpan(k,kj){
+  const [a,b]=k.split('.');
+  return '<span>'+esc(a)+(b?'<span class="o">'+esc(b)+'</span>':'')+'</span>';
+}
+function renderKanji(it){
+  const [kj,on,kun]=it;
+  const ex=kun.filter(k=>k.includes('.')).map(k=>{const [a,b]=k.split('.');return '<span class="ex"><ruby>'+kj+'<rt>'+esc(a)+'</rt></ruby>'+esc(b)+'</span>'});
+  return '<div class="kgrid">'+
+    '<div class="side kun"><span class="lbl">くん読み</span><div class="rd kun" data-fit>'+(kun.length?kun.map(k=>kunSpan(k,kj)).join(''):'<span class="none">なし</span>')+'</div></div>'+
+    '<div class="kc"><span class="kj">'+kj+'</span></div>'+
+    '<div class="side on"><span class="lbl">音読み</span><div class="rd on" data-fit>'+(on.length?on.map(o=>'<span>'+esc(o)+'</span>').join(''):'<span class="none">なし</span>')+'</div></div>'+
+    '</div><div class="sup"><span class="t">おくりがなをつけると</span>'+(ex.length?ex.join(''):'<span class="no">おくりがなをつける読みはないよ</span>')+'</div>';
+}
+function renderEn(it){
+  const [w,ka,ms]=it;
+  const cls=w.length>16?' xl':(w.length>9?' long':'');
+  return '<div class="ecard"><div class="ka">'+esc(ka)+'</div><div class="w'+cls+'" lang="en">'+esc(w)+'</div><div class="line"></div><div class="ms'+(ms.length>2?' many':'')+'">'+ms.map(m=>'<span>'+m+'</span>').join('')+'</div></div>';
+}
+/* 読みがはみ出すときは文字を小さくする */
+function fit(){
+  document.querySelectorAll('#cin [data-fit]').forEach(el=>{
+    const over=()=>el.scrollWidth>el.clientWidth+1||el.scrollHeight>el.clientHeight+1;
+    // まずは1つの読みを1れつずつ。入りきらないときは つめてならべる
+    el.classList.remove('flow');let fs=KIND==='kanji'?28:22;el.style.fontSize=fs+'px';
+    while(fs>16&&over()){fs-=1;el.style.fontSize=fs+'px'}
+    if(over()){el.classList.add('flow');fs=24;el.style.fontSize=fs+'px';while(fs>11&&over()){fs-=1;el.style.fontSize=fs+'px'}}
+  });
+}
+window.addEventListener('resize',()=>{if(!$('play').hidden)fit()});
+
+/* ---------- プレイ ---------- */
+let roundAtStart=0,grp=null,list=[],idx=0,timer=0,t0=0,raf=0,paused=false,busy=false;
+function startGame(){
+  grp=byId(cur);clearFx();roundAtStart=load('round-'+grp.id,0)||0;
+  const d=draw(grp);list=d.list;idx=0;paused=false;
+  $('playTag').style.setProperty('--c',grp.c||'var(--accent)');
+  $('playTag').innerHTML='<i></i><span>'+grp.name+'</span>';
+  $('cAll').textContent=list.length;
+  $('dots').innerHTML=list.map(()=>'<span></span>').join('');
+  $('dots').style.gridTemplateColumns='repeat('+list.length+',1fr)';
+  $('bar').hidden=mode!=='auto';$('pause').hidden=mode!=='auto';$('hintTap').hidden=false;
+  show('play');showCard();
+}
+function showCard(){
+  const i=list[idx],it=grp.items[i];
+  markSeen(grp,i,list.slice(idx+1));
+  $('cNow').textContent=idx+1;
+  [...$('dots').children].forEach((d,j)=>{d.className=j<idx?'done':(j===idx?'now':'')});
+  const c=$('card');c.classList.remove('flip');void c.offsetWidth;c.classList.add('flip');
+  $('cin').innerHTML=KIND==='kanji'?renderKanji(it):renderEn(it);
+  fit();
+  if(KIND==='en')later(()=>sayWord(false),250);
+  startAuto();
+}
+function startAuto(){
+  cancelAnimationFrame(raf);
+  if(mode!=='auto')return;
+  t0=performance.now();renderPause();
+  const tick=()=>{
+    if(paused){raf=requestAnimationFrame(tick);return}
+    const p=Math.min(1,(performance.now()-t0)/(sec*1000));
+    $('barIn').style.width=(p*100)+'%';
+    if(p>=1){next();return}
+    raf=requestAnimationFrame(tick);
+  };
+  raf=requestAnimationFrame(tick);
+}
+let pausedAt=0;
+function renderPause(){
+  $('pause').innerHTML=paused
+    ?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg>さいかい'
+    :'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg>とめる';
+}
+$('pause').addEventListener('click',()=>{
+  if(paused){t0+=performance.now()-pausedAt;paused=false}else{paused=true;pausedAt=performance.now()}
+  renderPause();
+});
+let timers=[];function later(fn,ms){timers.push(setTimeout(fn,ms))}
+function next(){
+  if(busy)return;
+  cancelAnimationFrame(raf);
+  if(idx+1>=list.length){finish();return}
+  idx++;showCard();
+}
+$('card').addEventListener('click',()=>{if(!$('play').hidden){if(paused){paused=false;renderPause()}next()}});
+$('card').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();next()}});
+document.addEventListener('keydown',e=>{if(!$('play').hidden&&!document.querySelector('dialog[open]')&&(e.key==='ArrowRight')){e.preventDefault();next()}});
+$('quit').addEventListener('click',()=>{cancelAnimationFrame(raf);timers.forEach(clearTimeout);if(window.speechSynthesis)speechSynthesis.cancel();renderPick();show('sel')});
+
+/* 英語のはつおん（英たんごのみ） */
+const S=window.speechSynthesis||null;let enVoice=null;
+function pickVoice(){if(!S)return;const all=S.getVoices();const en=all.filter(v=>/^en[-_]US/i.test(v.lang));const en2=en.length?en:all.filter(v=>/^en/i.test(v.lang));enVoice=en2.find(v=>/Samantha|Google US|Aria|Jenny|Zira|Allison|Ava/i.test(v.name))||en2[0]||null}
+if(S){pickVoice();if('onvoiceschanged' in S)S.addEventListener('voiceschanged',pickVoice)}
+let soundOn=load('sound',KIND==='en');
+function sayWord(force){
+  if(KIND!=='en'||!S||typeof SpeechSynthesisUtterance!=='function')return;
+  if(!force&&!soundOn)return;
+  const w=grp.items[list[idx]][0].replace(/[()（）]/g,'').replace(/\s*\/\s*/g,', ');
+  const u=new SpeechSynthesisUtterance(w);u.lang='en-US';if(enVoice)u.voice=enVoice;u.rate=.85;
+  if(S.speaking||S.pending){S.cancel();setTimeout(()=>S.speak(u),60)}else S.speak(u);
+}
+const sayBtn=$('say');
+if(sayBtn){
+  const r=()=>{sayBtn.setAttribute('aria-pressed',soundOn);sayBtn.querySelector('span').textContent=soundOn?'はつおん ON':'はつおん OFF'};
+  sayBtn.addEventListener('click',()=>{soundOn=!soundOn;save('sound',soundOn);r();if(soundOn)sayWord(true);else if(S)S.cancel()});r();
+}
+
+/* ---------- クリア ---------- */
+let ac=null;
+function tone(f,dur,at){try{if(!ac){const C=window.AudioContext||window.webkitAudioContext;if(C)ac=new C()}if(!ac)return;if(ac.state==='suspended')ac.resume();const t=ac.currentTime+at,o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(.16,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+dur+.02)}catch(e){}}
+function finish(){
+  cancelAnimationFrame(raf);
+  [523,659,784,1047].forEach((f,i)=>tone(f,.25,i*.11));
+  $('rMode').innerHTML=grp.name+'　'+list.length+'もん';
+  if(KIND==='kanji')$('rSeen').innerHTML='<div class="seenGrid">'+list.map(i=>'<span>'+grp.items[i][0]+'</span>').join('')+'</div>';
+  else $('rSeen').innerHTML='<div class="seenList">'+list.map(i=>'<span lang="en">'+esc(grp.items[i][0])+'</span>').join('')+'</div>';
+  const s=seenCount(grp),n=grp.items.length,r=load('round-'+grp.id,0)||0;
+  const all=r>roundAtStart;
+  $('rProg').className='prog'+(all?' all':'');
+  $('rProg').innerHTML=all?'🎉 '+n+(KIND==='kanji'?'字':'こ')+'ぜんぶ見たよ！ つぎは またさいしょから':(n+(KIND==='kanji'?'字':'こ')+'中 <b>'+s+'</b> 見たよ（のこり '+(n-s)+'）');
+  show('result');$('rTitle').focus({preventScroll:true});
+  setTimeout(celebrate,150);
+}
+$('again').addEventListener('click',()=>startGame());
+$('toSel').addEventListener('click',()=>{clearFx();renderPick();show('sel')});
+$('start').addEventListener('click',()=>startGame());
+let fxTimer=0;
+const FX_STAR='<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4l8.2 17.6 19.3 2.2-14.3 13.1 3.9 19L32 46.3 14.9 55.9l3.9-19L4.5 23.8l19.3-2.2z" fill="#F6C343" stroke="#1F2A44" stroke-width="3.5" stroke-linejoin="round"/><circle cx="25" cy="24" r="3.4" fill="#fff" opacity=".8"/></svg>';
+function clearFx(){clearTimeout(fxTimer);const e=$('clearFx');if(e)e.remove()}
+function celebrate(){
+  clearFx();const b=$('resultBox');const fx=document.createElement('div');fx.className='clearFx';fx.id='clearFx';fx.setAttribute('aria-hidden','true');
+  fx.style.setProperty('--bw',Math.min(b.clientWidth,560)+'px');
+  const cols=['#E23B3B','#F08A24','#F6C343','#22A55B','#2F6FE0','#8E5BD8'];
+  const sparks=Array.from({length:14},(_,i)=>`<i style="--a:${i*360/14}deg;--c:${cols[i%cols.length]}"></i>`).join('');
+  const stars=[[-.3,0,.13,.3],[.3,0,.13,.5]].map(([x,y,s,d])=>`<div class="cfStar" style="left:calc(50% + var(--bw)*${x});top:calc(40px + var(--bw)*${y});--s:${s};--d:${d}s">${FX_STAR}</div>`).join('');
+  fx.innerHTML=`<div class="cfFlash"></div><div class="cfSparks">${sparks}</div>${stars}`;
+  b.appendChild(fx);fxTimer=setTimeout(()=>{fx.classList.add('out');fxTimer=setTimeout(()=>fx.remove(),460)},3000);
+}
+
+/* ---------- あそびかた ---------- */
+const dlg=$('tuto');
+function openTuto(){if(typeof dlg.showModal==='function'){if(!dlg.open)dlg.showModal()}else dlg.setAttribute('open','');document.body.classList.add('lock');dlg.querySelector('.body').scrollTop=0;$('tutoTitle').focus()}
+function closeTuto(){if(typeof dlg.close==='function'&&dlg.open)dlg.close();else dlg.removeAttribute('open');document.body.classList.remove('lock');save('tutorial-seen',1)}
+$('openTuto').addEventListener('click',()=>{paused=true;pausedAt=performance.now();renderPause();openTuto()});$('closeTuto').addEventListener('click',closeTuto);$('startTuto').addEventListener('click',closeTuto);
+dlg.addEventListener('cancel',e=>{e.preventDefault();closeTuto()});
+dlg.addEventListener('click',e=>{if(e.target===dlg)closeTuto()});
+
+renderPick();
+if(!load('tutorial-seen',0))openTuto();
+})();
+</script>
+<script>
+if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
+</script>
+<script>
+(function(){
+  const dlg=document.getElementById('tuto'),v=document.getElementById('tutoVideo'),box=document.getElementById('vbox'),
+        btn=document.getElementById('vplay'),lbl=document.getElementById('vplayLabel');
+  if(!dlg||!v)return;
+  const sync=()=>{box.classList.toggle('playing',!v.paused&&!v.ended)};
+  v.addEventListener('play',sync);v.addEventListener('playing',sync);v.addEventListener('pause',sync);
+  v.addEventListener('ended',()=>{lbl.textContent='もういちど見る';sync()});
+  btn.addEventListener('click',()=>{if(v.ended)v.currentTime=0;v.play().catch(()=>{})});
+  function onOpen(){lbl.textContent='どうがを見る';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
+  function onClose(){v.pause()}
+  let was=dlg.open;if(was)onOpen();
+  new MutationObserver(()=>{if(dlg.open&&!was)onOpen();else if(!dlg.open&&was)onClose();was=dlg.open}).observe(dlg,{attributes:true,attributeFilter:['open']});
+})();
+</script>
+</body>
+</html>

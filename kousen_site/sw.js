@@ -1,6 +1,6 @@
 // 知育Webアプリ KouSen式 Service Worker
 // ファイルを更新したら VERSION を上げてください（古いキャッシュが入れ替わります）
-const VERSION = 'v23';
+const VERSION = 'v33';
 const CACHE = 'kousen-' + VERSION;
 const FONT_CACHE = 'kousen-fonts';
 const ASSETS = [
@@ -9,6 +9,11 @@ const ASSETS = [
   './korokoro_puzzle.html',
   './korokoro_craft.html',
   './anzan_timeattack.html',
+  './kuku_master.html',
+  './kanji_ou.html',
+  './eitango_master.html',
+  './flash_kanji.html',
+  './flash_eitango.html',
   './yamakawa_timeattack.html',
   './chiba_puzzle.html',
   './japan_puzzle.html',
@@ -26,6 +31,16 @@ const ASSETS = [
   './img/japan.png',
   './img/yamakawa.webp',
   './img/yamakawa.png',
+  './img/kuku.webp',
+  './img/kuku.png',
+  './img/kanji.webp',
+  './img/kanji.png',
+  './img/eitango.webp',
+  './img/eitango.png',
+  './img/flashk.webp',
+  './img/flashk.png',
+  './img/flashe.webp',
+  './img/flashe.png',
   './img/openchat_qr.png',
   './img/food.webp',
   './img/food.png',
@@ -40,6 +55,11 @@ const ASSETS = [
   './video/chiba_tutorial.jpg',
   './video/jp_tutorial.jpg',
   './video/yamakawa_tutorial.jpg',
+  './video/kuku_tutorial.jpg',
+  './video/kanji_tutorial.jpg',
+  './video/eitango_tutorial.jpg',
+  './video/flashk_tutorial.jpg',
+  './video/flashe_tutorial.jpg',
   './video/food_tutorial.jpg'
 ];
 
