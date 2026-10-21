@@ -107,11 +107,17 @@ h1 .dot{display:inline-block;width:.5em;height:.5em;border-radius:50%;margin-lef
 /* けっか */
 .result{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px 18px 20px;display:flex;flex-direction:column;gap:12px;text-align:center;overflow:hidden}
 .result h2{margin:0;font-family:var(--boldFont);font-size:1.6rem;font-weight:700;letter-spacing:.06em}
+.bestNow{display:flex;align-items:baseline;justify-content:center;gap:10px;padding:8px 12px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
+.bestNow .k{color:var(--sub);font-size:.95rem}
+.bestNow .v{font-family:var(--boldFont);font-weight:700;font-size:1.6rem;font-variant-numeric:tabular-nums}
+.bestNow .v small{font-size:.55em;margin-left:2px}
+.bestNow .v.empty{font-size:1.05rem;color:var(--sub);font-weight:400}
+.newBest{align-self:center;padding:4px 14px;border-radius:999px;background:#F6C343;color:#1F2A44;font-size:1rem;font-family:var(--boldFont);font-weight:700}
 .scoreBox{border-radius:18px;background:var(--board);color:#fff;padding:12px 10px 14px;box-shadow:inset 0 -6px 0 var(--rim)}
 .scoreBox .k{font-size:.95rem;opacity:.9}
 .scoreBox .v{font-family:var(--boldFont);font-weight:700;font-size:clamp(2.6rem,13vw,3.6rem);line-height:1.15;font-variant-numeric:tabular-nums}
 .scoreBox .v small{font-size:.4em;margin-left:4px}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .stats div{background:var(--bg);border-radius:12px;padding:6px 4px}
 .stats .k{display:block;font-size:.85rem;color:var(--sub)}
 .stats .v{font-family:var(--boldFont);font-weight:700;font-size:1.25rem;font-variant-numeric:tabular-nums}
@@ -186,6 +192,7 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
         <span><i style="background:linear-gradient(#D3E6F5 0 5px,#2F6FE0 5px 11px,#D3E6F5 11px)"></i><ruby>河川<rt>かせん</rt></ruby></span>
         <span><i style="background:radial-gradient(circle,#fff 0 3px,#E23B3B 3px 6px,transparent 6px)"></i><ruby>半島<rt>はんとう</rt></ruby></span>
       </div>
+      <div class="bestNow"><span class="k">ベストスコア</span><span class="v" id="bestNow">―</span></div>
       <button class="start" id="start"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>スタート</button>
       <div class="sndRow"><button class="snd" data-snd aria-pressed="true"></button></div>
       <table class="hist" id="hist1"></table>
@@ -221,9 +228,11 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
     <div class="result" id="resultBox">
       <h2 id="rTitle"><ruby>結果<rt>けっか</rt></ruby></h2>
       <div class="scoreBox"><div class="k">スコア</div><div class="v"><span id="rScore">0</span><small><ruby>点<rt>てん</rt></ruby></small></div></div>
+      <span class="newBest" id="rNew" hidden>ベストスコアこうしん！</span>
       <div class="stats">
         <div><span class="k"><ruby>正解<rt>せいかい</rt></ruby>の<ruby>数<rt>かず</rt></ruby></span><span class="v" id="rOk">0</span></div>
         <div><span class="k">タイム</span><span class="v" id="rTime">0:00.0</span></div>
+        <div><span class="k">ベスト</span><span class="v" id="rBest">0</span></div>
       </div>
       <table class="hist" id="hist2"></table>
       <div class="rbtns">
@@ -269,10 +278,12 @@ const NS='http://www.w3.org/2000/svg';
 const rb=s=>s.replace(/\{([^|}]+)\|([^}]+)\}/g,'<ruby>$1<rt>$2</rt></ruby>');
 const CAT={s:{n:'{山地|さんち}・{山脈|さんみゃく}・{高地|こうち}',q:'{山地|さんち}・{山脈|さんみゃく}・{高地|こうち}',c:'#2E8B57'},h:{n:'{平野|へいや}',q:'{平野|へいや}',c:'#E07B1A'},k:{n:'{河川|かせん}',q:'{川|かわ}',c:'#2F6FE0'},t:{n:'{半島|はんとう}',q:'{半島|はんとう}',c:'#E23B3B'}};
 const COUNT=10, LIMIT=300, FAST=40, MAXS=1000, MINS=10;
-const KEY_HIST='kousen-yamakawa-history', KEY_SND='kousen-yamakawa-sound', KEY_TUTO='kousen-yamakawa-tutorial-seen';
+const KEY_BEST='kousen-yamakawa-best', KEY_HIST='kousen-yamakawa-history', KEY_SND='kousen-yamakawa-sound', KEY_TUTO='kousen-yamakawa-tutorial-seen';
 function load(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 let hist=load(KEY_HIST,[]); if(!Array.isArray(hist))hist=[];
+let best=Number(load(KEY_BEST,0))||0; best=Math.max(best,...hist.map(h=>h.s||0));
+function renderBest(){const e=document.getElementById('bestNow');if(!e)return;e.innerHTML=best?best.toLocaleString('ja-JP')+' <small>'+rb('{点|てん}')+'</small>':'まだありません';e.classList.toggle('empty',!best)}
 let soundOn=load(KEY_SND,true);
 const fmtT=s=>{const m=Math.floor(s/60),r=s-m*60;return m+':'+(r<10?'0':'')+r.toFixed(1)};
 const fmtD=t=>{const d=new Date(t);return (d.getMonth()+1)+'/'+d.getDate()+' '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')};
@@ -381,6 +392,8 @@ function finish(){
   running=false;cancelAnimationFrame(timerRaf);
   const sec=(performance.now()-t0)/1000, score=calcScore(sec,ok), now=Date.now();
   hist.unshift({d:now,s:score,c:ok,t:Math.round(sec*10)/10});hist=hist.slice(0,5);save(KEY_HIST,hist);
+  const isNew=score>best;if(isNew){best=score;save(KEY_BEST,best)}
+  $('rNew').hidden=!isNew;$('rBest').textContent=best.toLocaleString('ja-JP');renderBest();
   $('rScore').textContent=score.toLocaleString('ja-JP');$('rOk').innerHTML=rb(`${ok} / ${COUNT}{問|もん}`);$('rTime').textContent=fmtT(sec);
   renderHist($('hist2'),now);renderHist($('hist1'));
   show('result');sfx.clear();later(celebrate,200);
@@ -411,7 +424,7 @@ $('openTuto').onclick=openTuto;$('closeTuto').onclick=closeTuto;$('startTuto').o
 dlg.addEventListener('cancel',e=>{e.preventDefault();closeTuto()});
 dlg.addEventListener('click',e=>{if(e.target===dlg)closeTuto()});
 
-renderSnd();renderHist($('hist1'));
+renderSnd();renderHist($('hist1'));renderBest();
 if(!load(KEY_TUTO,0))openTuto();
 </script>
 <script>

@@ -1,6 +1,6 @@
 // 知育Webアプリ KouSen式 Service Worker
 // ファイルを更新したら VERSION を上げてください（古いキャッシュが入れ替わります）
-const VERSION = 'v39';
+const VERSION = 'v44';
 const CACHE = 'kousen-' + VERSION;
 const FONT_CACHE = 'kousen-fonts';
 const ASSETS = [
@@ -14,6 +14,7 @@ const ASSETS = [
   './eitango_master.html',
   './flash_kanji.html',
   './flash_eitango.html',
+  './color_timeattack.html',
   './yamakawa_timeattack.html',
   './chiba_puzzle.html',
   './japan_puzzle.html',
@@ -41,6 +42,8 @@ const ASSETS = [
   './img/flashk.png',
   './img/flashe.webp',
   './img/flashe.png',
+  './img/color.webp',
+  './img/color.png',
   './img/openchat_qr.png',
   './img/food.webp',
   './img/food.png',
@@ -60,6 +63,7 @@ const ASSETS = [
   './video/eitango_tutorial.jpg',
   './video/flashk_tutorial.jpg',
   './video/flashe_tutorial.jpg',
+  './video/color_tutorial.jpg',
   './video/food_tutorial.jpg'
 ];
 
