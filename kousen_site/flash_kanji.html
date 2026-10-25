@@ -136,6 +136,12 @@ h1{margin:0;font-size:clamp(1.15rem,5.2vw,1.7rem);font-weight:600;line-height:1.
 .say{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:999px;border:2px solid var(--line);background:var(--panel);font-size:.95rem}
 .say svg{width:18px;height:18px}
 
+/* あいうえおカード */
+.kana{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.kana .row{font-size:1rem;padding:2px 12px;border-radius:999px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);font-family:var(--boldFont);font-weight:700}
+.kana .ch{font-family:var(--font);font-size:clamp(9rem,52vw,15rem);line-height:1.05;color:var(--ink)}
+.seenGrid.kanaG{grid-template-columns:repeat(8,1fr);gap:4px}
+.seenGrid.kanaG span{font-size:1.25rem;border-radius:8px}
 /* クリア */
 .result{position:relative;overflow:hidden;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px 18px 20px;display:flex;flex-direction:column;gap:12px;text-align:center}
 .result h2{margin:0;font-size:2rem;font-weight:600;letter-spacing:.08em;color:var(--accent)}
@@ -287,7 +293,7 @@ const DATA={"1":[["一",["イチ","イツ"],["ひと","ひと.つ"]],["右",["�
 <script>
 (function(){
 const $=id=>document.getElementById(id);
-const P='kousen-flash-'+KIND+'-';
+const P='kousen-flash-'+(DATA&&DATA.key?DATA.key:KIND)+'-';
 function load(k,def){try{const v=localStorage.getItem(P+k);return v===null?def:JSON.parse(v)}catch(e){return def}}
 function save(k,v){try{localStorage.setItem(P+k,JSON.stringify(v))}catch(e){}}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -296,8 +302,10 @@ const COUNT=10;
 
 /* ---------- グループ ---------- */
 const GCOL={1:'#E23B3B',2:'#F08A24',3:'#22A55B',4:'#2F6FE0',5:'#8E5BD8',6:'#C2477A'};
+const KANA=KIND==='kana';
 const GROUPS=KIND==='kanji'
   ?[1,2,3,4,5,6].map(g=>({id:String(g),name:g+'年のかん字',short:g+'<small>年</small>',items:DATA[g],c:GCOL[g]}))
+  :KANA?[{id:'all',name:DATA.name,items:DATA.items,c:null}]
   :DATA.map(c=>({id:c.id,name:c.name,items:c.w,c:null}));
 const byId=id=>GROUPS.find(g=>g.id===id);
 let cur=load('last',GROUPS[0].id);if(!byId(cur))cur=GROUPS[0].id;
@@ -330,6 +338,10 @@ function markSeen(g,i,upcoming){
 /* ---------- えらぶ ---------- */
 function renderPick(){
   const p=$('pick');
+  if(KANA){p.hidden=true;p.previousElementSibling.hidden=true;$('seenNow').parentElement.hidden=true;
+    document.querySelectorAll('#modeTabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===mode));
+    document.querySelectorAll('[data-sec]').forEach(b=>b.setAttribute('aria-pressed',Number(b.dataset.sec)===sec));
+    $('secRow').style.opacity=mode==='auto'?'1':'.45';save('mode',mode);save('sec',sec);return}
   if(KIND==='kanji'){
     p.className='grades';
     p.innerHTML=GROUPS.map(g=>{const s=seenCount(g),n=g.items.length;return '<button class="gr" data-g="'+g.id+'" style="--c:'+g.c+';--p:'+Math.round(s/n*100)+'%" aria-pressed="'+(g.id===cur)+'"><b>'+g.short+'</b><span>'+n+'字</span><i></i></button>'}).join('');
@@ -364,6 +376,7 @@ function renderKanji(it){
     '<div class="side on"><span class="lbl">音読み</span><div class="rd on" data-fit>'+(on.length?on.map(o=>'<span>'+esc(o)+'</span>').join(''):'<span class="none">なし</span>')+'</div></div>'+
     '</div><div class="sup"><span class="t">おくりがなをつけると</span>'+(ex.length?ex.join(''):'<span class="no">おくりがなをつける読みはないよ</span>')+'</div>';
 }
+function renderKana(it){return '<div class="kana">'+(it[1]?'<span class="row">'+esc(it[1])+'</span>':'<span class="row" style="visibility:hidden">　</span>')+'<span class="ch">'+esc(it[0])+'</span></div>'}
 function renderEn(it){
   const [w,ka,ms]=it;
   const cls=w.length>16?' xl':(w.length>9?' long':'');
@@ -385,7 +398,7 @@ window.addEventListener('resize',()=>{if(!$('play').hidden)fit()});
 let roundAtStart=0,grp=null,list=[],idx=0,timer=0,t0=0,raf=0,paused=false,busy=false;
 function startGame(){
   grp=byId(cur);clearFx();roundAtStart=load('round-'+grp.id,0)||0;
-  const d=draw(grp);list=d.list;idx=0;paused=false;
+  const d=KANA?{list:[...Array(grp.items.length).keys()]}:draw(grp);list=d.list;idx=0;paused=false;
   $('playTag').style.setProperty('--c',grp.c||'var(--accent)');
   $('playTag').innerHTML='<i></i><span>'+grp.name+'</span>';
   $('cAll').textContent=list.length;
@@ -396,13 +409,13 @@ function startGame(){
 }
 function showCard(){
   const i=list[idx],it=grp.items[i];
-  markSeen(grp,i,list.slice(idx+1));
+  if(!KANA)markSeen(grp,i,list.slice(idx+1));
   $('cNow').textContent=idx+1;
   [...$('dots').children].forEach((d,j)=>{d.className=j<idx?'done':(j===idx?'now':'')});
   const c=$('card');c.classList.remove('flip');void c.offsetWidth;c.classList.add('flip');
-  $('cin').innerHTML=KIND==='kanji'?renderKanji(it):renderEn(it);
+  $('cin').innerHTML=KIND==='kanji'?renderKanji(it):KANA?renderKana(it):renderEn(it);
   fit();
-  if(KIND==='en')later(()=>sayWord(false),250);
+  if(KIND==='en'||KANA)later(()=>sayWord(false),250);
   startAuto();
 }
 function startAuto(){
@@ -444,10 +457,13 @@ $('quit').addEventListener('click',()=>{cancelAnimationFrame(raf);timers.forEach
 const S=window.speechSynthesis||null;let enVoice=null;
 function pickVoice(){if(!S)return;const all=S.getVoices();const en=all.filter(v=>/^en[-_]US/i.test(v.lang));const en2=en.length?en:all.filter(v=>/^en/i.test(v.lang));enVoice=en2.find(v=>/Samantha|Google US|Aria|Jenny|Zira|Allison|Ava/i.test(v.name))||en2[0]||null}
 if(S){pickVoice();if('onvoiceschanged' in S)S.addEventListener('voiceschanged',pickVoice)}
-let soundOn=load('sound',KIND==='en');
+let soundOn=load('sound',KIND==='en'||KANA);
+let jaVoice=null;function pickJa(){if(!S)return;const vs=S.getVoices().filter(v=>/^ja/i.test(v.lang));jaVoice=vs.find(v=>/Kyoko|O-?ren|Nanami|Haruka|Mizuki|Google/i.test(v.name))||vs[0]||null}
+if(S){pickJa();if('onvoiceschanged' in S)S.addEventListener('voiceschanged',pickJa)}
 function sayWord(force){
-  if(KIND!=='en'||!S||typeof SpeechSynthesisUtterance!=='function')return;
+  if((KIND!=='en'&&!KANA)||!S||typeof SpeechSynthesisUtterance!=='function')return;
   if(!force&&!soundOn)return;
+  if(KANA){const u=new SpeechSynthesisUtterance(grp.items[list[idx]][0]);u.lang='ja-JP';if(jaVoice)u.voice=jaVoice;u.rate=.9;u.pitch=1.15;if(S.speaking||S.pending){S.cancel();setTimeout(()=>S.speak(u),60)}else S.speak(u);return}
   const w=grp.items[list[idx]][0].replace(/[()（）]/g,'').replace(/\s*\/\s*/g,', ');
   const u=new SpeechSynthesisUtterance(w);u.lang='en-US';if(enVoice)u.voice=enVoice;u.rate=.85;
   if(S.speaking||S.pending){S.cancel();setTimeout(()=>S.speak(u),60)}else S.speak(u);
@@ -464,9 +480,11 @@ function tone(f,dur,at){try{if(!ac){const C=window.AudioContext||window.webkitAu
 function finish(){
   cancelAnimationFrame(raf);
   [523,659,784,1047].forEach((f,i)=>tone(f,.25,i*.11));
-  $('rMode').innerHTML=grp.name+'　'+list.length+'もん';
-  if(KIND==='kanji')$('rSeen').innerHTML='<div class="seenGrid">'+list.map(i=>'<span>'+grp.items[i][0]+'</span>').join('')+'</div>';
+  $('rMode').innerHTML=grp.name+'　'+list.length+(KANA?'もじ':'もん');
+  if(KANA)$('rSeen').innerHTML='<div class="seenGrid kanaG">'+list.map(i=>'<span>'+grp.items[i][0]+'</span>').join('')+'</div>';
+  else if(KIND==='kanji')$('rSeen').innerHTML='<div class="seenGrid">'+list.map(i=>'<span>'+grp.items[i][0]+'</span>').join('')+'</div>';
   else $('rSeen').innerHTML='<div class="seenList">'+list.map(i=>'<span lang="en">'+esc(grp.items[i][0])+'</span>').join('')+'</div>';
+  if(KANA){$('rProg').className='prog all';$('rProg').innerHTML='🎉 '+grp.name+'の '+list.length+'もじ ぜんぶ見たよ！';show('result');$('rTitle').focus({preventScroll:true});setTimeout(celebrate,150);return}
   const s=seenCount(grp),n=grp.items.length,r=load('round-'+grp.id,0)||0;
   const all=r>roundAtStart;
   $('rProg').className='prog'+(all?' all':'');
@@ -518,6 +536,19 @@ if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventLis
   function onClose(){v.pause()}
   let was=dlg.open;if(was)onOpen();
   new MutationObserver(()=>{if(dlg.open&&!was)onOpen();else if(!dlg.open&&was)onClose();was=dlg.open}).observe(dlg,{attributes:true,attributeFilter:['open']});
+})();
+</script>
+<!--kousen-pick--><script>
+(function(){
+  var u;try{u=new URLSearchParams(location.search)}catch(e){return}
+  var from=u.get('from'),pick=u.get('pick');
+  if(from&&/^(pre|[1-6]|brain)$/.test(from)){
+    document.querySelectorAll('a.backTop').forEach(function(a){a.href='cat_'+from+'.html';var t=[].slice.call(a.childNodes).filter(function(n){return n.nodeType===3&&n.textContent.trim()});if(t.length)t[t.length-1].textContent='ゲームいちらんにもどる'});
+  }
+  if(pick){
+    // カテゴリから きたときは おすすめの むずかしさを えらぶ
+    window.addEventListener('load',function(){setTimeout(function(){pick.split('|').forEach(function(s){try{var el=document.querySelector(s);if(el)el.click()}catch(e){}})},80)});
+  }
 })();
 </script>
 </body>

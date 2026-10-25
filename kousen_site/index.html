@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>知育Webアプリ KouSen式</title>
-<meta name="description" content="知育Webアプリ KouSen式。ボールをころがして考える、こどもむけのゲームです。">
+<title>知的探求Webアプリ KouSen式</title>
+<meta name="description" content="知的探求Webアプリ KouSen式。ボールをころがして考える、こどもむけのゲームです。">
 <meta name="theme-color" content="#274F8E">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
@@ -66,6 +66,20 @@ h1 .kicker{display:block;font-size:.42em;letter-spacing:.12em;color:var(--sub);m
 .game.flashk{--tint:#DDEBD8;--edge:#3E6E4E}
 .game.flashe{--tint:#DCE6F5;--edge:#2F5FA8}
 .game.color{--tint:#EFEDE4;--edge:#3B3F58}
+.game.kazutouch{--tint:#FFF3E8;--edge:#E0733A}
+.game.block{--tint:#E1F0EA;--edge:#2E7D6B}
+.game.pair{--tint:#FFF1D6;--edge:#2C7A52}
+.game.flashhira{--tint:#FFF0F6;--edge:#C2477A}
+.game.maze{--tint:#E3ECFA;--edge:#2F6FE0}
+.game.numpl{--tint:#E4EBF8;--edge:#3B5BA9}
+.game.nurie{--tint:#FCE6EB;--edge:#E0607E}
+.game.kotoba{--tint:#DDF2EB;--edge:#1F9E89}
+.game.donut{--tint:#FCEBD6;--edge:#D9822B}
+.game.quizrun{--tint:#E3E7FD;--edge:#5B6EE1}
+.game.flashkata{--tint:#F4F0FD;--edge:#7A57C9}
+.game.aiueotouch{--tint:#FFF0F6;--edge:#D94F86}
+.game.aiueokatatouch{--tint:#F4F0FD;--edge:#7A57C9}
+.game.abctouch{--tint:#EEF6FD;--edge:#2F7FC1}
 .game.yamakawa{--tint:#D9F0E0;--edge:#2E8B57}
 .game.yamakawa .plate{max-width:min(70%,330px)}
 .game.yamakawa .plate .name{font-size:clamp(1.05rem,4.7vw,1.5rem)}
@@ -136,6 +150,23 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
   @keyframes roll{from{transform:translateX(-160%) rotate(-360deg);opacity:0}to{transform:none;opacity:1}}
 }
 @media (max-width:400px){.wrap{padding-left:12px;padding-right:12px}.plate{margin-left:10px;padding:8px 11px 9px}.go{width:38px;height:38px;right:10px;bottom:10px}}
+
+/* ---- カテゴリ ---- */
+.cats{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cat{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:118px;padding:10px 8px 12px;border-radius:22px;text-decoration:none;color:#1F2A44;background:var(--tint);border:3px solid var(--edge);box-shadow:0 5px 0 var(--edge);transition:transform .12s,box-shadow .12s;text-align:center}
+.cat:active{transform:translateY(4px);box-shadow:0 1px 0 var(--edge)}
+.cat .ic{font-size:1.7rem;line-height:1}
+.cat .big{font-size:clamp(1.25rem,5.6vw,1.6rem);font-weight:600;line-height:1.15;color:var(--edge)}
+.cat .big b{font-size:1.5em;font-weight:600}
+.cat .big rt{font-size:.42em}
+.cat .cnt{font-size:.8rem;color:#46516B}
+.cat.g .big{display:flex;align-items:baseline;gap:2px}
+.cat.g .big small{font-size:.62em}
+.crumb{display:flex;align-items:center;gap:10px}
+.backBtn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px 0 10px;border-radius:999px;border:2px solid var(--accent);background:var(--panel);color:var(--accent);text-decoration:none;font-size:.98rem;white-space:nowrap}
+.backBtn svg{width:18px;height:18px}
+.ctitle{margin:0;display:flex;align-items:center;gap:8px;font-size:clamp(1.3rem,6vw,1.7rem);font-weight:600;color:var(--edge)}
+.ctitle rt{font-size:.42em}
 </style>
 </head>
 <body>
@@ -143,7 +174,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
   <header class="top">
     <div class="brand">
       <img src="icons/icon-192.png" alt="" width="54" height="54">
-      <h1><span class="kicker">知育Webアプリ</span>KouSen式<span class="rollIn" aria-hidden="true"><i style="background-color:var(--red)"></i><i style="background-color:var(--blue)"></i><i style="background-color:var(--green)"></i></span></h1>
+      <h1><span class="kicker">知的探求Webアプリ</span>KouSen式<span class="rollIn" aria-hidden="true"><i style="background-color:var(--red)"></i><i style="background-color:var(--blue)"></i><i style="background-color:var(--green)"></i></span></h1>
     </div>
     <div class="pills">
     <button class="bmBtn" id="openBm" aria-haspopup="dialog">
@@ -154,140 +185,19 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
     </button>
     </div>
   </header>
-  <p class="lead">ボールの道すじを考えるパズルや、あんざんのタイムアタックであそべます。あそびたいゲームをえらんでね。</p>
+  <p class="lead">学年や カテゴリを えらんでね。</p>
 
-  <ul class="games">
-    <li>
-      <a class="game puzzle" href="korokoro_puzzle.html">
-        <picture class="art"><source srcset="img/puzzle.webp" type="image/webp"><img src="img/puzzle.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
-        <span class="plate">
-          <span class="name">ころころパズル</span>
-          <span class="desc">黄色のピースとトンネルをヒントに、すきまをうめよう</span>
-        </span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
-      </a>
-    </li>
-    <li>
-      <a class="game craft" href="korokoro_craft.html">
-        <picture class="art"><source srcset="img/craft.webp" type="image/webp"><img src="img/craft.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
-        <span class="plate">
-          <span class="name">ころころクラフト</span>
-          <span class="desc">まっさらなばんめんに、ピースをぜんぶ自分でならべよう</span>
-        </span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
-      </a>
-    </li>
-    <li>
-      <a class="game kuku" href="kuku_master.html">
-        <picture class="art"><source srcset="img/kuku.webp" type="image/webp"><img src="img/kuku.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
-        <span class="plate">
-          <span class="name">九九マスター</span>
-          <span class="desc">1のだんから9のだんまで、じゅんばんにれんしゅうしよう</span>
-        </span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
-      </a>
-    </li>
-    <li>
-      <a class="game keisan" href="anzan_timeattack.html">
-        <picture class="art"><source srcset="img/keisan.webp" type="image/webp"><img src="img/keisan.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
-        <span class="plate">
-          <span class="name">あんざんタイムアタック</span>
-          <span class="desc">足し算・引き算・かけ算・わり算を10もん。はやくとくほど高い点になるよ</span>
-        </span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
-      </a>
-    </li>
-    <li>
-      <a class="game flashk" href="flash_kanji.html">
-        <picture class="art"><source srcset="img/flashk.webp" type="image/webp"><img src="img/flashk.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
-        <span class="plate">
-          <span class="name">フラッシュ漢字</span>
-          <span class="desc">かん字の読み方を、声に出してどんどん読もう</span>
-        </span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
-      </a>
-    </li>
-    <li>
-      <a class="game kanji" href="kanji_ou.html">
-        <picture class="art"><source srcset="img/kanji.webp" type="image/webp"><img src="img/kanji.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
-        <span class="plate">
-          <span class="name">目指せ！漢字王</span>
-          <span class="desc">学年ごとのかん字のよみを、フリック入力でこたえよう</span>
-        </span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
-      </a>
-    </li>
-    <li>
-      <a class="game flashe" href="flash_eitango.html">
-        <picture class="art"><source srcset="img/flashe.webp" type="image/webp"><img src="img/flashe.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
-        <span class="plate">
-          <span class="name">フラッシュ英単語</span>
-          <span class="desc">えい語のことばと いみを、声に出して読もう</span>
-        </span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
-      </a>
-    </li>
-    <li>
-      <a class="game eitango" href="eitango_master.html">
-        <picture class="art"><source srcset="img/eitango.webp" type="image/webp"><img src="img/eitango.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
-        <span class="plate">
-          <span class="name">目指せ！英単語master</span>
-          <span class="desc">えい語のいみを えらぼう。まちがえるまで つづくよ</span>
-        </span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
-      </a>
-    </li>
-    <li>
-      <a class="game chiba" href="chiba_puzzle.html">
-        <picture class="art"><source srcset="img/chiba.webp" type="image/webp"><img src="img/chiba.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
-        <span class="plate">
-          <span class="name">ちばけんパズル</span>
-          <span class="desc">市町村のピースを、ちばけんの地図にはめよう</span>
-        </span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
-      </a>
-    </li>
-    <li>
-      <a class="game japan" href="japan_puzzle.html">
-        <picture class="art"><source srcset="img/japan.webp" type="image/webp"><img src="img/japan.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
-        <span class="plate">
-          <span class="name">都道府県パズル</span>
-          <span class="desc">47の都道府県のピースを、日本の地図にはめよう</span>
-        </span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
-      </a>
-    </li>
-    <li>
-      <a class="game yamakawa" href="yamakawa_timeattack.html">
-        <picture class="art"><source srcset="img/yamakawa.webp" type="image/webp"><img src="img/yamakawa.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
-        <span class="plate">
-          <span class="name">やまかわタイムアタック</span>
-          <span class="desc">日本の山や川、へいや、はんとうを10もん。はやくこたえるほど高い点になるよ</span>
-        </span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
-      </a>
-    </li>
-    <li>
-      <a class="game food" href="food_jigsaw.html">
-        <picture class="art"><source srcset="img/food.webp" type="image/webp"><img src="img/food.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
-        <span class="plate">
-          <span class="name">やさい・くだものジグソー</span>
-          <span class="desc">すきなやさいやくだものの絵で、ジグソーパズルをしよう</span>
-        </span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
-      </a>
-    </li>
-    <li>
-      <a class="game color" href="color_timeattack.html">
-        <picture class="art"><source srcset="img/color.webp" type="image/webp"><img src="img/color.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
-        <span class="plate">
-          <span class="name">いろまぜマスター</span>
-          <span class="desc">えのぐを1色か2色えらんで、見本と同じ色を作ろう</span>
-        </span>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
-      </a>
-    </li>
+    <ul class="cats">
+    <li><a class="cat" href="cat_pre.html" style="--tint:#FFF1DC;--edge:#F2A33A"><span class="ic" aria-hidden="true">🧸</span><span class="big">しゅうがく<br>まえ</span><span class="cnt">20この ゲーム</span></a></li>
+    <li><a class="cat g" href="cat_1.html" style="--tint:#FDE7EC;--edge:#E0607E"><span class="ic" aria-hidden="true">🌱</span><span class="big">小学<b>1</b><small>年生</small></span><span class="cnt">23この ゲーム</span></a></li>
+    <li><a class="cat g" href="cat_2.html" style="--tint:#FFEBDD;--edge:#E8853A"><span class="ic" aria-hidden="true">🌷</span><span class="big">小学<b>2</b><small>年生</small></span><span class="cnt">19この ゲーム</span></a></li>
+    <li><a class="cat g" href="cat_3.html" style="--tint:#FFF6D2;--edge:#C9A21B"><span class="ic" aria-hidden="true">🌻</span><span class="big">小学<b>3</b><small>年生</small></span><span class="cnt">18この ゲーム</span></a></li>
+    <li><a class="cat g" href="cat_4.html" style="--tint:#DDF3E6;--edge:#2E9A5E"><span class="ic" aria-hidden="true">🍀</span><span class="big">小学<b>4</b><small>年生</small></span><span class="cnt">18この ゲーム</span></a></li>
+    <li><a class="cat g" href="cat_5.html" style="--tint:#E0EEFB;--edge:#2F7FC1"><span class="ic" aria-hidden="true">🚀</span><span class="big">小学<b>5</b><small>年生</small></span><span class="cnt">20この ゲーム</span></a></li>
+    <li><a class="cat g" href="cat_6.html" style="--tint:#E5E8FD;--edge:#5B6EE1"><span class="ic" aria-hidden="true">🎓</span><span class="big">小学<b>6</b><small>年生</small></span><span class="cnt">19この ゲーム</span></a></li>
+    <li><a class="cat" href="cat_brain.html" style="--tint:#EFE8FB;--edge:#7A57C9"><span class="ic" aria-hidden="true">🧠</span><span class="big"><ruby>脳<rt>のう</rt></ruby>トレ</span><span class="cnt">17この ゲーム</span></a></li>
   </ul>
+
 
   <p class="foot">ホームがめんについかすると、インターネットがつながらないところでもあそべます。</p>
 </div>
@@ -331,7 +241,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
             <rect x="20" y="18" width="150" height="12" rx="6" fill="#DCE5EF"/><rect x="20" y="38" width="240" height="9" rx="4.5" fill="#EEF2F7"/><rect x="20" y="54" width="210" height="9" rx="4.5" fill="#EEF2F7"/>
             <rect x="12" y="92" width="276" height="46" rx="23" fill="#EEF1F5"/>
             <circle cx="38" cy="115" r="17" fill="#fff"/><path d="M41 107l-8 8 8 8" stroke="#1F2A44" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="62" y="98" width="174" height="34" rx="17" fill="#fff"/><text x="149" y="120" text-anchor="middle" font-size="13" fill="#1F2A44">知育Webアプリ KouSen式</text>
+            <rect x="62" y="98" width="174" height="34" rx="17" fill="#fff"/><text x="149" y="120" text-anchor="middle" font-size="13" fill="#1F2A44">知的探求Webアプリ KouSen式</text>
             <circle cx="262" cy="115" r="17" fill="#fff"/><circle cx="254" cy="115" r="2.6" fill="#1F2A44"/><circle cx="262" cy="115" r="2.6" fill="#1F2A44"/><circle cx="270" cy="115" r="2.6" fill="#1F2A44"/>
             <circle cx="262" cy="115" r="24" fill="none" stroke="#F08A24" stroke-width="4"/>
             <path d="M262 64v18M254 75l8 8 8-8" stroke="#F08A24" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
@@ -418,7 +328,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
           <svg viewBox="0 0 300 150" role="img" aria-label="Chrome の右上にある「⋮」ボタンの場所">
             <rect x="1" y="1" width="298" height="148" rx="16" fill="#fff" stroke="#C9D6E4" stroke-width="2"/>
             <rect x="2" y="2" width="296" height="52" rx="15" fill="#EEF1F5"/><rect x="2" y="40" width="296" height="14" fill="#EEF1F5"/>
-            <rect x="14" y="12" width="190" height="30" rx="15" fill="#fff"/><text x="30" y="32" font-size="12" fill="#1F2A44">知育Webアプリ KouSen式</text>
+            <rect x="14" y="12" width="190" height="30" rx="15" fill="#fff"/><text x="30" y="32" font-size="12" fill="#1F2A44">知的探求Webアプリ KouSen式</text>
             <rect x="216" y="15" width="22" height="22" rx="5" fill="none" stroke="#1F2A44" stroke-width="2.2"/><text x="227" y="31" text-anchor="middle" font-size="11" fill="#1F2A44">1</text>
             <circle cx="268" cy="19" r="2.6" fill="#1F2A44"/><circle cx="268" cy="27" r="2.6" fill="#1F2A44"/><circle cx="268" cy="35" r="2.6" fill="#1F2A44"/>
             <circle cx="268" cy="27" r="19" fill="none" stroke="#F08A24" stroke-width="4"/>

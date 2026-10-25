@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ナンバープレイス｜知育Webアプリ KouSen式</title>
+<meta name="theme-color" content="#3B5BA9">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="KouSen式">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --font:"UD Digi Kyokasho NK-R","UD デジタル 教科書体 NK-R","UDDigiKyokashoNK-R","Klee One","Hiragino Maru Gothic ProN","Hiragino Sans","Meiryo",sans-serif;
+  --boldFont:"UD Digi Kyokasho NK-B","UD デジタル 教科書体 NK-B","UDDigiKyokashoNK-B","UD Digi Kyokasho NK-R","UD デジタル 教科書体 NK-R","Klee One","Hiragino Maru Gothic ProN","Hiragino Sans","Meiryo",sans-serif;
+  --bg:#EEF2FB;--ink:#1F2638;--sub:#5F6880;--panel:#FFFFFF;--line:#CCD6EA;--board:#3B5BA9;--deep:#263F7E;--accent:#3B5BA9;
+  --cellBg:#F7FBF9;--hole:#4A5A56;
+  --red:#E23B3B;--orange:#F08A24;--green:#22A55B;--blue:#2F6FE0;--yellow:#F6C343;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131B19;--ink:#E5F0ED;--sub:#9BB0AA;--panel:#1D2825;--line:#33463F;--accent:#9DB4F0;--cellBg:#24312D;--hole:#0B100F}}
+:root[data-theme="dark"]{--bg:#131B19;--ink:#E5F0ED;--sub:#9BB0AA;--panel:#1D2825;--line:#33463F;--accent:#9DB4F0;--cellBg:#24312D;--hole:#0B100F}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.6;font-synthesis:none}
+body.lock{overflow:hidden}
+body.dragging{overflow:hidden;touch-action:none}
+button,a{font:inherit;color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+button,button *,.backTop{font-family:var(--boldFont)!important;font-weight:700!important;font-synthesis:weight}
+button:focus-visible,a:focus-visible{outline:3px solid #FFB020;outline-offset:2px}
+[hidden]{display:none!important}
+.wrap{max-width:560px;margin:0 auto;padding:12px 12px 28px;display:flex;flex-direction:column;gap:10px}
+.titlebar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+h1{margin:0;font-size:clamp(1.15rem,5.2vw,1.7rem);font-weight:600;line-height:1.2;white-space:nowrap}
+.pill{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;height:39px;padding:0 14px 0 10px;border-radius:999px;border:2px solid var(--accent);background:var(--panel);color:var(--accent);font-size:15px;white-space:nowrap}
+.pill svg{width:18px;height:18px}
+.tabs{display:flex;gap:4px;background:var(--panel);padding:4px;border-radius:999px;border:1px solid var(--line)}
+.tabs button{flex:1;height:38px;border:0;background:transparent;border-radius:999px;font-size:1.1rem}
+.tabs button[aria-pressed="true"]{background:var(--board);color:#fff}
+.qbar{display:flex;align-items:center;gap:6px}
+.arrow{flex:0 0 34px;height:36px;border-radius:10px;border:2px solid var(--line);background:var(--panel);font-size:1.4rem;line-height:1;padding:0}
+.nums{display:flex;gap:6px;flex:1;min-width:0;overflow-x:auto;scroll-snap-type:x proximity;padding:4px 2px;scrollbar-width:none}
+.nums::-webkit-scrollbar{display:none}
+.nums button{flex:0 0 auto;scroll-snap-align:center;width:36px;height:36px;border-radius:50%;border:2px solid var(--line);background:var(--panel);font-size:.85rem;position:relative;padding:0}
+.nums button[aria-current="true"]{border-color:var(--board);background:var(--board);color:#fff}
+.nums button.done::after{content:"";position:absolute;right:-2px;top:-2px;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid var(--bg)}
+.prog{font-size:.85rem;color:var(--sub);text-align:right;margin:-4px 2px 0}
+
+/* ばんめん */
+.stage{position:relative;display:flex;justify-content:center}
+.board{position:relative;padding:6px;border-radius:16px;background:var(--board);box-shadow:inset 0 -5px 0 var(--deep),0 8px 18px rgba(20,40,80,.2)}
+.sg{display:grid;grid-template-columns:repeat(var(--n),var(--cs));grid-auto-rows:var(--cs);gap:2px;background:var(--board)}
+.sc{position:relative;display:flex;align-items:center;justify-content:center;border:0;padding:0;border-radius:4px;background:#FFFFFF;font-size:calc(var(--cs)*.6);line-height:1;color:var(--blue);font-family:var(--boldFont)!important;font-weight:700!important}
+.sc.g{color:#24263A;background:#F1F3F8}
+.sc.rb{margin-right:3px}.sc.bb{margin-bottom:3px}
+.sc.hl{background:#EAF2FF}.sc.g.hl{background:#E2E8F3}
+.sc.same{background:#FFF1C2}
+.sc.sel{background:#FFD76B!important;box-shadow:inset 0 0 0 3px #E0A100}
+.sc.bad{color:var(--red)!important;background:#FFE1E1}
+.pad{display:grid;grid-template-columns:repeat(var(--pc,5),1fr);gap:8px;max-width:520px;width:100%;margin:0 auto}
+.pad button{height:54px;border-radius:14px;border:2px solid var(--line);background:var(--panel);font-size:1.6rem;box-shadow:0 3px 0 var(--line);color:var(--blue)}
+.pad button.del{font-size:.9rem;color:var(--ink);white-space:nowrap;padding:0}
+.btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn{height:42px;padding:0 16px;border-radius:999px;border:2px solid var(--line);background:var(--panel);font-size:.98rem;box-shadow:0 3px 0 var(--line)}
+.msg{margin:0;text-align:center;font-size:.95rem;color:var(--sub);min-height:1.6em}
+.pad button.full{opacity:.35}
+.pad button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+/* クリア */
+.clear{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;border-radius:18px;background:rgba(255,255,255,.55);backdrop-filter:blur(1px)}
+.clear .t{font-family:var(--boldFont);font-weight:700;font-size:clamp(2.4rem,12vw,3.4rem);color:#F6C343;-webkit-text-stroke:.022em #F6C343;text-shadow:0.055em 0.000em 0 #111,0.051em 0.021em 0 #111,0.039em 0.039em 0 #111,0.021em 0.051em 0 #111,0.000em 0.055em 0 #111,-0.021em 0.051em 0 #111,-0.039em 0.039em 0 #111,-0.051em 0.021em 0 #111,-0.055em 0.000em 0 #111,-0.051em -0.021em 0 #111,-0.039em -0.039em 0 #111,-0.021em -0.051em 0 #111,-0.000em -0.055em 0 #111,0.021em -0.051em 0 #111,0.039em -0.039em 0 #111,0.051em -0.021em 0 #111,0 .09em .12em rgba(0,0,0,.4);letter-spacing:.06em;animation:pop .5s cubic-bezier(.2,.9,.3,1.4) both}
+.clear .next{height:50px;padding:0 22px;border:0;border-radius:16px;background:var(--green);color:#fff;font-size:1.15rem;box-shadow:0 4px 0 #17773F}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+.backTop{display:flex;align-items:center;justify-content:center;gap:8px;height:46px;margin-top:8px;border-radius:14px;border:2px solid var(--accent);background:var(--panel);color:var(--accent);text-decoration:none;font-size:17.6px;line-height:1}
+.backTop svg{width:20px;height:20px}
+/* あそびかた */
+dialog.tuto{border:0;padding:0;border-radius:20px;width:min(560px,94vw);max-height:88vh;max-height:88dvh;background:var(--panel);color:var(--ink);box-shadow:0 20px 50px rgba(0,0,0,.35);overflow:hidden}
+dialog.tuto[open]{display:flex;flex-direction:column}
+dialog.tuto::backdrop{background:rgba(10,25,20,.55)}
+.tuto .head{display:flex;align-items:center;justify-content:space-between;padding:12px 12px 10px 20px;border-bottom:1px solid var(--line)}
+.tuto .head h2{margin:0;font-size:1.1rem;font-weight:600;outline:none}
+.close{width:42px;height:42px;border-radius:50%;border:0;background:var(--bg);font-size:1.35rem;line-height:1;padding:0}
+.tuto .body{overflow-y:auto;padding:6px 20px 8px}
+.step{padding:12px 0;border-bottom:1px dashed var(--line)}
+.step:last-child{border-bottom:0}
+.step h3{margin:0 0 6px;font-size:1rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.step h3 .n{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--board);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem}
+.step p{margin:4px 0 0;font-size:.93rem;line-height:1.9}
+.tuto .foot{padding:10px 20px 14px;border-top:1px solid var(--line)}
+.tuto .foot button{width:100%;height:46px;border:0;border-radius:12px;background:var(--board);color:#fff;font-size:1.1rem}
+.tvid{padding:14px 0 6px}
+.vbox{position:relative;margin:0 auto;width:min(100%,280px,calc(52vh*.5625));width:min(100%,280px,calc(52dvh*.5625));aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:#EEF2FB;border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.vbox video{display:block;width:100%;height:100%;object-fit:cover}
+.vplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;height:52px;padding:0 20px 0 16px;border:0;border-radius:999px;background:rgba(31,46,42,.88);color:#fff;font-size:1.05rem;white-space:nowrap;cursor:pointer}
+.vplay svg{width:22px;height:22px}
+.vbox.playing .vplay{display:none}
+.vnext{margin:12px 0 0;text-align:center;font-size:.86rem;color:var(--sub)}
+.mini{display:inline-grid;grid-template-columns:repeat(3,14px);grid-auto-rows:14px;gap:2px;vertical-align:middle;margin:0 4px}
+.mini i{display:block;border-radius:3px}
+@media (prefers-reduced-motion:reduce){.clear .t{animation:none}}
+@media (max-width:360px){.pill{padding:0 9px 0 7px;font-size:.85rem!important;gap:4px}h1{font-size:1rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="titlebar">
+    <h1>ナンバープレイス</h1>
+    <button class="pill" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>あそびかた</button>
+  </div>
+  <div class="tabs" role="group" aria-label="ばんめんの大きさ"><button data-n="3">3×3</button><button data-n="6">6×6</button><button data-n="9">9×9</button></div>
+  <div class="qbar"><button class="arrow" id="prevQ" aria-label="前のもんだい">‹</button><nav class="nums" id="nums" aria-label="もんだいばんごう"></nav><button class="arrow" id="nextQ" aria-label="つぎのもんだい">›</button></div>
+  <p class="prog" id="prog"></p>
+  <div class="stage"><div class="board" id="board"><div class="sg" id="grid"></div></div></div>
+  <p class="msg" id="msg" role="status" aria-live="polite"></p>
+  <div class="pad" id="pad" role="group" aria-label="すうじ"></div>
+  <div class="btns"><button class="btn" id="reset">やりなおす</button><button class="btn" id="answer">こたえを見る</button></div>
+  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにもどる</a>
+</div>
+
+<dialog class="tuto" id="tuto" aria-labelledby="tutoTitle">
+  <div class="head"><h2 id="tutoTitle" tabindex="-1">ナンバープレイスのあそびかた</h2><button class="close" id="closeTuto" aria-label="とじる">✕</button></div>
+  <div class="body">
+    <section class="tvid" aria-label="どうがで見るあそびかた">
+      <div class="vbox" id="vbox">
+        <video id="tutoVideo" src="video/numpl_tutorial.mp4" poster="video/numpl_tutorial.jpg" playsinline muted preload="metadata" controls></video>
+        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">どうがを見る</span></button>
+      </div>
+      <p class="vnext">どうがのあとは、下のせつめいも見てね</p>
+    </section>
+    <section class="step"><h3><span class="n">1</span><span>大きさと もんだいを えらぶ</span></h3><p>3×3（1〜3）は10もん、6×6（1〜6）は20もん、9×9（1〜9）は50もん あります。うしろの もんだいほど、あいている マスが ふえて むずかしくなります。クリアした もんだいには ●が つきます。</p></section>
+    <section class="step"><h3><span class="n">2</span><span>ルール</span></h3><p>どの よこの れつにも、どの たての れつにも、同じ すうじが 1つずつ 入るように します。6×6と9×9では、ふとい せんで かこまれた ブロックの 中にも、同じ すうじが 1つずつ 入ります。</p></section>
+    <section class="step"><h3><span class="n">3</span><span>すうじを 入れる</span></h3><p>あいている マスを タップして えらび、下の すうじを おします。「けす」で けせます。同じ れつや ブロックに 同じ すうじが あると、赤く なって おしえてくれます。とちゅうで ほかの もんだいに いっても、入れた すうじは のこります。</p></section>
+    <section class="step"><h3><span class="n">4</span><span>ぜんぶ うまったら クリア！</span></h3><p>すべての マスに 正しい すうじが 入ったら クリアです。こまったときは「こたえを見る」で こたえが 見られます。</p></section>
+  </div>
+  <div class="foot"><button id="startTuto">はじめる</button></div>
+</dialog>
+
+<script>
+const PZ={"3":[{"q":"320210032","a":"321213132"},{"q":"100312230","a":"123312231"},{"q":"012200120","a":"312231123"},{"q":"213002001","a":"213132321"},{"q":"200103310","a":"231123312"},{"q":"201002020","a":"231312123"},{"q":"100230010","a":"123231312"},{"q":"000301013","a":"132321213"},{"q":"000003102","a":"321213132"},{"q":"100021000","a":"132321213"}],"6":[{"q":"153064206000005036631542504023362005","a":"153264246351425136631542514623362415"},{"q":"104506200030542603003054300145451062","a":"134526265431542613613254326145451362"},{"q":"010605562000635400400030146253250164","a":"314625562341635412421536146253253164"},{"q":"301546406002503021214050005260600035","a":"321546456312563421214653135264642135"},{"q":"200000451360015426020500042605503201","a":"236154451362315426624513142635563241"},{"q":"351064462300003500540032020650605001","a":"351264462315213546546132124653635421"},{"q":"600124204063360050001200403610026300","a":"635124214563362451541236453612126345"},{"q":"460010100000201003306120032461604032","a":"463215125346241653356124532461614532"},{"q":"625040031052164020053010040005500030","a":"625341431652164523253416342165516234"},{"q":"503040060530135000604050050026240300","a":"513642462531135264624153351426246315"},{"q":"541602003451106000452000060000300046","a":"541632623451136524452163264315315246"},{"q":"015400460000000203230001643512000300","a":"315426462135156243234651643512521364"},{"q":"062400134002050623006000010006040010","a":"562431134562451623326154215346643215"},{"q":"510043030600001500205104004001000062","a":"516243432615341526265134624351153462"},{"q":"000003420001602104100050300612060000","a":"516423423561652134134256345612261345"},{"q":"104000020400040000510206000601260530","a":"154362326415642153513246435621261534"},{"q":"010005405001000000504102302600006500","a":"613245425361231456564132352614146523"},{"q":"001205005103004000300004150000402000","a":"631245245163514632326514153426462351"},{"q":"600103302006001000205400000600100030","a":"654123312546461352235461523614146235"},{"q":"603002104000000000000150200300301500","a":"653412124635516243432156245361361524"}],"9":[{"q":"000250970600417052750000601920145703008069000074800009201594830437600200805370406","a":"143256978689417352752938641926145783318769524574823169261594837437681295895372416"},{"q":"052006080701080200048215930560130704010562300023000506206000803105023649380650002","a":"952376481731984265648215937569138724417562398823497516296741853175823649384659172"},{"q":"080702051450901300037584296560300120020816039001200070905173062076000003800600700","a":"689732451452961387137584296568397124724816539391245678945173862276458913813629745"},{"q":"725010960894536720001900080040709036906340058003602490408200070000100840659408000","a":"725814963894536721361927584542789136976341258183652497418293675237165849659478312"},{"q":"130072080080450310605800790007295000490780501050104070203609150960028437500010000","a":"134972685789456312625831794317295846496783521852164973273649158961528437548317269"},{"q":"017035060450090302900006054030581000100300540795640003572003480049210600001854200","a":"217435968456198372983726154634581729128379546795642813572963481849217635361854297"},{"q":"305020009001967805960580204502608301000740000804000067059834000008056103000170458","a":"385421679421967835967583214572698341613745982894312567159834726748256193236179458"},{"q":"800200645090064080540000920320475016650308092000000530185002009407159008060800350","a":"871293645293564187546781923329475816654318792718926534185632479437159268962847351"},{"q":"013670089000030046047085132135247008460010270002050013380000607070090021000000354","a":"213674589859132746647985132135247968468319275792856413384521697576493821921768354"},{"q":"850349726000000000072000304019408030284600150735001048320900080000805002598012003","a":"851349726463127895972586314619458237284673159735291648327964581146835972598712463"},{"q":"005000368703400052100253400350040021601002004020010670060100000032084719914027800","a":"245971368793468152186253497358746921671392584429815673867139245532684719914527836"},{"q":"246710005000009020090043000004830592020465813508001006001002000852390007360004250","a":"246718935183659724795243681614837592927465813538921476471582369852396147369174258"},{"q":"028000006700000800643070250002307145004510920080249300016004500030108072250900081","a":"128495736795632814643871259962387145374516928581249367816724593439158672257963481"},{"q":"000795004007061009905834000024903006810500000300040010653402198040100060000386405","a":"182795634437261859965834271524913786816527943379648512653472198248159367791386425"},{"q":"194306857002107090600040001060700000000600503548293006005468102010002970080001005","a":"194326857832157694657849321361785249729614583548293716975468132416532978283971465"},{"q":"800436729030702000792000060069000803370008100020309040043000278907503400210074000","a":"851436729634792581792185364469217853375648192128359647543961278987523416216874935"},{"q":"740038915001060237000100604060350800000090502580020070004082003002703008130945000","a":"746238915891564237325179684267351849413897562589426371974682153652713498138945726"},{"q":"500000004230007608046008250005000102007430800480250037000974086074010520003605400","a":"518362794239547618746198253365789142927431865481256937152974386674813529893625471"},{"q":"070504031000631509001890046008005600029000007500460903165240090800006020040000360","a":"976524831284631579351897246438975612629318457517462983165243798893756124742189365"},{"q":"005900210020057000060142970000004590602570184500800000030000600050086701016430052","a":"475968213129357468863142975381624597692573184547891326238715649954286731716439852"},{"q":"042900057790000400800005029120003005680094001453600790034100000010009800900320500","a":"342968157795231486861745329129873645687594231453612798534187962216459873978326514"},{"q":"070800940000730000890410530007080194941360250000900700409000000020000385105608009","a":"673852941514739826892416537367285194941367258258941763489573612726194385135628479"},{"q":"410900000080030002900087400000504300351602000074090106849050603036000200007860540","a":"413925768785436912962187435698514327351672894274398156849251673536749281127863549"},{"q":"002001090070943260900000107006094082040035901300002000407020810001400030080009720","a":"862751493175943268934268157756194382248635971319872546497326815521487639683519724"},{"q":"090165000000004001450082306830250619700400020560001040140000900000048100200009460","a":"397165284628374591451982376834257619719436825562891743146723958975648132283519467"},{"q":"653079040040030600009650800002700016360000970807306000030980050070405000405100000","a":"653879142748231695129654837592748316364512978817396524236987451971465283485123769"},{"q":"004820003070400502036079000403752010050000000607301000308907051000000090005038026","a":"514826973879413562236579184483752619152694837697381245328967451761245398945138726"},{"q":"037000501006100800105730000012000900800061000350090600908503002020908065000200709","a":"237684591496125873185739426612457938879361254354892617968573142721948365543216789"},{"q":"090070830000100900004298016009000005030506090508901000810000420003612000200830009","a":"691475832782163954354298716129347685437586291568921347816759423943612578275834169"},{"q":"700203108820040009009086200380679000000804000500100706001000507005307840200000001","a":"746293158823541679159786234382679415617854923594132786431928567965317842278465391"},{"q":"586932047307150600020000000001080000400000010063201000030000800000005762015600930","a":"586932147397154628124867593251486379478593216963271485632749851849315762715628934"},{"q":"209300061060000000000697005000029003002006000005073408053002800400730090900801530","a":"249358761567214389831697245784529613312486957695173428153962874428735196976841532"},{"q":"040030087050064000001005640037000006500307090000506002016850000009000005400690021","a":"642139587853764219971285643237918456564327198198546372716852934329471865485693721"},{"q":"005100400009502006000003000800790604002480000710030090030850001007004900041020803","a":"325168479179542386468973215853791624692485137714236598236859741587314962941627853"},{"q":"000002305000605710000081040098060000040000000360000927001027634876300000000910000","a":"617492385284635719539781246798263451142579863365148927951827634876354192423916578"},{"q":"001095200000060040520800000090000728706008531000003604005040000200009050604500003","a":"461395287389267145527814369193456728746928531852173694935641872218739456674582913"},{"q":"560900004089023075000007000020000010800570046070000800340008567200730008008000000","a":"567981324189423675432657981925846713813579246674312859341298567256734198798165432"},{"q":"500009000200000846400008700140806000890030060000970304006007020000400030310080050","a":"568749213279153846431268795143826579897534162625971384956317428782495631314682957"},{"q":"080003600000850000039062000024000580000426700003007142100340000006000405200090000","a":"587913624612854937439762851724139586851426793963587142178345269396278415245691378"},{"q":"007001002024690300830000906001500200260000009000064000000030090340000000510900034","a":"697351482124698357835742916471589263268173549953264178782435691349816725516927834"},{"q":"300700100415060700780054600501070300860000050200009000907000060100000004000200003","a":"396782145415963728782154639541876392869321457273549816927438561138695274654217983"},{"q":"000608940900004030068000000030002000010300002049080070106807004000200000594000080","a":"372658941951724836468931725637412598815379462249586173126897354783245619594163287"},{"q":"060007000000100640300826000000301000087005002000000000020030950700510008890702060","a":"561497283278153649349826715652371894487965132913284576124638957736519428895742361"},{"q":"089020700710009300450000900001300090670008001000041507960000405000200000000500000","a":"389125764716489352452736918541372896673958241298641537967813425835264179124597683"},{"q":"029500010000010090050092070000130000000004003634000009080000000061400280002070006","a":"329547618476318592158692374297136845815924763634785129783269451961453287542871936"},{"q":"100708000700052000000000080200506000670800001805049060500300100400001500060000008","a":"146738925783952614952614387214576893679823451835149762528367149497281536361495278"},{"q":"007029000462000700000010000746000003000090070000600000004070080050801097900002006","a":"137429568462583719895716234746158923381294675529637841614975382253861497978342156"},{"q":"405003008000000010800100009076000000000030000590070060000590830040062005050010007","a":"415923678937486512862157349176245983284639751593871264721594836348762195659318427"},{"q":"900000067000420500000300000206800900500009070300010058100000703600000410002000000","a":"924158367713426589865397142276845931581639274349712658158964723697283415432571896"},{"q":"279000000100060007000950000300100005000000102000048069047500800000401000650000000","a":"279814653185263947436957218368192475794635182512748369947526831823471596651389724"}]};
+</script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const COLORS=['#F2706B','#F7A541','#F4D03F','#6CC26B','#4FB8C9','#5B8DEF','#A77BE8','#F08CC0'];
+const KEY_PROG='kousen-numpl-progress', KEY_LAST='kousen-numpl-last', KEY_TUTO='kousen-numpl-tutorial-seen';
+function load(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+let prog=load(KEY_PROG,{});if(typeof prog!=='object'||!prog)prog={};
+let last=load(KEY_LAST,{n:3,q:{}});
+let N=[3,6,9].includes(last.n)?last.n:3, qi={3:0,6:0,9:0};Object.assign(qi,last.q||{});
+Object.keys(qi).forEach(k=>{if(!PZ[k]||qi[k]>=PZ[k].length)qi[k]=0});
+const norm=cs=>{const mr=Math.min(...cs.map(c=>c[0])),mc=Math.min(...cs.map(c=>c[1]));return cs.map(([r,c])=>[r-mr,c-mc]).sort((a,b)=>a[0]-b[0]||a[1]-b[1])};
+const rot=cs=>norm(cs.map(([r,c])=>[c,-r]));
+const dims=cs=>[Math.max(...cs.map(c=>c[0]))+1,Math.max(...cs.map(c=>c[1]))+1];
+
+/* ---------- 音 ---------- */
+let ac=null;
+function tone(f,dur,type='sine',vol=.14,at=0){try{if(!ac){const C=window.AudioContext||window.webkitAudioContext;if(C)ac=new C()}if(!ac)return;if(ac.state==='suspended')ac.resume();const t=ac.currentTime+at,o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+dur+.02)}catch(e){}}
+const sfx={put(){tone(740,.08,'triangle');tone(988,.1,'triangle',.12,.05)},ng(){tone(220,.18,'square',.05)},rot(){tone(600,.05,'triangle',.08)},back(){tone(500,.07,'triangle',.08)},clear(){[523,659,784,1047].forEach((f,i)=>tone(f,.25,'triangle',.18,i*.11))}};
+
+/* ---------- じょうたい ---------- */
+const BOX={3:null,6:[2,3],9:[3,3]};
+let P=null,cur=[],given=[],sel=-1,done=false,cs=40;
+function setup(){
+  P=PZ[N][qi[N]];done=false;sel=-1;
+  given=[...P.q].map(Number);cur=given.slice();
+  const saved=load('kousen-numpl-cur-'+N+'-'+qi[N],null);
+  if(Array.isArray(saved)&&saved.length===N*N)saved.forEach((v,i)=>{if(!given[i])cur[i]=v});
+  $('msg').textContent='';
+  sizeBoard();buildGrid();buildPad();render();
+  save(KEY_LAST,{n:N,q:qi});
+}
+function sizeBoard(){
+  const W=Math.min(document.querySelector('.wrap').clientWidth-24-12,520);
+  const top=$('grid').getBoundingClientRect().top+window.scrollY;
+  const H=Math.max(220,Math.min(window.innerHeight*.58,window.innerHeight-top-190));
+  const extra=(N-1)*2+(BOX[N]?(N/BOX[N][1]-1+N/BOX[N][0]-1)*3:0);
+  cs=Math.floor(Math.min((W-extra)/N,(H-extra)/N,N===3?96:(N===6?64:52)));
+  $('grid').style.setProperty('--n',N);$('grid').style.setProperty('--cs',cs+'px');
+}
+function boxOf(i){const b=BOX[N];if(!b)return -1;const r=Math.floor(i/N),c=i%N;return Math.floor(r/b[0])*(N/b[1])+Math.floor(c/b[1])}
+function peersOf(i){const r=Math.floor(i/N),c=i%N,bx=boxOf(i),o=[];for(let j=0;j<N*N;j++){if(j===i)continue;const r2=Math.floor(j/N),c2=j%N;if(r2===r||c2===c||(bx>=0&&boxOf(j)===bx))o.push(j)}return o}
+function buildGrid(){
+  const b=BOX[N];let h='';
+  for(let i=0;i<N*N;i++){const r=Math.floor(i/N),c=i%N;let cls='sc'+(given[i]?' g':'');
+    if(b){if((c+1)%b[1]===0&&c<N-1)cls+=' rb';if((r+1)%b[0]===0&&r<N-1)cls+=' bb'}
+    h+='<button class="'+cls+'" data-i="'+i+'" aria-label="'+(r+1)+'ぎょう '+(c+1)+'れつ"></button>'}
+  $('grid').innerHTML=h;
+}
+function buildPad(){
+  const cols=N<=6?N+1:5;$('pad').style.setProperty('--pc',cols);
+  let h='';for(let v=1;v<=N;v++)h+='<button data-v="'+v+'">'+v+'</button>';
+  h+='<button class="del" data-v="0">けす</button>';
+  $('pad').innerHTML=h;
+}
+function render(){
+  const cells=$('grid').children,pe=sel>=0?new Set(peersOf(sel)):new Set();
+  const sv=sel>=0?cur[sel]:0;
+  for(let i=0;i<N*N;i++){
+    const el=cells[i],v=cur[i];el.textContent=v?v:'';
+    const bad=v&&!given[i]&&peersOf(i).some(j=>cur[j]===v);
+    el.classList.toggle('sel',i===sel);el.classList.toggle('hl',pe.has(i));el.classList.toggle('same',!!sv&&v===sv&&i!==sel);el.classList.toggle('bad',!!bad);
+  }
+  // つかいきった すうじは うすく
+  [...$('pad').children].forEach(b=>{const v=Number(b.dataset.v);if(v)b.classList.toggle('full',cur.filter(x=>x===v).length>=N)});
+  renderNums();
+}
+function renderNums(){
+  const pr=prog[N]||[];
+  $('nums').innerHTML=PZ[N].map((_,i)=>'<button data-q="'+i+'"'+(i===qi[N]?' aria-current="true"':'')+(pr.includes(i)?' class="done"':'')+'>'+(i+1)+'</button>').join('');
+  document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-pressed',Number(b.dataset.n)===N));
+  $('prog').textContent=N+'×'+N+'：'+pr.length+' / '+PZ[N].length+' クリア';
+}
+function scrollNums(){const b=$('nums').querySelector('[aria-current="true"]');if(b)b.scrollIntoView({block:'nearest',inline:'center'})}
+$('grid').addEventListener('click',e=>{const b=e.target.closest('.sc');if(!b||done)return;sel=Number(b.dataset.i);sfx.rot();$('msg').textContent=given[sel]?'さいしょから ある すうじは かえられないよ':'';render()});
+function put(v){
+  if(done)return;
+  if(sel<0){$('msg').textContent='さきに マスを えらんでね';return}
+  if(given[sel]){$('msg').textContent='さいしょから ある すうじは かえられないよ';return}
+  cur[sel]=v;v?sfx.put():sfx.back();
+  save('kousen-numpl-cur-'+N+'-'+qi[N],cur);
+  render();check();
+}
+$('pad').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;put(Number(b.dataset.v))});
+document.addEventListener('keydown',e=>{
+  if(document.querySelector('dialog[open]'))return;
+  if(/^[1-9]$/.test(e.key)&&Number(e.key)<=N){put(Number(e.key));e.preventDefault()}
+  else if(e.key==='Backspace'||e.key==='Delete'||e.key==='0'){put(0);e.preventDefault()}
+  else if(sel>=0&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){const d={ArrowLeft:-1,ArrowRight:1,ArrowUp:-N,ArrowDown:N}[e.key];const n=sel+d;if(n>=0&&n<N*N&&!(d===1&&n%N===0)&&!(d===-1&&sel%N===0)){sel=n;render()}e.preventDefault()}
+});
+function check(){
+  if(done)return;
+  if(cur.every((v,i)=>v===Number(P.a[i]))){
+    done=true;sel=-1;render();sfx.clear();
+    try{localStorage.removeItem('kousen-numpl-cur-'+N+'-'+qi[N])}catch(e){}
+    const pr=prog[N]||[];if(!pr.includes(qi[N])){pr.push(qi[N]);prog[N]=pr;save(KEY_PROG,prog)}
+    renderNums();
+    const last=qi[N]>=PZ[N].length-1;
+    const o=document.createElement('div');o.className='clear';o.id='clearBox';
+    o.innerHTML='<div class="t">クリア！</div><button class="next" id="goNext">'+(last?N+'×'+N+' ぜんぶ おわり！':'つぎの もんだいへ ›')+'</button>';
+    $('board').appendChild(o);
+    $('goNext').addEventListener('click',()=>{if(!last)qi[N]++;closeClear();setup();scrollNums()});
+  }else if(cur.every(v=>v)){$('msg').textContent='どこかに まちがいが あるよ。赤い すうじを 見てみよう'}
+}
+function closeClear(){const o=$('clearBox');if(o)o.remove()}
+
+/* ---------- ボタン ---------- */
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{N=Number(b.dataset.n);closeClear();setup();scrollNums()}));
+$('nums').addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b)return;qi[N]=Number(b.dataset.q);closeClear();setup();scrollNums()});
+$('prevQ').addEventListener('click',()=>{if(qi[N]>0){qi[N]--;closeClear();setup();scrollNums()}});
+$('nextQ').addEventListener('click',()=>{if(qi[N]<PZ[N].length-1){qi[N]++;closeClear();setup();scrollNums()}});
+$('reset').addEventListener('click',()=>{closeClear();try{localStorage.removeItem('kousen-numpl-cur-'+N+'-'+qi[N])}catch(e){}setup()});
+$('answer').addEventListener('click',()=>{
+  closeClear();cur=[...P.a].map(Number);done=true;sel=-1;render();
+  $('msg').textContent='これが こたえだよ。「やりなおす」で もういちど チャレンジしよう';
+});
+window.addEventListener('resize',()=>{sizeBoard()});
+
+/* ---------- あそびかた ---------- */
+const dlg=$('tuto');
+function openTuto(){if(typeof dlg.showModal==='function'){if(!dlg.open)dlg.showModal()}else dlg.setAttribute('open','');document.body.classList.add('lock');dlg.querySelector('.body').scrollTop=0;$('tutoTitle').focus()}
+function closeTuto(){if(typeof dlg.close==='function'&&dlg.open)dlg.close();else dlg.removeAttribute('open');document.body.classList.remove('lock');save(KEY_TUTO,1)}
+$('openTuto').addEventListener('click',openTuto);$('closeTuto').addEventListener('click',closeTuto);$('startTuto').addEventListener('click',closeTuto);
+dlg.addEventListener('cancel',e=>{e.preventDefault();closeTuto()});
+dlg.addEventListener('click',e=>{if(e.target===dlg)closeTuto()});
+
+setup();scrollNums();
+if(!load(KEY_TUTO,0))openTuto();
+})();
+</script>
+<script>
+if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
+</script>
+<script>
+(function(){
+  const dlg=document.getElementById('tuto'),v=document.getElementById('tutoVideo'),box=document.getElementById('vbox'),
+        btn=document.getElementById('vplay'),lbl=document.getElementById('vplayLabel');
+  if(!dlg||!v)return;
+  const sync=()=>{box.classList.toggle('playing',!v.paused&&!v.ended)};
+  v.addEventListener('play',sync);v.addEventListener('playing',sync);v.addEventListener('pause',sync);
+  v.addEventListener('ended',()=>{lbl.textContent='もういちど見る';sync()});
+  btn.addEventListener('click',()=>{if(v.ended)v.currentTime=0;v.play().catch(()=>{})});
+  function onOpen(){lbl.textContent='どうがを見る';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
+  function onClose(){v.pause()}
+  let was=dlg.open;if(was)onOpen();
+  new MutationObserver(()=>{if(dlg.open&&!was)onOpen();else if(!dlg.open&&was)onClose();was=dlg.open}).observe(dlg,{attributes:true,attributeFilter:['open']});
+})();
+</script>
+<!--kousen-pick--><script>
+(function(){
+  var u;try{u=new URLSearchParams(location.search)}catch(e){return}
+  var from=u.get('from'),pick=u.get('pick');
+  if(from&&/^(pre|[1-6]|brain)$/.test(from)){
+    document.querySelectorAll('a.backTop').forEach(function(a){a.href='cat_'+from+'.html';var t=[].slice.call(a.childNodes).filter(function(n){return n.nodeType===3&&n.textContent.trim()});if(t.length)t[t.length-1].textContent='ゲームいちらんにもどる'});
+  }
+  if(pick){
+    // カテゴリから きたときは おすすめの むずかしさを えらぶ
+    window.addEventListener('load',function(){setTimeout(function(){pick.split('|').forEach(function(s){try{var el=document.querySelector(s);if(el)el.click()}catch(e){}})},80)});
+  }
+})();
+</script>
+</body>
+</html>
