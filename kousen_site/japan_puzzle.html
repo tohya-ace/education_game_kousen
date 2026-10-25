@@ -521,6 +521,7 @@ if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventLis
   if(from&&/^(pre|[1-6]|brain)$/.test(from)){
     document.querySelectorAll('a.backTop').forEach(function(a){a.href='cat_'+from+'.html';var t=[].slice.call(a.childNodes).filter(function(n){return n.nodeType===3&&n.textContent.trim()});if(t.length)t[t.length-1].textContent='ゲームいちらんにもどる'});
   }
+  if(from&&/^([3-6]|brain)$/.test(from)){var st=document.createElement('style');st.id='noruby';st.textContent='rt,rp{display:none!important}.ex rt{display:revert!important}';document.head.appendChild(st)}
   if(pick){
     // カテゴリから きたときは おすすめの むずかしさを えらぶ
     window.addEventListener('load',function(){setTimeout(function(){pick.split('|').forEach(function(s){try{var el=document.querySelector(s);if(el)el.click()}catch(e){}})},80)});
