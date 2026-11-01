@@ -2,6 +2,64 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+<script>(function(){
+  /* 学年に あわせて 漢字と ひらがなを かきわける */
+  var GR={"1": "一右雨円王音下火花貝学気九休玉金空月犬見五口校左三山子四糸字耳七車手十出女小上森人水正生青夕石赤千川先早草足村大男竹中虫町天田土二日入年白八百文木本名目立力林六", "2": "引羽雲園遠何科夏家歌画回会海絵外角楽活間丸岩顔汽記帰弓牛魚京強教近兄形計元言原戸古午後語工公広交光考行高黄合谷国黒今才細作算止市矢姉思紙寺自時室社弱首秋週春書少場色食心新親図数西声星晴切雪船線前組走多太体台地池知茶昼長鳥朝直通弟店点電刀冬当東答頭同道読内南肉馬売買麦半番父風分聞米歩母方北毎妹万明鳴毛門夜野友用曜来里理話", "3": "悪安暗医委意育員院飲運泳駅央横屋温化荷界開階寒感漢館岸起期客究急級宮球去橋業曲局銀区苦具君係軽血決研県庫湖向幸港号根祭皿仕死使始指歯詩次事持式実写者主守取酒受州拾終習集住重宿所暑助昭消商章勝乗植申身神真深進世整昔全相送想息速族他打対待代第題炭短談着注柱丁帳調追定庭笛鉄転都度投豆島湯登等動童農波配倍箱畑発反坂板皮悲美鼻筆氷表秒病品負部服福物平返勉放味命面問役薬由油有遊予羊洋葉陽様落流旅両緑礼列練路和", "4": "愛案以衣位茨印英栄媛塩岡億加果貨課芽賀改械害街各覚潟完官管関観願岐希季旗器機議求泣給挙漁共協鏡競極熊訓軍郡群径景芸欠結建健験固功好香候康佐差菜最埼材崎昨札刷察参産散残氏司試児治滋辞鹿失借種周祝順初松笑唱焼照城縄臣信井成省清静席積折節説浅戦選然争倉巣束側続卒孫帯隊達単置仲沖兆低底的典伝徒努灯働特徳栃奈梨熱念敗梅博阪飯飛必票標不夫付府阜富副兵別辺変便包法望牧末満未民無約勇要養浴利陸良料量輪類令冷例連老労録", "5": "圧囲移因永営衛易益液演応往桜可仮価河過快解格確額刊幹慣眼紀基寄規喜技義逆久旧救居許境均禁句型経潔件険検限現減故個護効厚耕航鉱構興講告混査再災妻採際在財罪殺雑酸賛士支史志枝師資飼示似識質舎謝授修述術準序招証象賞条状常情織職制性政勢精製税責績接設絶祖素総造像増則測属率損貸態団断築貯張停提程適統堂銅導得毒独任燃能破犯判版比肥非費備評貧布婦武復複仏粉編弁保墓報豊防貿暴脈務夢迷綿輸余容略留領歴", "6": "胃異遺域宇映延沿恩我灰拡革閣割株干巻看簡危机揮貴疑吸供胸郷勤筋系敬警劇激穴券絹権憲源厳己呼誤后孝皇紅降鋼刻穀骨困砂座済裁策冊蚕至私姿視詞誌磁射捨尺若樹収宗就衆従縦縮熟純処署諸除承将傷障蒸針仁垂推寸盛聖誠舌宣専泉洗染銭善奏窓創装層操蔵臓存尊退宅担探誕段暖値宙忠著庁頂腸潮賃痛敵展討党糖届難乳認納脳派拝背肺俳班晩否批秘俵腹奮並陛閉片補暮宝訪亡忘棒枚幕密盟模訳郵優預幼欲翌乱卵覧裏律臨朗論"};
+  var KG={};for(var g in GR){var s=GR[g];for(var i=0;i<s.length;i++)KG[s[i]]=+g}
+  var L=null,from=null;
+  try{from=new URLSearchParams(location.search).get('from')}catch(e){}
+  if(window.KZ_LEVEL!==undefined)L=window.KZ_LEVEL;
+  else if(from){L={pre:0,'1':0,'2':1,'3':2,'4':3,'5':4,'6':5,brain:99}[from];if(L===undefined)L=null}
+  var S0='',S1='',S2='',RE=/([khr])([^]*)([^]*)/g;
+  function ok(k){for(var i=0;i<k.length;i++){var c=k.charCodeAt(i);if(c>=0x4e00&&c<=0x9fff){var g=KG[k[i]]||7;if(g>L)return false}}return true}
+  function seg(t,k,r){if(L===null)return t==='h'?r:k;return ok(k)?k:r}
+  function plain(s){return typeof s==='string'&&s.indexOf(S0)>=0?s.replace(RE,function(_,t,k,r){return seg(t,k,r)}):s}
+  function reading(s){return typeof s==='string'&&s.indexOf(S0)>=0?s.replace(RE,function(_,t,k,r){return r}):s}
+  window.__kz={plain:plain,reading:reading,level:L};
+  var SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,TITLE:1,OPTION:1};
+  function doText(n){
+    var v=n.nodeValue;if(!v||v.indexOf(S0)<0)return;
+    var p=n.parentNode;if(!p||p.nodeName==='SCRIPT'||p.nodeName==='STYLE'||p.nodeName==='TITLE')return;if(SKIP[p.nodeName]){n.nodeValue=plain(v);return}
+    if(L===null&&/r/.test(v)){
+      // ルビは そのまま ルビで だす
+      var f=document.createDocumentFragment(),last=0,m;RE.lastIndex=0;
+      while((m=RE.exec(v))){if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));
+        if(m[1]==='r'){var rb=document.createElement('ruby');rb.appendChild(document.createTextNode(m[2]));var rt=document.createElement('rt');rt.textContent=m[3];rb.appendChild(rt);f.appendChild(rb)}
+        else f.appendChild(document.createTextNode(seg(m[1],m[2],m[3])));last=RE.lastIndex}
+      if(last<v.length)f.appendChild(document.createTextNode(v.slice(last)));
+      p.replaceChild(f,n);return}
+    n.nodeValue=plain(v);
+  }
+  var ATTR=['aria-label','title','alt','placeholder'];
+  function doEl(el){for(var i=0;i<ATTR.length;i++){var a=el.getAttribute&&el.getAttribute(ATTR[i]);if(a&&a.indexOf(S0)>=0)el.setAttribute(ATTR[i],plain(a))}
+    if(el.nodeName==='INPUT'&&el.value&&el.value.indexOf(S0)>=0)el.value=plain(el.value)}
+  function walk(root){
+    if(root.nodeType===3){doText(root);return}
+    if(root.nodeType!==1&&root.nodeType!==11)return;
+    if(root.nodeType===1){if(SKIP[root.nodeName]&&root.nodeName!=='OPTION'&&root.nodeName!=='TITLE')return;doEl(root)}
+    var tw=document.createTreeWalker(root,5,null),list=[],x;
+    while((x=tw.nextNode()))list.push(x);
+    for(var i=0;i<list.length;i++){var q=list[i];try{if(q.nodeType===3){if(q.parentNode)doText(q)}else doEl(q)}catch(e){}}
+  }
+  var mo=new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var m=ms[i];try{
+    if(m.type==='characterData')doText(m.target);
+    else if(m.type==='attributes')doEl(m.target);
+    else for(var j=0;j<m.addedNodes.length;j++)walk(m.addedNodes[j])}catch(e){}}});
+  mo.observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:ATTR});
+  document.addEventListener('DOMContentLoaded',function(){try{walk(document.documentElement)}catch(e){}});
+  window.addEventListener('load',function(){try{walk(document.documentElement)}catch(e){}});
+  // ねんのため しばらくは ときどき みなおす
+  var sw=0,iv=setInterval(function(){try{walk(document.documentElement)}catch(e){}if(++sw>16)clearInterval(iv)},250);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)walk(document.documentElement)});
+  // 読み上げは ひらがなで
+  try{var U=window.SpeechSynthesisUtterance;if(U){var d=Object.getOwnPropertyDescriptor(U.prototype,'text');
+    if(d&&d.set)Object.defineProperty(U.prototype,'text',{get:d.get,set:function(v){d.set.call(this,reading(v))},configurable:true});
+    var W=function(t){var u=new U(reading(t));return u};W.prototype=U.prototype;window.SpeechSynthesisUtterance=W}}catch(e){}
+  // ダウンロードの なまえ
+  try{var dd=Object.getOwnPropertyDescriptor(HTMLAnchorElement.prototype,'download');
+    if(dd&&dd.set)Object.defineProperty(HTMLAnchorElement.prototype,'download',{get:dd.get,set:function(v){dd.set.call(this,plain(v))},configurable:true})}catch(e){}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>あんざんタイムアタック｜知育Webアプリ KouSen式</title>
 <meta name="theme-color" content="#274F8E">
@@ -171,29 +229,29 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
 <body>
 <div class="wrap">
   <div class="titlebar">
-    <h1>あんざんタイムアタック</h1>
-    <button class="pill" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>あそびかた</button>
+    <h1>h暗算あんざんタイムアタック</h1>
+    <button class="pill" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>h遊あそびh方かた</button>
   </div>
 
-  <!-- ===== えらぶ ===== -->
-  <section id="sel" aria-label="アタックモードとむずかしさをえらぶ">
+  <!-- ===== h選えらぶ ===== -->
+  <section id="sel" aria-label="アタックモードとh難むずかしさをh選えらぶ">
     <div style="display:flex;flex-direction:column;gap:12px">
       <p class="label">アタックモード</p>
       <div class="modes" role="group" aria-label="アタックモード">
-        <button class="mode" data-mode="add" style="--c:var(--red)"><span class="sym" aria-hidden="true">＋</span>足し算アタック</button>
-        <button class="mode" data-mode="sub" style="--c:var(--blue)"><span class="sym" aria-hidden="true">−</span>引き算アタック</button>
-        <button class="mode" data-mode="mul" style="--c:var(--green)"><span class="sym" aria-hidden="true">×</span>かけ算アタック</button>
-        <button class="mode" data-mode="div" style="--c:var(--orange)"><span class="sym" aria-hidden="true">÷</span>わり算アタック</button>
+        <button class="mode" data-mode="add" style="--c:var(--red)"><span class="sym" aria-hidden="true">＋</span>k足たしk算ざんアタック</button>
+        <button class="mode" data-mode="sub" style="--c:var(--blue)"><span class="sym" aria-hidden="true">−</span>k引ひきk算ざんアタック</button>
+        <button class="mode" data-mode="mul" style="--c:var(--green)"><span class="sym" aria-hidden="true">×</span>h掛かけk算ざんアタック</button>
+        <button class="mode" data-mode="div" style="--c:var(--orange)"><span class="sym" aria-hidden="true">÷</span>h割わりk算ざんアタック</button>
       </div>
-      <p class="label">むずかしさ</p>
-      <div class="tabs" role="group" aria-label="むずかしさ">
+      <p class="label">h難むずかしさ</p>
+      <div class="tabs" role="group" aria-label="h難むずかしさ">
         <button data-dig="1">Normal</button><button data-dig="2">Hard</button><button data-dig="3">Very Hard</button>
       </div>
       <div class="bestNow"><span class="k">ベストスコア</span><span class="v" id="bestNow">―</span></div>
       <button class="start" id="start"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>スタート</button>
       <div class="sndRow"><button class="snd" data-snd aria-pressed="true"></button></div>
-      <table class="bestTable" aria-label="ベストスコアいちらん">
-        <caption>ベストスコアいちらん</caption>
+      <table class="bestTable" aria-label="ベストスコアh一いちh覧らん">
+        <caption>ベストスコアh一いちh覧らん</caption>
         <thead><tr><th scope="col" style="text-align:left">アタックモード</th><th scope="col">Normal</th><th scope="col">Hard</th><th scope="col">Very Hard</th></tr></thead>
         <tbody id="bestBody"></tbody>
       </table>
@@ -201,7 +259,7 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
   </section>
 
   <!-- ===== プレイ ===== -->
-  <section id="play" aria-label="もんだい" hidden>
+  <section id="play" aria-label="h問もんh題だい" hidden>
     <div style="display:flex;flex-direction:column;gap:12px">
       <div class="hud">
         <span class="tag" id="playTag"></span>
@@ -211,7 +269,7 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
       <div class="display" id="display">
         <div class="qn" id="qn"></div>
         <div class="q" id="q" aria-live="polite"></div>
-        <div class="ansRow"><div class="ans" id="ans" aria-label="こたえ"></div></div>
+        <div class="ansRow"><div class="ans" id="ans" aria-label="h答こたえ"></div></div>
         <div class="hint" id="hint" role="status"></div>
         <span class="mark o" aria-hidden="true">⭕</span><span class="mark x" aria-hidden="true">❌</span>
       </div>
@@ -219,7 +277,7 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
         <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
         <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
         <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
-        <button data-k="del" class="del">けす</button><button data-k="0">0</button><button data-k="ent" class="ent">こたえる</button>
+        <button data-k="del" class="del">h消けす</button><button data-k="0">0</button><button data-k="ent" class="ent">h答こたえる</button>
       </div>
       <div class="playFoot">
         <button class="quit" id="quit">やめる</button>
@@ -228,43 +286,43 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
     </div>
   </section>
 
-  <!-- ===== けっか ===== -->
-  <section id="result" aria-label="けっか" hidden>
+  <!-- ===== h結けっh果か ===== -->
+  <section id="result" aria-label="h結けっh果か" hidden>
     <div class="result">
       <h2 id="rTitle" tabindex="-1">クリア！</h2>
       <p class="rmode" id="rMode"></p>
-      <div class="scoreBox" id="scoreBox"><div class="k">スコア</div><div class="v"><span id="rScore">0</span><small>点</small></div></div>
-      <span class="newBest" id="rNew" hidden>ベストスコアこうしん！</span>
+      <div class="scoreBox" id="scoreBox"><div class="k">スコア</div><div class="v"><span id="rScore">0</span><small>k点てん</small></div></div>
+      <span class="newBest" id="rNew" hidden>ベストスコアh更新こうしん！</span>
       <div class="stats">
         <div><span class="k">タイム</span><span class="v" id="rTime"></span></div>
-        <div><span class="k">まちがい</span><span class="v" id="rMiss"></span></div>
+        <div><span class="k">h間違まちがい</span><span class="v" id="rMiss"></span></div>
         <div id="rBestWrap"><span class="k">ベスト</span><span class="v" id="rBest"></span></div>
       </div>
-      <p class="over5" id="rOver" hidden>5分をこえたので、さいていスコアになりました。</p>
+      <p class="over5" id="rOver" hidden>5k分ふんをh超こえたので、h最さいh低ていスコアになりました。</p>
       <div class="rbtns">
-        <button class="start" id="again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>もういちど</button>
-        <button class="btn2 retry" id="retry" hidden>まちがえたもんだいだけれんしゅう</button>
-        <button class="btn2" id="toSel">アタックモードをえらぶ</button>
+        <button class="start" id="again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>もうh一いちh度ど</button>
+        <button class="btn2 retry" id="retry" hidden>h間違まちがえたh問もんh題だいだけh練れんh習しゅう</button>
+        <button class="btn2" id="toSel">アタックモードをh選えらぶ</button>
       </div>
     </div>
   </section>
 
-  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにもどる</a>
+  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにh戻もどる</a>
 </div>
 
 <dialog class="tuto" id="tuto" aria-labelledby="tutoTitle">
-  <div class="head"><h2 id="tutoTitle" tabindex="-1">あんざんタイムアタックのあそびかた</h2><button class="close" id="closeTuto" aria-label="とじる">✕</button></div>
+  <div class="head"><h2 id="tutoTitle" tabindex="-1">h暗算あんざんタイムアタックのh遊あそびh方かた</h2><button class="close" id="closeTuto" aria-label="h閉とじる">✕</button></div>
   <div class="body">
-    <section class="tvid" aria-label="どうがで見るあそびかた">
+    <section class="tvid" aria-label="h動どうh画がでk見みるh遊あそびh方かた">
       <div class="vbox" id="vbox">
         <video id="tutoVideo" src="video/anzan_tutorial.mp4" poster="video/anzan_tutorial.jpg" playsinline muted preload="metadata" controls></video>
-        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">どうがを見る</span></button>
+        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">h動どうh画がをk見みる</span></button>
       </div>
-      <p class="vnext">どうがのあとは、下のくわしいせつめいも見てね</p>
+      <p class="vnext">h動どうh画がのあとは、k下したのh詳くわしいh説せつh明めいもk見みてね</p>
     </section>
     <section class="step">
-      <h3><span class="n">1</span>アタックモードとむずかしさをえらぶ</h3>
-      <p>足し算・引き算・かけ算・わり算の4つのアタックモードと、Normal・Hard・Very Hard の3つのむずかしさがあります。</p>
+      <h3><span class="n">1</span>アタックモードとh難むずかしさをh選えらぶ</h3>
+      <p>k足たしk算ざん・k引ひきk算ざん・h掛かけk算ざん・h割わりk算ざんの4つのアタックモードと、Normal・Hard・Very Hard の3つのh難むずかしさがあります。</p>
       <table>
         <thead><tr><th></th><th>Normal</th><th>Hard</th><th>Very Hard</th></tr></thead>
         <tbody>
@@ -274,30 +332,30 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
           <tr><th>÷</th><td>42 ÷ 7</td><td>252 ÷ 4</td><td>1872 ÷ 8</td></tr>
         </tbody>
       </table>
-      <p>引き算の答えは、Normal は1けた、Hard は1けた〜2けた、Very Hard は1けた〜3けたになります。答えはマイナスになりません。わり算はかならずわり切れます。</p>
+      <p>k引ひきk算ざんのk答こたえは、Normal は1h桁けた、Hard は1h桁けた〜2h桁けた、Very Hard は1h桁けた〜3h桁けたになります。k答こたえはマイナスになりません。h割わりk算ざんはh必かならずh割わりk切きれます。</p>
     </section>
     <section class="step">
-      <h3><span class="n">2</span>数字キーで答えを入れる</h3>
-      <p>答えをさいごのけたまで入れると、その場で○か×が出ます。まちがえたら、同じもんだいにもういちどチャレンジ。3回まちがえると答えが出ます。</p>
+      <h3><span class="n">2</span>k数すうk字じキーでk答こたえをk入いれる</h3>
+      <p>k答こたえをh最さいh後ごのh桁けたまでk入いれると、そのk場ばで○か×がk出でます。h間違まちがえたら、k同おなじh問もんh題だいにもうh一いちh度どチャレンジ。3k回かいh間違まちがえるとk答こたえがk出でます。</p>
     </section>
     <section class="step">
-      <h3><span class="n">3</span>まちがえたもんだいだけれんしゅう</h3>
-      <p>まちがえたもんだいがあったときは、けっかがめんからそのもんだいだけをもういちどとけます（スコアはつきません）。</p>
+      <h3><span class="n">3</span>h間違まちがえたh問もんh題だいだけh練れんh習しゅう</h3>
+      <p>h間違まちがえたh問もんh題だいがあったときは、h結けっh果かh画がh面めんからそのh問もんh題だいだけをもうh一いちh度どh解とけます（スコアはh付つきません）。</p>
     </section>
   </div>
-  <div class="foot"><button id="startTuto">はじめる</button></div>
+  <div class="foot"><button id="startTuto">h始はじめる</button></div>
 </dialog>
 
 <script>
 (function(){
 const $=id=>document.getElementById(id);
 const MODES={
-  add:{label:'足し算アタック',sym:'+',c:'var(--red)'},
-  sub:{label:'引き算アタック',sym:'−',c:'var(--blue)'},
-  mul:{label:'かけ算アタック',sym:'×',c:'var(--green)'},
-  div:{label:'わり算アタック',sym:'÷',c:'var(--orange)'}
+  add:{label:'k足たしk算ざんアタック',sym:'+',c:'var(--red)'},
+  sub:{label:'k引ひきk算ざんアタック',sym:'−',c:'var(--blue)'},
+  mul:{label:'h掛かけk算ざんアタック',sym:'×',c:'var(--green)'},
+  div:{label:'h割わりk算ざんアタック',sym:'÷',c:'var(--orange)'}
 };
-// 難易度ごとのスコア設定：fast 秒以内で最高点、300秒(5分)以上で最低点
+// 難易度ごとのスコア設定：fast 秒以内で最高点、300秒(5k分ふん)以上で最低点
 const LV={1:{max:1000,min:10,fast:15},2:{max:10000,min:100,fast:30},3:{max:100000,min:1000,fast:60}};
 const LIMIT=300, COUNT=10;
 const LVNAME={1:'Normal',2:'Hard',3:'Very Hard'};
@@ -312,14 +370,14 @@ let mode=MODES[last.mode]?last.mode:'add', dig=[1,2,3].includes(last.dig)?last.d
 let soundOn=load(KEY_SND,true);
 const fmt=n=>Number(n).toLocaleString('ja-JP');
 
-/* ---------- もんだい ---------- */
+/* ---------- h問もんh題だい ---------- */
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function range(d){return d===1?[1,9]:[10**(d-1),10**d-1]}
 function gen(m,d){
   const [lo,hi]=range(d); let a,b,ans;
   if(m==='add'){a=rnd(lo,hi);b=rnd(lo,hi);ans=a+b}
   else if(m==='sub'){
-    // 引く数は難易度のけた数、答えは Normal:1けた / Hard:1〜2けた / Very Hard:1〜3けた（例 15−8=7）
+    // 引く数は難易度のけた数、答えは Normal:1h桁けた / Hard:1〜2h桁けた / Very Hard:1〜3h桁けた（k例れい 15−8=7）
     b=rnd(lo,hi);
     const W={1:[1],2:[.3,.7],3:[.2,.3,.5]}[d];
     let r=Math.random(),ad=1;for(let i=0;i<W.length;i++){if(r<W[i]){ad=i+1;break}r-=W[i]}
@@ -334,7 +392,7 @@ function makeSet(m,d){
   return out;
 }
 
-/* ---------- 音 ---------- */
+/* ---------- k音おと ---------- */
 let ac=null;
 function audio(){if(!ac){const C=window.AudioContext||window.webkitAudioContext;if(C)ac=new C()}if(ac&&ac.state==='suspended')ac.resume();return ac}
 function tone(f,dur,type='sine',vol=.18,at=0){
@@ -351,7 +409,7 @@ const sfx={
   clear(){[523,659,784,1047].forEach((f,i)=>tone(f,.25,'triangle',.18,i*.11))}
 };
 /* まちがえたときの声（端末の日本語音声を、女の子らしい高めの声で読み上げ） */
-const NG_LINES=['おろろ','ゆっくりでいいんだよ','おちついてがんばって'];
+const NG_LINES=['おろろ','ゆっくりでいいんだよ','h落おちh着ついてh頑張がんばって'];
 let lastLine=-1, jaVoice=null;
 const S=window.speechSynthesis||null;
 function pickVoice(){
@@ -379,8 +437,8 @@ function renderSnd(){
   document.querySelectorAll('[data-snd]').forEach(b=>{
     b.setAttribute('aria-pressed',soundOn);
     b.innerHTML=(soundOn
-      ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>音 ON'
-      :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>音 OFF');
+      ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>k音おと ON'
+      :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>k音おと OFF');
   });
 }
 document.querySelectorAll('[data-snd]').forEach(b=>b.addEventListener('click',()=>{soundOn=!soundOn;save(KEY_SND,soundOn);renderSnd();if(!soundOn&&S)S.cancel();if(soundOn)sfx.tick()}));
@@ -390,17 +448,17 @@ function calcScore(sec,d){
   const L=LV[d];
   if(sec>=LIMIT)return L.min;
   if(sec<=L.fast)return L.max;
-  const r=(LIMIT-sec)/(LIMIT-L.fast);          // 1(はやい)〜0(5分)
+  const r=(LIMIT-sec)/(LIMIT-L.fast);          // 1(h速はやい)〜0(5k分ふん)
   return Math.round(L.min+(L.max-L.min)*r*r);    // はやいほど大きく伸びる
 }
 function fmtTime(sec){const m=Math.floor(sec/60),s=sec-m*60;return m+':'+(s<10?'0':'')+s.toFixed(1)}
 
-/* ---------- えらぶがめん ---------- */
+/* ---------- h選えらぶh画がh面めん ---------- */
 function renderSel(){
   document.querySelectorAll('.mode').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===mode));
   document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-pressed',Number(b.dataset.dig)===dig));
   const v=best[mode+dig];
-  $('bestNow').textContent=v?fmt(v)+' 点':'まだありません';$('bestNow').classList.toggle('empty',!v);
+  $('bestNow').textContent=v?fmt(v)+' k点てん':'まだありません';$('bestNow').classList.toggle('empty',!v);
   $('bestBody').innerHTML=Object.keys(MODES).map(m=>'<tr><th scope="row" style="--c:'+MODES[m].c+'"><i></i>'+MODES[m].label+'</th>'+
     [1,2,3].map(d=>{const s=best[m+d];return s?'<td>'+fmt(s)+'</td>':'<td class="none">―</td>'}).join('')+'</tr>').join('');
   save(KEY_LAST,{mode,dig});
@@ -421,12 +479,12 @@ function startGame(list){
   set=list?list.map(p=>Object.assign({},p)):makeSet(mode,dig);
   idx=0;input='';tries=0;miss=0;wrongs=[];locked=true;
   $('playTag').style.setProperty('--c',MODES[mode].c);
-  $('playTag').innerHTML='<i></i>'+MODES[mode].label+'　'+LVNAME[dig]+(practice?'　れんしゅう':'');
+  $('playTag').innerHTML='<i></i>'+MODES[mode].label+'　'+LVNAME[dig]+(practice?'　h練れんh習しゅう':'');
   $('timer').hidden=practice;$('timer').textContent='0:00.0';$('timer').classList.remove('over');
   $('dots').innerHTML=set.map(()=>'<span></span>').join('');
   $('dots').style.gridTemplateColumns='repeat('+set.length+',1fr)';
   show('play');
-  // 5・4・3・2・1 のカウントダウン（1秒ずつ、5秒）
+  // 5・4・3・2・1 のカウントダウン（1k秒びょうずつ、5k秒びょう）
   $('qn').textContent='';$('ans').innerHTML='';$('hint').textContent='';
   $('pad').setAttribute('aria-disabled','true');
   let n=5;
@@ -446,7 +504,7 @@ function loop(){
 }
 function showQ(){
   const p=set[idx];
-  $('qn').textContent='だい'+(idx+1)+'もん / '+set.length+'もん';
+  $('qn').textContent='h第だい'+(idx+1)+'h問もん / '+set.length+'h問もん';
   $('q').textContent=p.a+' '+MODES[p.m].sym+' '+p.b+' =';
   input='';tries=0;$('hint').textContent='';renderAns();
   [...$('dots').children].forEach((d,i)=>d.classList.toggle('now',i===idx&&!d.classList.contains('ok')&&!d.classList.contains('re')));
@@ -475,7 +533,7 @@ function judge(){
     if(tries===1)wrongs.push(p);
     later(()=>{
       input='';renderAns();
-      $('hint').textContent=tries>=3?'こたえは '+p.ans+' だよ。入れてみよう':'もういちど！';
+      $('hint').textContent=tries>=3?'h答こたえは '+p.ans+' だよ。k入いれてみよう':'もうh一いちh度ど！';
       locked=false;
     },420);
   }
@@ -490,18 +548,18 @@ document.addEventListener('keydown',e=>{
 });
 $('quit').addEventListener('click',()=>{clearTimers();locked=true;renderSel();show('sel')});
 
-/* ---------- けっか ---------- */
+/* ---------- h結けっh果か ---------- */
 function finish(){
   cancelAnimationFrame(raf);
   const sec=(performance.now()-t0)/1000;
   sfx.clear();
-  $('rMode').textContent=MODES[mode].label+'（'+LVNAME[dig]+'）'+(practice?' れんしゅう':'');
+  $('rMode').textContent=MODES[mode].label+'（'+LVNAME[dig]+'）'+(practice?' h練れんh習しゅう':'');
   $('rTime').textContent=practice?'―':fmtTime(sec);
-  $('rMiss').textContent=miss+'回';
+  $('rMiss').textContent=miss+'k回かい';
   $('retry').hidden=wrongs.length===0;
-  $('retry').textContent='まちがえた'+wrongs.length+'もんだけれんしゅう';
+  $('retry').textContent='h間違まちがえた'+wrongs.length+'h問もんだけh練れんh習しゅう';
   if(practice){
-    $('rTitle').textContent='れんしゅうおわり！';
+    $('rTitle').textContent='h練れんh習しゅうh終おわり！';
     $('scoreBox').hidden=true;$('rNew').hidden=true;$('rOver').hidden=true;$('rBestWrap').hidden=true;
   }else{
     const k=mode+dig, score=calcScore(sec,dig), prev=best[k]||0, isNew=score>prev;
@@ -520,7 +578,7 @@ $('retry').addEventListener('click',()=>startGame(wrongs));
 $('toSel').addEventListener('click',()=>{renderSel();show('sel')});
 $('start').addEventListener('click',()=>startGame());
 
-/* ---------- あそびかた ---------- */
+/* ---------- h遊あそびh方かた ---------- */
 const dlg=$('tuto');
 function openTuto(){if(typeof dlg.showModal==='function'){if(!dlg.open)dlg.showModal()}else dlg.setAttribute('open','');document.body.classList.add('lock');dlg.querySelector('.body').scrollTop=0;$('tutoTitle').focus()}
 function closeTuto(){if(typeof dlg.close==='function'&&dlg.open)dlg.close();else dlg.removeAttribute('open');document.body.classList.remove('lock');save(KEY_TUTO,1)}
@@ -543,9 +601,9 @@ if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventLis
   if(!dlg||!v)return;
   const sync=()=>{box.classList.toggle('playing',!v.paused&&!v.ended)};
   v.addEventListener('play',sync);v.addEventListener('playing',sync);v.addEventListener('pause',sync);
-  v.addEventListener('ended',()=>{lbl.textContent='もういちど見る';sync()});
+  v.addEventListener('ended',()=>{lbl.textContent='もうh一いちh度どk見みる';sync()});
   btn.addEventListener('click',()=>{if(v.ended)v.currentTime=0;v.play().catch(()=>{})});
-  function onOpen(){lbl.textContent='どうがを見る';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
+  function onOpen(){lbl.textContent='h動どうh画がをk見みる';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
   function onClose(){v.pause()}
   let was=dlg.open;if(was)onOpen();
   new MutationObserver(()=>{if(dlg.open&&!was)onOpen();else if(!dlg.open&&was)onClose();was=dlg.open}).observe(dlg,{attributes:true,attributeFilter:['open']});

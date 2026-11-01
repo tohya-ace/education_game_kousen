@@ -2,6 +2,64 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+<script>(function(){
+  /* 学年に あわせて 漢字と ひらがなを かきわける */
+  var GR={"1": "一右雨円王音下火花貝学気九休玉金空月犬見五口校左三山子四糸字耳七車手十出女小上森人水正生青夕石赤千川先早草足村大男竹中虫町天田土二日入年白八百文木本名目立力林六", "2": "引羽雲園遠何科夏家歌画回会海絵外角楽活間丸岩顔汽記帰弓牛魚京強教近兄形計元言原戸古午後語工公広交光考行高黄合谷国黒今才細作算止市矢姉思紙寺自時室社弱首秋週春書少場色食心新親図数西声星晴切雪船線前組走多太体台地池知茶昼長鳥朝直通弟店点電刀冬当東答頭同道読内南肉馬売買麦半番父風分聞米歩母方北毎妹万明鳴毛門夜野友用曜来里理話", "3": "悪安暗医委意育員院飲運泳駅央横屋温化荷界開階寒感漢館岸起期客究急級宮球去橋業曲局銀区苦具君係軽血決研県庫湖向幸港号根祭皿仕死使始指歯詩次事持式実写者主守取酒受州拾終習集住重宿所暑助昭消商章勝乗植申身神真深進世整昔全相送想息速族他打対待代第題炭短談着注柱丁帳調追定庭笛鉄転都度投豆島湯登等動童農波配倍箱畑発反坂板皮悲美鼻筆氷表秒病品負部服福物平返勉放味命面問役薬由油有遊予羊洋葉陽様落流旅両緑礼列練路和", "4": "愛案以衣位茨印英栄媛塩岡億加果貨課芽賀改械害街各覚潟完官管関観願岐希季旗器機議求泣給挙漁共協鏡競極熊訓軍郡群径景芸欠結建健験固功好香候康佐差菜最埼材崎昨札刷察参産散残氏司試児治滋辞鹿失借種周祝順初松笑唱焼照城縄臣信井成省清静席積折節説浅戦選然争倉巣束側続卒孫帯隊達単置仲沖兆低底的典伝徒努灯働特徳栃奈梨熱念敗梅博阪飯飛必票標不夫付府阜富副兵別辺変便包法望牧末満未民無約勇要養浴利陸良料量輪類令冷例連老労録", "5": "圧囲移因永営衛易益液演応往桜可仮価河過快解格確額刊幹慣眼紀基寄規喜技義逆久旧救居許境均禁句型経潔件険検限現減故個護効厚耕航鉱構興講告混査再災妻採際在財罪殺雑酸賛士支史志枝師資飼示似識質舎謝授修述術準序招証象賞条状常情織職制性政勢精製税責績接設絶祖素総造像増則測属率損貸態団断築貯張停提程適統堂銅導得毒独任燃能破犯判版比肥非費備評貧布婦武復複仏粉編弁保墓報豊防貿暴脈務夢迷綿輸余容略留領歴", "6": "胃異遺域宇映延沿恩我灰拡革閣割株干巻看簡危机揮貴疑吸供胸郷勤筋系敬警劇激穴券絹権憲源厳己呼誤后孝皇紅降鋼刻穀骨困砂座済裁策冊蚕至私姿視詞誌磁射捨尺若樹収宗就衆従縦縮熟純処署諸除承将傷障蒸針仁垂推寸盛聖誠舌宣専泉洗染銭善奏窓創装層操蔵臓存尊退宅担探誕段暖値宙忠著庁頂腸潮賃痛敵展討党糖届難乳認納脳派拝背肺俳班晩否批秘俵腹奮並陛閉片補暮宝訪亡忘棒枚幕密盟模訳郵優預幼欲翌乱卵覧裏律臨朗論"};
+  var KG={};for(var g in GR){var s=GR[g];for(var i=0;i<s.length;i++)KG[s[i]]=+g}
+  var L=null,from=null;
+  try{from=new URLSearchParams(location.search).get('from')}catch(e){}
+  if(window.KZ_LEVEL!==undefined)L=window.KZ_LEVEL;
+  else if(from){L={pre:0,'1':0,'2':1,'3':2,'4':3,'5':4,'6':5,brain:99}[from];if(L===undefined)L=null}
+  var S0='',S1='',S2='',RE=/([khr])([^]*)([^]*)/g;
+  function ok(k){for(var i=0;i<k.length;i++){var c=k.charCodeAt(i);if(c>=0x4e00&&c<=0x9fff){var g=KG[k[i]]||7;if(g>L)return false}}return true}
+  function seg(t,k,r){if(L===null)return t==='h'?r:k;return ok(k)?k:r}
+  function plain(s){return typeof s==='string'&&s.indexOf(S0)>=0?s.replace(RE,function(_,t,k,r){return seg(t,k,r)}):s}
+  function reading(s){return typeof s==='string'&&s.indexOf(S0)>=0?s.replace(RE,function(_,t,k,r){return r}):s}
+  window.__kz={plain:plain,reading:reading,level:L};
+  var SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,TITLE:1,OPTION:1};
+  function doText(n){
+    var v=n.nodeValue;if(!v||v.indexOf(S0)<0)return;
+    var p=n.parentNode;if(!p||p.nodeName==='SCRIPT'||p.nodeName==='STYLE'||p.nodeName==='TITLE')return;if(SKIP[p.nodeName]){n.nodeValue=plain(v);return}
+    if(L===null&&/r/.test(v)){
+      // ルビは そのまま ルビで だす
+      var f=document.createDocumentFragment(),last=0,m;RE.lastIndex=0;
+      while((m=RE.exec(v))){if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));
+        if(m[1]==='r'){var rb=document.createElement('ruby');rb.appendChild(document.createTextNode(m[2]));var rt=document.createElement('rt');rt.textContent=m[3];rb.appendChild(rt);f.appendChild(rb)}
+        else f.appendChild(document.createTextNode(seg(m[1],m[2],m[3])));last=RE.lastIndex}
+      if(last<v.length)f.appendChild(document.createTextNode(v.slice(last)));
+      p.replaceChild(f,n);return}
+    n.nodeValue=plain(v);
+  }
+  var ATTR=['aria-label','title','alt','placeholder'];
+  function doEl(el){for(var i=0;i<ATTR.length;i++){var a=el.getAttribute&&el.getAttribute(ATTR[i]);if(a&&a.indexOf(S0)>=0)el.setAttribute(ATTR[i],plain(a))}
+    if(el.nodeName==='INPUT'&&el.value&&el.value.indexOf(S0)>=0)el.value=plain(el.value)}
+  function walk(root){
+    if(root.nodeType===3){doText(root);return}
+    if(root.nodeType!==1&&root.nodeType!==11)return;
+    if(root.nodeType===1){if(SKIP[root.nodeName]&&root.nodeName!=='OPTION'&&root.nodeName!=='TITLE')return;doEl(root)}
+    var tw=document.createTreeWalker(root,5,null),list=[],x;
+    while((x=tw.nextNode()))list.push(x);
+    for(var i=0;i<list.length;i++){var q=list[i];try{if(q.nodeType===3){if(q.parentNode)doText(q)}else doEl(q)}catch(e){}}
+  }
+  var mo=new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var m=ms[i];try{
+    if(m.type==='characterData')doText(m.target);
+    else if(m.type==='attributes')doEl(m.target);
+    else for(var j=0;j<m.addedNodes.length;j++)walk(m.addedNodes[j])}catch(e){}}});
+  mo.observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:ATTR});
+  document.addEventListener('DOMContentLoaded',function(){try{walk(document.documentElement)}catch(e){}});
+  window.addEventListener('load',function(){try{walk(document.documentElement)}catch(e){}});
+  // ねんのため しばらくは ときどき みなおす
+  var sw=0,iv=setInterval(function(){try{walk(document.documentElement)}catch(e){}if(++sw>16)clearInterval(iv)},250);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)walk(document.documentElement)});
+  // 読み上げは ひらがなで
+  try{var U=window.SpeechSynthesisUtterance;if(U){var d=Object.getOwnPropertyDescriptor(U.prototype,'text');
+    if(d&&d.set)Object.defineProperty(U.prototype,'text',{get:d.get,set:function(v){d.set.call(this,reading(v))},configurable:true});
+    var W=function(t){var u=new U(reading(t));return u};W.prototype=U.prototype;window.SpeechSynthesisUtterance=W}}catch(e){}
+  // ダウンロードの なまえ
+  try{var dd=Object.getOwnPropertyDescriptor(HTMLAnchorElement.prototype,'download');
+    if(dd&&dd.set)Object.defineProperty(HTMLAnchorElement.prototype,'download',{get:dd.get,set:function(v){dd.set.call(this,plain(v))},configurable:true})}catch(e){}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ブロックウメール｜知育Webアプリ KouSen式</title>
 <meta name="theme-color" content="#2E7D6B">
@@ -118,34 +176,34 @@ dialog.tuto::backdrop{background:rgba(10,25,20,.55)}
 <div class="wrap">
   <div class="titlebar">
     <h1>ブロックウメール</h1>
-    <button class="pill" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>あそびかた</button>
+    <button class="pill" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>h遊あそびh方かた</button>
   </div>
-  <div class="tabs" role="group" aria-label="ばんめんの大きさ"><button data-n="4">4×4</button><button data-n="5">5×5</button><button data-n="6">6×6</button></div>
-  <div class="qbar"><button class="arrow" id="prevQ" aria-label="前のもんだい">‹</button><nav class="nums" id="nums" aria-label="もんだいばんごう"></nav><button class="arrow" id="nextQ" aria-label="つぎのもんだい">›</button></div>
+  <div class="tabs" role="group" aria-label="h盤面ばんめんのk大おおきさ"><button data-n="4">4×4</button><button data-n="5">5×5</button><button data-n="6">6×6</button></div>
+  <div class="qbar"><button class="arrow" id="prevQ" aria-label="k前まえのh問もんh題だい">‹</button><nav class="nums" id="nums" aria-label="h問もんh題だいh番ばんh号ごう"></nav><button class="arrow" id="nextQ" aria-label="h次つぎのh問もんh題だい">›</button></div>
   <p class="prog" id="prog"></p>
   <div class="stage"><div class="board" id="board"><div class="grid" id="grid"></div></div></div>
   <p class="msg" id="msg" role="status" aria-live="polite"></p>
   <div class="tray" id="tray" aria-label="ブロック"></div>
-  <div class="btns"><button class="btn" id="reset">やりなおす</button><button class="btn" id="answer">こたえを見る</button></div>
-  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにもどる</a>
+  <div class="btns"><button class="btn" id="reset">やりh直なおす</button><button class="btn" id="answer">h答こたえをk見みる</button></div>
+  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにh戻もどる</a>
 </div>
 
 <dialog class="tuto" id="tuto" aria-labelledby="tutoTitle">
-  <div class="head"><h2 id="tutoTitle" tabindex="-1">ブロックウメールのあそびかた</h2><button class="close" id="closeTuto" aria-label="とじる">✕</button></div>
+  <div class="head"><h2 id="tutoTitle" tabindex="-1">ブロックウメールのh遊あそびh方かた</h2><button class="close" id="closeTuto" aria-label="h閉とじる">✕</button></div>
   <div class="body">
-    <section class="tvid" aria-label="どうがで見るあそびかた">
+    <section class="tvid" aria-label="h動どうh画がでk見みるh遊あそびh方かた">
       <div class="vbox" id="vbox">
         <video id="tutoVideo" src="video/block_tutorial.mp4" poster="video/block_tutorial.jpg" playsinline muted preload="metadata" controls></video>
-        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">どうがを見る</span></button>
+        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">h動どうh画がをk見みる</span></button>
       </div>
-      <p class="vnext">どうがのあとは、下のせつめいも見てね</p>
+      <p class="vnext">h動どうh画がのあとは、k下したのh説せつh明めいもk見みてね</p>
     </section>
-    <section class="step"><h3><span class="n">1</span><span>ばんめんと もんだいを えらぶ</span></h3><p>4×4・5×5・6×6 の3つの大きさに、それぞれ50もん あります。うしろの もんだいほど、ブロックが ふえて むずかしくなります。クリアした もんだいには ●が つきます。</p></section>
-    <section class="step"><h3><span class="n">2</span><span>ブロックを ばんめんに おく</span></h3><p>下にある ブロックを ゆびで つかんで、ばんめんに ドラッグします。おける ところは 白く、おけない ところは 赤く 光ります。黒い マスには おけません。</p></section>
-    <section class="step"><h3><span class="n">3</span><span>まわす・もどす</span></h3><p>下にある ブロックを <b>タップ</b>すると、くるっと まわります。ばんめんに おいた ブロックを タップすると、下に もどります。おいた ブロックを つかんで、ほかの ところへ うごかすことも できます。</p></section>
-    <section class="step"><h3><span class="n">4</span><span>ぜんぶ おけたら クリア！</span></h3><p>すべての ブロックを、すきまなく ぴったり おけたら クリアです。こまったときは「こたえを見る」で こたえが 見られます。</p></section>
+    <section class="step"><h3><span class="n">1</span><span>h盤面ばんめんと h問もんh題だいを h選えらぶ</span></h3><p>4×4・5×5・6×6 の3つのk大おおきさに、それぞれ50h問もん あります。h後うしろの h問もんh題だいほど、ブロックが h増ふえて h難むずかしくなります。クリアした h問もんh題だいには ●が h付つきます。</p></section>
+    <section class="step"><h3><span class="n">2</span><span>ブロックを h盤面ばんめんに h置おく</span></h3><p>k下したにある ブロックを h指ゆびで つかんで、h盤面ばんめんに ドラッグします。h置おける ところは k白しろく、h置おけない ところは k赤あかく k光ひかります。k黒くろい マスには h置おけません。</p></section>
+    <section class="step"><h3><span class="n">3</span><span>h回まわす・h戻もどす</span></h3><p>k下したにある ブロックを <b>タップ</b>すると、くるっと h回まわります。h盤面ばんめんに h置おいた ブロックを タップすると、k下したに h戻もどります。h置おいた ブロックを つかんで、h他ほかの ところへ h動うごかすことも できます。</p></section>
+    <section class="step"><h3><span class="n">4</span><span>h全ぜんh部ぶ h置おけたら クリア！</span></h3><p>h全すべての ブロックを、h隙間すきまなく ぴったり h置おけたら クリアです。h困こまったときは「h答こたえをk見みる」で h答こたえが k見みられます。</p></section>
   </div>
-  <div class="foot"><button id="startTuto">はじめる</button></div>
+  <div class="foot"><button id="startTuto">h始はじめる</button></div>
 </dialog>
 
 <script>
@@ -165,7 +223,7 @@ const norm=cs=>{const mr=Math.min(...cs.map(c=>c[0])),mc=Math.min(...cs.map(c=>c
 const rot=cs=>norm(cs.map(([r,c])=>[c,-r]));
 const dims=cs=>[Math.max(...cs.map(c=>c[0]))+1,Math.max(...cs.map(c=>c[1]))+1];
 
-/* ---------- 音 ---------- */
+/* ---------- k音おと ---------- */
 let ac=null;
 function tone(f,dur,type='sine',vol=.14,at=0){try{if(!ac){const C=window.AudioContext||window.webkitAudioContext;if(C)ac=new C()}if(!ac)return;if(ac.state==='suspended')ac.resume();const t=ac.currentTime+at,o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+dur+.02)}catch(e){}}
 const sfx={put(){tone(740,.08,'triangle');tone(988,.1,'triangle',.12,.05)},ng(){tone(220,.18,'square',.05)},rot(){tone(600,.05,'triangle',.08)},back(){tone(500,.07,'triangle',.08)},clear(){[523,659,784,1047].forEach((f,i)=>tone(f,.25,'triangle',.18,i*.11))}};
@@ -215,7 +273,7 @@ function renderTray(){
   const left=pieces.map((p,i)=>[p,i]).filter(([p])=>!p.at);
   const ts=Math.max(16,Math.min(26,Math.round(cs*.42)));
   $('tray').innerHTML=left.length?left.map(([p,i])=>{const [h,w]=dims(p.shape);const set=new Set(p.shape.map(x=>x.join(',')));let cells='';for(let r=0;r<h;r++)for(let c=0;c<w;c++)cells+='<i'+(set.has(r+','+c)?' class="f"':'')+'></i>';
-    return '<button class="piece" data-i="'+i+'" style="--w:'+w+';--ts:'+ts+'px;--pc:'+p.color+'" aria-label="ブロック '+p.shape.length+'こ。タップでまわす">'+cells+'<span class="rt" aria-hidden="true">↻</span></button>'}).join(''):'<span class="trayEmpty">ぜんぶ おいたよ！</span>';
+    return '<button class="piece" data-i="'+i+'" style="--w:'+w+';--ts:'+ts+'px;--pc:'+p.color+'" aria-label="ブロック '+p.shape.length+'h個こ。タップでh回まわす">'+cells+'<span class="rt" aria-hidden="true">↻</span></button>'}).join(''):'<span class="trayEmpty">h全ぜんh部ぶ h置おいたよ！</span>';
 }
 function renderNums(){
   const pr=prog[N]||[];
@@ -228,7 +286,7 @@ function scrollNums(){const b=$('nums').querySelector('[aria-current="true"]');i
 /* ---------- ドラッグ ---------- */
 let drag=null;
 function startDrag(i,e,grabCell,fromBoard){
-  // ここでは まだ ブロックを 大きくしない（うごかしたときだけ 大きく出す。タップは まわす／もどす）
+  // ここでは まだ ブロックを 大きくしない（うごかしたときだけ 大きく出す。タップは まわす／h戻もどす）
   const lift=e.pointerType==='touch'?cs*.9:0;
   drag={i,g:null,grab:grabCell,x0:e.clientX,y0:e.clientY,moved:false,fromBoard,lift,prevAt:pieces[i].at,id:e.pointerId};
 }
@@ -265,8 +323,8 @@ function endDrag(e,cancel){
   const d=drag;drag=null;if(d.g)d.g.remove();document.body.classList.remove('dragging');
   const p=pieces[d.i];
   if(!d.moved&&!cancel){
-    if(d.fromBoard){p.at=null;sfx.back()}           // ばんめんの ブロックを タップ → 下にもどす
-    else{p.shape=rot(p.shape);sfx.rot()}           // 下の ブロックを タップ → まわす
+    if(d.fromBoard){p.at=null;sfx.back()}           // h盤面ばんめんの ブロックを タップ → k下したにh戻もどす
+    else{p.shape=rot(p.shape);sfx.rot()}           // k下したの ブロックを タップ → h回まわす
     render();check();return;
   }
   const at=cellAtGhost(d);
@@ -275,7 +333,7 @@ function endDrag(e,cancel){
     if(d.fromBoard&&d.prevAt&&!cancel){p.at=null}
     const onBoard=p.shape.some(([r,c])=>{const R=r+at[0],C=c+at[1];return R>=0&&C>=0&&R<N&&C<N});
     if(onBoard)sfx.ng();
-    $('msg').textContent=onBoard?'そこには おけないよ':'';
+    $('msg').textContent=onBoard?'そこには h置おけないよ':'';
   }
   render();check();
 }
@@ -305,7 +363,7 @@ function check(){
     const pr=prog[N]||[];if(!pr.includes(qi[N])){pr.push(qi[N]);prog[N]=pr;save(KEY_PROG,prog)}
     renderNums();
     const o=document.createElement('div');o.className='clear';o.id='clearBox';
-    o.innerHTML='<div class="t">クリア！</div>'+(qi[N]<49?'<button class="next" id="goNext">つぎの もんだいへ ›</button>':'<button class="next" id="goNext">'+N+'×'+N+' ぜんぶ おわり！</button>');
+    o.innerHTML='<div class="t">クリア！</div>'+(qi[N]<49?'<button class="next" id="goNext">h次つぎの h問もんh題だいへ ›</button>':'<button class="next" id="goNext">'+N+'×'+N+' h全ぜんh部ぶ h終おわり！</button>');
     $('board').appendChild(o);
     $('goNext').addEventListener('click',()=>{if(qi[N]<49){qi[N]++;}closeClear();setup();scrollNums()});
   }
@@ -321,11 +379,11 @@ $('reset').addEventListener('click',()=>{closeClear();setup()});
 $('answer').addEventListener('click',()=>{
   closeClear();
   pieces.forEach((p,i)=>{p.shape=P.p[i].sol.map(x=>x.slice());p.at=P.p[i].a.slice()});
-  done=true;render();$('msg').textContent='これが こたえの 1つだよ。「やりなおす」で もういちど チャレンジしよう';
+  done=true;render();$('msg').textContent='これが h答こたえの 1つだよ。「やりh直なおす」で もうh一いちh度ど チャレンジしよう';
 });
 window.addEventListener('resize',()=>{if(!drag){sizeBoard();render()}});
 
-/* ---------- あそびかた ---------- */
+/* ---------- h遊あそびh方かた ---------- */
 const dlg=$('tuto');
 function openTuto(){if(typeof dlg.showModal==='function'){if(!dlg.open)dlg.showModal()}else dlg.setAttribute('open','');document.body.classList.add('lock');dlg.querySelector('.body').scrollTop=0;$('tutoTitle').focus()}
 function closeTuto(){if(typeof dlg.close==='function'&&dlg.open)dlg.close();else dlg.removeAttribute('open');document.body.classList.remove('lock');save(KEY_TUTO,1)}
@@ -347,9 +405,9 @@ if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventLis
   if(!dlg||!v)return;
   const sync=()=>{box.classList.toggle('playing',!v.paused&&!v.ended)};
   v.addEventListener('play',sync);v.addEventListener('playing',sync);v.addEventListener('pause',sync);
-  v.addEventListener('ended',()=>{lbl.textContent='もういちど見る';sync()});
+  v.addEventListener('ended',()=>{lbl.textContent='もうh一いちh度どk見みる';sync()});
   btn.addEventListener('click',()=>{if(v.ended)v.currentTime=0;v.play().catch(()=>{})});
-  function onOpen(){lbl.textContent='どうがを見る';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
+  function onOpen(){lbl.textContent='h動どうh画がをk見みる';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
   function onClose(){v.pause()}
   let was=dlg.open;if(was)onOpen();
   new MutationObserver(()=>{if(dlg.open&&!was)onOpen();else if(!dlg.open&&was)onClose();was=dlg.open}).observe(dlg,{attributes:true,attributeFilter:['open']});

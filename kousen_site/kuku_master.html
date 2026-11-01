@@ -2,6 +2,64 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+<script>(function(){
+  /* 学年に あわせて 漢字と ひらがなを かきわける */
+  var GR={"1": "一右雨円王音下火花貝学気九休玉金空月犬見五口校左三山子四糸字耳七車手十出女小上森人水正生青夕石赤千川先早草足村大男竹中虫町天田土二日入年白八百文木本名目立力林六", "2": "引羽雲園遠何科夏家歌画回会海絵外角楽活間丸岩顔汽記帰弓牛魚京強教近兄形計元言原戸古午後語工公広交光考行高黄合谷国黒今才細作算止市矢姉思紙寺自時室社弱首秋週春書少場色食心新親図数西声星晴切雪船線前組走多太体台地池知茶昼長鳥朝直通弟店点電刀冬当東答頭同道読内南肉馬売買麦半番父風分聞米歩母方北毎妹万明鳴毛門夜野友用曜来里理話", "3": "悪安暗医委意育員院飲運泳駅央横屋温化荷界開階寒感漢館岸起期客究急級宮球去橋業曲局銀区苦具君係軽血決研県庫湖向幸港号根祭皿仕死使始指歯詩次事持式実写者主守取酒受州拾終習集住重宿所暑助昭消商章勝乗植申身神真深進世整昔全相送想息速族他打対待代第題炭短談着注柱丁帳調追定庭笛鉄転都度投豆島湯登等動童農波配倍箱畑発反坂板皮悲美鼻筆氷表秒病品負部服福物平返勉放味命面問役薬由油有遊予羊洋葉陽様落流旅両緑礼列練路和", "4": "愛案以衣位茨印英栄媛塩岡億加果貨課芽賀改械害街各覚潟完官管関観願岐希季旗器機議求泣給挙漁共協鏡競極熊訓軍郡群径景芸欠結建健験固功好香候康佐差菜最埼材崎昨札刷察参産散残氏司試児治滋辞鹿失借種周祝順初松笑唱焼照城縄臣信井成省清静席積折節説浅戦選然争倉巣束側続卒孫帯隊達単置仲沖兆低底的典伝徒努灯働特徳栃奈梨熱念敗梅博阪飯飛必票標不夫付府阜富副兵別辺変便包法望牧末満未民無約勇要養浴利陸良料量輪類令冷例連老労録", "5": "圧囲移因永営衛易益液演応往桜可仮価河過快解格確額刊幹慣眼紀基寄規喜技義逆久旧救居許境均禁句型経潔件険検限現減故個護効厚耕航鉱構興講告混査再災妻採際在財罪殺雑酸賛士支史志枝師資飼示似識質舎謝授修述術準序招証象賞条状常情織職制性政勢精製税責績接設絶祖素総造像増則測属率損貸態団断築貯張停提程適統堂銅導得毒独任燃能破犯判版比肥非費備評貧布婦武復複仏粉編弁保墓報豊防貿暴脈務夢迷綿輸余容略留領歴", "6": "胃異遺域宇映延沿恩我灰拡革閣割株干巻看簡危机揮貴疑吸供胸郷勤筋系敬警劇激穴券絹権憲源厳己呼誤后孝皇紅降鋼刻穀骨困砂座済裁策冊蚕至私姿視詞誌磁射捨尺若樹収宗就衆従縦縮熟純処署諸除承将傷障蒸針仁垂推寸盛聖誠舌宣専泉洗染銭善奏窓創装層操蔵臓存尊退宅担探誕段暖値宙忠著庁頂腸潮賃痛敵展討党糖届難乳認納脳派拝背肺俳班晩否批秘俵腹奮並陛閉片補暮宝訪亡忘棒枚幕密盟模訳郵優預幼欲翌乱卵覧裏律臨朗論"};
+  var KG={};for(var g in GR){var s=GR[g];for(var i=0;i<s.length;i++)KG[s[i]]=+g}
+  var L=null,from=null;
+  try{from=new URLSearchParams(location.search).get('from')}catch(e){}
+  if(window.KZ_LEVEL!==undefined)L=window.KZ_LEVEL;
+  else if(from){L={pre:0,'1':0,'2':1,'3':2,'4':3,'5':4,'6':5,brain:99}[from];if(L===undefined)L=null}
+  var S0='',S1='',S2='',RE=/([khr])([^]*)([^]*)/g;
+  function ok(k){for(var i=0;i<k.length;i++){var c=k.charCodeAt(i);if(c>=0x4e00&&c<=0x9fff){var g=KG[k[i]]||7;if(g>L)return false}}return true}
+  function seg(t,k,r){if(L===null)return t==='h'?r:k;return ok(k)?k:r}
+  function plain(s){return typeof s==='string'&&s.indexOf(S0)>=0?s.replace(RE,function(_,t,k,r){return seg(t,k,r)}):s}
+  function reading(s){return typeof s==='string'&&s.indexOf(S0)>=0?s.replace(RE,function(_,t,k,r){return r}):s}
+  window.__kz={plain:plain,reading:reading,level:L};
+  var SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,TITLE:1,OPTION:1};
+  function doText(n){
+    var v=n.nodeValue;if(!v||v.indexOf(S0)<0)return;
+    var p=n.parentNode;if(!p||p.nodeName==='SCRIPT'||p.nodeName==='STYLE'||p.nodeName==='TITLE')return;if(SKIP[p.nodeName]){n.nodeValue=plain(v);return}
+    if(L===null&&/r/.test(v)){
+      // ルビは そのまま ルビで だす
+      var f=document.createDocumentFragment(),last=0,m;RE.lastIndex=0;
+      while((m=RE.exec(v))){if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));
+        if(m[1]==='r'){var rb=document.createElement('ruby');rb.appendChild(document.createTextNode(m[2]));var rt=document.createElement('rt');rt.textContent=m[3];rb.appendChild(rt);f.appendChild(rb)}
+        else f.appendChild(document.createTextNode(seg(m[1],m[2],m[3])));last=RE.lastIndex}
+      if(last<v.length)f.appendChild(document.createTextNode(v.slice(last)));
+      p.replaceChild(f,n);return}
+    n.nodeValue=plain(v);
+  }
+  var ATTR=['aria-label','title','alt','placeholder'];
+  function doEl(el){for(var i=0;i<ATTR.length;i++){var a=el.getAttribute&&el.getAttribute(ATTR[i]);if(a&&a.indexOf(S0)>=0)el.setAttribute(ATTR[i],plain(a))}
+    if(el.nodeName==='INPUT'&&el.value&&el.value.indexOf(S0)>=0)el.value=plain(el.value)}
+  function walk(root){
+    if(root.nodeType===3){doText(root);return}
+    if(root.nodeType!==1&&root.nodeType!==11)return;
+    if(root.nodeType===1){if(SKIP[root.nodeName]&&root.nodeName!=='OPTION'&&root.nodeName!=='TITLE')return;doEl(root)}
+    var tw=document.createTreeWalker(root,5,null),list=[],x;
+    while((x=tw.nextNode()))list.push(x);
+    for(var i=0;i<list.length;i++){var q=list[i];try{if(q.nodeType===3){if(q.parentNode)doText(q)}else doEl(q)}catch(e){}}
+  }
+  var mo=new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var m=ms[i];try{
+    if(m.type==='characterData')doText(m.target);
+    else if(m.type==='attributes')doEl(m.target);
+    else for(var j=0;j<m.addedNodes.length;j++)walk(m.addedNodes[j])}catch(e){}}});
+  mo.observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:ATTR});
+  document.addEventListener('DOMContentLoaded',function(){try{walk(document.documentElement)}catch(e){}});
+  window.addEventListener('load',function(){try{walk(document.documentElement)}catch(e){}});
+  // ねんのため しばらくは ときどき みなおす
+  var sw=0,iv=setInterval(function(){try{walk(document.documentElement)}catch(e){}if(++sw>16)clearInterval(iv)},250);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)walk(document.documentElement)});
+  // 読み上げは ひらがなで
+  try{var U=window.SpeechSynthesisUtterance;if(U){var d=Object.getOwnPropertyDescriptor(U.prototype,'text');
+    if(d&&d.set)Object.defineProperty(U.prototype,'text',{get:d.get,set:function(v){d.set.call(this,reading(v))},configurable:true});
+    var W=function(t){var u=new U(reading(t));return u};W.prototype=U.prototype;window.SpeechSynthesisUtterance=W}}catch(e){}
+  // ダウンロードの なまえ
+  try{var dd=Object.getOwnPropertyDescriptor(HTMLAnchorElement.prototype,'download');
+    if(dd&&dd.set)Object.defineProperty(HTMLAnchorElement.prototype,'download',{get:dd.get,set:function(v){dd.set.call(this,plain(v))},configurable:true})}catch(e){}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>九九マスター｜知育Webアプリ KouSen式</title>
 <meta name="theme-color" content="#274F8E">
@@ -104,6 +162,8 @@ h1{margin:0;font-size:clamp(1.15rem,5.2vw,1.7rem);font-weight:600;line-height:1.
 .dots span.re{background:var(--orange)}
 .display{position:relative;background:var(--board);border-radius:20px;padding:14px 16px 16px;color:#fff;box-shadow:inset 0 -6px 0 var(--rim),0 8px 20px rgba(20,40,80,.22);border:4px solid transparent;transition:border-color .15s,background-color .15s}
 .display .qn{font-size:.9rem;opacity:.85}
+.display .yomi{min-height:1.5em;text-align:center;font-size:clamp(1.05rem,5vw,1.35rem);letter-spacing:.06em;font-family:var(--boldFont,inherit);font-weight:700;opacity:.95;word-spacing:.35em}
+.display .yomi b{color:#FFE07A;font-weight:700}
 .display .q{font-size:clamp(2rem,10vw,3.1rem);line-height:1.2;text-align:center;letter-spacing:.04em;white-space:nowrap;min-height:1.25em;font-variant-numeric:tabular-nums}
 .display .ansRow{display:flex;justify-content:center;margin-top:8px}
 .display .ans{min-width:min(70%,260px);height:clamp(58px,15vw,72px);border-radius:14px;background:var(--well);box-shadow:inset 0 4px 8px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:flex-end;padding:0 16px;font-size:clamp(2rem,10vw,3rem);letter-spacing:.06em;font-variant-numeric:tabular-nums}
@@ -199,16 +259,16 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
 <body>
 <div class="wrap">
   <div class="titlebar">
-    <h1>九九マスター</h1>
-    <button class="pill" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>あそびかた</button>
+    <h1>k九くk九くマスター</h1>
+    <button class="pill" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>h遊あそびh方かた</button>
   </div>
 
-  <!-- ===== えらぶ ===== -->
-  <section id="sel" aria-label="だんをえらぶ">
+  <!-- ===== h選えらぶ ===== -->
+  <section id="sel" aria-label="h段だんをh選えらぶ">
     <div style="display:flex;flex-direction:column;gap:12px">
-      <p class="label">だんをえらぶ</p>
-      <div class="dans" role="group" aria-label="だん"><button class="dan" data-dan="1"><span class="in"><b>1</b><span>のだん</span></span></button><button class="dan" data-dan="2"><span class="in"><b>2</b><span>のだん</span></span></button><button class="dan" data-dan="3"><span class="in"><b>3</b><span>のだん</span></span></button><button class="dan" data-dan="4"><span class="in"><b>4</b><span>のだん</span></span></button><button class="dan" data-dan="5"><span class="in"><b>5</b><span>のだん</span></span></button><button class="dan" data-dan="6"><span class="in"><b>6</b><span>のだん</span></span></button><button class="dan" data-dan="7"><span class="in"><b>7</b><span>のだん</span></span></button><button class="dan" data-dan="8"><span class="in"><b>8</b><span>のだん</span></span></button><button class="dan" data-dan="9"><span class="in"><b>9</b><span>のだん</span></span></button>
-        <button class="dan rnd" data-dan="r"><span class="in"><b>？</b><span>ランダム（10もん）</span></span></button>
+      <p class="label">h段だんをh選えらぶ</p>
+      <div class="dans" role="group" aria-label="h段だん"><button class="dan" data-dan="1"><span class="in"><b>1</b><span>のh段だん</span></span></button><button class="dan" data-dan="2"><span class="in"><b>2</b><span>のh段だん</span></span></button><button class="dan" data-dan="3"><span class="in"><b>3</b><span>のh段だん</span></span></button><button class="dan" data-dan="4"><span class="in"><b>4</b><span>のh段だん</span></span></button><button class="dan" data-dan="5"><span class="in"><b>5</b><span>のh段だん</span></span></button><button class="dan" data-dan="6"><span class="in"><b>6</b><span>のh段だん</span></span></button><button class="dan" data-dan="7"><span class="in"><b>7</b><span>のh段だん</span></span></button><button class="dan" data-dan="8"><span class="in"><b>8</b><span>のh段だん</span></span></button><button class="dan" data-dan="9"><span class="in"><b>9</b><span>のh段だん</span></span></button>
+        <button class="dan rnd" data-dan="r"><span class="in"><b>？</b><span>ランダム（10h問もん）</span></span></button>
       </div>
       <p class="selNote" id="selNote"></p>
       <button class="start" id="start"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>スタート</button>
@@ -217,7 +277,7 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
   </section>
 
   <!-- ===== プレイ ===== -->
-  <section id="play" aria-label="もんだい" hidden>
+  <section id="play" aria-label="h問もんh題だい" hidden>
     <div style="display:flex;flex-direction:column;gap:12px">
       <div class="hud">
         <span class="tag" id="playTag"></span>
@@ -225,8 +285,9 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
       <div class="dots" id="dots" aria-hidden="true"></div>
       <div class="display" id="display">
         <div class="qn" id="qn"></div>
+        <div class="yomi" id="yomi" aria-hidden="true"></div>
         <div class="q" id="q" aria-live="polite"></div>
-        <div class="ansRow"><div class="ans" id="ans" aria-label="こたえ"></div></div>
+        <div class="ansRow"><div class="ans" id="ans" aria-label="h答こたえ"></div></div>
         <div class="hint" id="hint" role="status"></div>
         <span class="mark o" aria-hidden="true">⭕</span><span class="mark x" aria-hidden="true">❌</span>
       </div>
@@ -234,7 +295,7 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
         <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
         <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
         <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
-        <button data-k="del" class="del">けす</button><button data-k="0">0</button><button data-k="ent" class="ent">こたえる</button>
+        <button data-k="del" class="del">h消けす</button><button data-k="0">0</button><button data-k="ent" class="ent">h答こたえる</button>
       </div>
       <div class="playFoot">
         <button class="quit" id="quit">やめる</button>
@@ -243,49 +304,49 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
     </div>
   </section>
 
-  <!-- ===== けっか ===== -->
-  <section id="result" aria-label="けっか" hidden>
+  <!-- ===== h結けっh果か ===== -->
+  <section id="result" aria-label="h結けっh果か" hidden>
     <div class="result" id="resultBox">
       <h2 id="rTitle" tabindex="-1">クリア！</h2>
       <p class="rmode" id="rMode"></p>
-      <div class="stats one"><div><span class="k">まちがい</span><span class="v" id="rMiss"></span></div></div>
+      <div class="stats one"><div><span class="k">h間違まちがい</span><span class="v" id="rMiss"></span></div></div>
       <div class="rbtns">
-        <button class="start" id="again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>もういちど</button>
-        <button class="btn2" id="nextDan" hidden>つぎのだんへ</button>
-        <button class="btn2 retry" id="retry" hidden>まちがえたもんだいだけれんしゅう</button>
-        <button class="btn2" id="toSel">だんをえらぶ</button>
+        <button class="start" id="again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L20 12z" fill="currentColor"/></svg>もうh一いちh度ど</button>
+        <button class="btn2" id="nextDan" hidden>h次つぎのh段だんへ</button>
+        <button class="btn2 retry" id="retry" hidden>h間違まちがえたh問もんh題だいだけh練れんh習しゅう</button>
+        <button class="btn2" id="toSel">h段だんをh選えらぶ</button>
       </div>
     </div>
   </section>
 
-  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにもどる</a>
+  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにh戻もどる</a>
 </div>
 
 <dialog class="tuto" id="tuto" aria-labelledby="tutoTitle">
-  <div class="head"><h2 id="tutoTitle" tabindex="-1">九九マスターのあそびかた</h2><button class="close" id="closeTuto" aria-label="とじる">✕</button></div>
+  <div class="head"><h2 id="tutoTitle" tabindex="-1">k九くk九くマスターのh遊あそびh方かた</h2><button class="close" id="closeTuto" aria-label="h閉とじる">✕</button></div>
   <div class="body">
-    <section class="tvid" aria-label="どうがで見るあそびかた">
+    <section class="tvid" aria-label="h動どうh画がでk見みるh遊あそびh方かた">
       <div class="vbox" id="vbox">
         <video id="tutoVideo" src="video/kuku_tutorial.mp4" poster="video/kuku_tutorial.jpg" playsinline muted preload="metadata" controls></video>
-        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">どうがを見る</span></button>
+        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">h動どうh画がをk見みる</span></button>
       </div>
-      <p class="vnext">どうがのあとは、下のくわしいせつめいも見てね</p>
+      <p class="vnext">h動どうh画がのあとは、k下したのh詳くわしいh説せつh明めいもk見みてね</p>
     </section>
     <section class="step">
-      <h3><span class="n">1</span>だんをえらぶ</h3>
-      <p>1のだんから9のだんまで、すきなだんをえらびます。たとえば2のだんなら、2×1、2×2、2×3…2×9 の じゅんばんに出ます。</p>
-      <p><b>ランダム</b>をえらぶと、九九ぜんぶの中から10もんがばらばらに出ます。</p>
+      <h3><span class="n">1</span>h段だんをh選えらぶ</h3>
+      <p>1のh段だんから9のh段だんまで、h好すきなh段だんをh選えらびます。たとえば2のh段だんなら、2×1、2×2、2×3…2×9 の h順じゅんh番ばんにk出でます。</p>
+      <p><b>ランダム</b>をh選えらぶと、k九くk九くh全ぜんh部ぶのk中なかから10h問もんがばらばらにk出でます。</p>
     </section>
     <section class="step">
-      <h3><span class="n">2</span>数字キーで答えを入れる</h3>
-      <p>答えをさいごのけたまで入れると、その場で○か×が出ます。まちがえたら、同じもんだいにもういちどチャレンジ。3回まちがえると答えが出ます。時間はかりません。ゆっくり考えてね。</p>
+      <h3><span class="n">2</span>k数すうk字じキーでk答こたえをk入いれる</h3>
+      <p>k答こたえをh最さいh後ごのh桁けたまでk入いれると、そのk場ばで○か×がk出でます。h間違まちがえたら、k同おなじh問もんh題だいにもうh一いちh度どチャレンジ。3k回かいh間違まちがえるとk答こたえがk出でます。k時じk間かんh計はかりません。ゆっくりk考かんがえてね。</p>
     </section>
     <section class="step">
-      <h3><span class="n">3</span>おわったら</h3>
-      <p>ぜんぶ答えると「クリア！」が出ます。だんをえらんでいたときは「つぎのだんへ」で、つぎのだんにすすめます。まちがえたもんだいがあったときは、そのもんだいだけをもういちどれんしゅうできます。</p>
+      <h3><span class="n">3</span>h終おわったら</h3>
+      <p>h全ぜんh部ぶk答こたえると「クリア！」がk出でます。h段だんをh選えらんでいたときは「h次つぎのh段だんへ」で、h次つぎのh段だんにh進すすめます。h間違まちがえたh問もんh題だいがあったときは、そのh問もんh題だいだけをもうh一いちh度どh練れんh習しゅうできます。</p>
     </section>
   </div>
-  <div class="foot"><button id="startTuto">はじめる</button></div>
+  <div class="foot"><button id="startTuto">h始はじめる</button></div>
 </dialog>
 
 <script>
@@ -297,9 +358,9 @@ function load(k,def){try{const v=localStorage.getItem(k);return v===null?def:JSO
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 let dan=load(KEY_LAST,1); if(!(dan==='r'||(dan>=1&&dan<=9)))dan=1;
 let soundOn=load(KEY_SND,true);
-const danName=d=>d==='r'?'ランダム':d+'のだん';
+const danName=d=>d==='r'?'ランダム':d+'のh段だん';
 
-/* ---------- もんだい ---------- */
+/* ---------- h問もんh題だい ---------- */
 function makeSet(d){
   if(d!=='r')return Array.from({length:9},(_,i)=>({a:d,b:i+1,ans:d*(i+1)}));
   const all=[];for(let a=1;a<=9;a++)for(let b=1;b<=9;b++)all.push({a,b,ans:a*b});
@@ -307,7 +368,7 @@ function makeSet(d){
   return all.slice(0,COUNT_R);
 }
 
-/* ---------- 音 ---------- */
+/* ---------- k音おと ---------- */
 let ac=null;
 function audio(){if(!ac){const C=window.AudioContext||window.webkitAudioContext;if(C)ac=new C()}if(ac&&ac.state==='suspended')ac.resume();return ac}
 function tone(f,dur,type='sine',vol=.18,at=0){
@@ -324,7 +385,7 @@ const sfx={
   clear(){[523,659,784,1047].forEach((f,i)=>tone(f,.25,'triangle',.18,i*.11))}
 };
 /* まちがえたときの声（端末の日本語音声を、女の子らしい高めの声で読み上げ） */
-const NG_LINES=['おろろ','ゆっくりでいいんだよ','おちついてがんばって'];
+const NG_LINES=['おろろ','ゆっくりでいいんだよ','h落おちh着ついてh頑張がんばって'];
 let lastLine=-1, jaVoice=null;
 const S=window.speechSynthesis||null;
 function pickVoice(){
@@ -352,16 +413,16 @@ function renderSnd(){
   document.querySelectorAll('[data-snd]').forEach(b=>{
     b.setAttribute('aria-pressed',soundOn);
     b.innerHTML=(soundOn
-      ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>音 ON'
-      :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>音 OFF');
+      ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>k音おと ON'
+      :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>k音おと OFF');
   });
 }
 document.querySelectorAll('[data-snd]').forEach(b=>b.addEventListener('click',()=>{soundOn=!soundOn;save(KEY_SND,soundOn);renderSnd();if(!soundOn&&S)S.cancel();if(soundOn)sfx.tick()}));
 
-/* ---------- えらぶがめん ---------- */
+/* ---------- h選えらぶh画がh面めん ---------- */
 function renderSel(){
   document.querySelectorAll('.dan').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.dan===String(dan))));
-  $('selNote').textContent=dan==='r'?'九九ぜんぶの中から10もん、ばらばらに出るよ':dan+'×1 から '+dan+'×9 まで、じゅんばんに出るよ';
+  $('selNote').textContent=dan==='r'?'k九くk九くh全ぜんh部ぶのk中なかから10h問もん、ばらばらにk出でるよ':dan+'×1 から '+dan+'×9 まで、h順じゅんh番ばんにk出でるよ';
   save(KEY_LAST,dan);
 }
 document.querySelectorAll('.dan').forEach(b=>b.addEventListener('click',()=>{dan=b.dataset.dan==='r'?'r':Number(b.dataset.dan);renderSel()}));
@@ -379,16 +440,18 @@ function startGame(list){
   set=list?list.map(p=>Object.assign({},p)):makeSet(dan);
   idx=0;input='';tries=0;miss=0;wrongs=[];locked=true;
   $('playTag').style.setProperty('--c','var(--orange)');
-  $('playTag').innerHTML='<i></i>'+danName(dan)+(practice?'　れんしゅう':'');
+  $('playTag').innerHTML='<i></i>'+danName(dan)+(practice?'　h練れんh習しゅう':'');
   $('dots').innerHTML=set.map(()=>'<span></span>').join('');
   $('dots').style.gridTemplateColumns='repeat('+set.length+',1fr)';
   show('play');$('pad').setAttribute('aria-disabled','false');
   showQ();
 }
+const YOMI={"1": [["いん", "いち", "が", "いち"], ["いん", "に", "が", "に"], ["いん", "さん", "が", "さん"], ["いん", "し", "が", "し"], ["いん", "ご", "が", "ご"], ["いん", "ろく", "が", "ろく"], ["いん", "しち", "が", "しち"], ["いん", "h蜂はち", "が", "h蜂はち"], ["いん", "く", "が", "く"]], "2": [["に", "いち", "が", "に"], ["に", "にん", "が", "し"], ["に", "さん", "が", "ろく"], ["に", "し", "が", "h蜂はち"], ["に", "ご", "じゅう"], ["に", "ろく", "じゅうに"], ["に", "しち", "じゅうし"], ["に", "h蜂はち", "じゅうろく"], ["に", "く", "じゅうはち"]], "3": [["さん", "いち", "が", "さん"], ["さん", "に", "が", "ろく"], ["さ", "ざん", "が", "く"], ["さん", "し", "じゅうに"], ["さん", "ご", "じゅうご"], ["さぶ", "ろく", "じゅうはち"], ["さん", "しち", "にじゅういち"], ["さん", "ぱ", "にじゅうし"], ["さん", "く", "にじゅうしち"]], "4": [["し", "いち", "が", "し"], ["し", "に", "が", "h蜂はち"], ["し", "さん", "じゅうに"], ["し", "し", "じゅうろく"], ["し", "ご", "にじゅう"], ["し", "ろく", "にじゅうし"], ["し", "しち", "にじゅうはち"], ["し", "は", "さんじゅうに"], ["し", "く", "さんじゅうろく"]], "5": [["ご", "いち", "が", "ご"], ["ご", "に", "じゅう"], ["ご", "さん", "じゅうご"], ["ご", "し", "にじゅう"], ["ご", "ご", "にじゅうご"], ["ご", "ろく", "さんじゅう"], ["ご", "しち", "さんじゅうご"], ["ご", "は", "しじゅう"], ["ごっ", "く", "しじゅうご"]], "6": [["ろく", "いち", "が", "ろく"], ["ろく", "に", "じゅうに"], ["ろく", "さん", "じゅうはち"], ["ろく", "し", "にじゅうし"], ["ろく", "ご", "さんじゅう"], ["ろく", "ろく", "さんじゅうろく"], ["ろく", "しち", "しじゅうに"], ["ろく", "は", "しじゅうはち"], ["ろっ", "く", "ごじゅうし"]], "7": [["しち", "いち", "が", "しち"], ["しち", "に", "じゅうし"], ["しち", "さん", "にじゅういち"], ["しち", "し", "にじゅうはち"], ["しち", "ご", "さんじゅうご"], ["しち", "ろく", "しじゅうに"], ["しち", "しち", "しじゅうく"], ["しち", "は", "ごじゅうろく"], ["しち", "く", "ろくじゅうさん"]], "8": [["h蜂はち", "いち", "が", "h蜂はち"], ["h蜂はち", "に", "じゅうろく"], ["h蜂はち", "さん", "にじゅうし"], ["h蜂はち", "し", "さんじゅうに"], ["h蜂はち", "ご", "しじゅう"], ["h蜂はち", "ろく", "しじゅうはち"], ["h蜂はち", "しち", "ごじゅうろく"], ["はっ", "ぱ", "ろくじゅうし"], ["はっ", "く", "しちじゅうに"]], "9": [["く", "いち", "が", "く"], ["く", "に", "じゅうはち"], ["く", "さん", "にじゅうしち"], ["く", "し", "さんじゅうろく"], ["く", "ご", "しじゅうご"], ["く", "ろく", "ごじゅうし"], ["く", "しち", "ろくじゅうさん"], ["く", "は", "しちじゅうに"], ["く", "く", "はちじゅういち"]]};
+function yomiQ(p,full){const t=(YOMI[p.a]||[])[p.b-1];if(!t){$('yomi').textContent='';return}const n=t.length;const q=t.slice(0,n-1).join(' ');$('yomi').innerHTML=q+(full?' <b>'+t[n-1]+'</b>':'')}
 function showQ(){
   const p=set[idx];
-  $('qn').textContent='だい'+(idx+1)+'もん / '+set.length+'もん';
-  $('q').textContent=p.a+' × '+p.b+' =';
+  $('qn').textContent='h第だい'+(idx+1)+'h問もん / '+set.length+'h問もん';
+  $('q').textContent=p.a+' × '+p.b+' =';yomiQ(p,false);
   input='';tries=0;$('hint').textContent='';renderAns();
   [...$('dots').children].forEach((d,i)=>d.classList.toggle('now',i===idx&&!d.classList.contains('ok')&&!d.classList.contains('re')));
   locked=false;
@@ -410,13 +473,14 @@ function judge(){
   if(Number(input)===p.ans){
     sfx.ok();flash('ok');
     const dot=$('dots').children[idx];dot.classList.remove('now');dot.classList.add(tries?'re':'ok');
-    later(()=>{idx++;if(idx>=set.length)finish();else showQ()},340);
+    yomiQ(p,true);
+    later(()=>{idx++;if(idx>=set.length)finish();else showQ()},900);
   }else{
     sfx.ng();flash('ng');tries++;miss++;
     if(tries===1)wrongs.push(p);
     later(()=>{
       input='';renderAns();
-      $('hint').textContent=tries>=3?'こたえは '+p.ans+' だよ。入れてみよう':'もういちど！';
+      $('hint').textContent=tries>=3?'h答こたえは '+p.ans+' だよ。k入いれてみよう':'もうh一いちh度ど！';
       locked=false;
     },420);
   }
@@ -431,16 +495,16 @@ document.addEventListener('keydown',e=>{
 });
 $('quit').addEventListener('click',()=>{clearTimers();locked=true;renderSel();show('sel')});
 
-/* ---------- けっか ---------- */
+/* ---------- h結けっh果か ---------- */
 function finish(){
   sfx.clear();
-  $('rTitle').textContent=practice?'れんしゅうおわり！':'クリア！';
-  $('rMode').textContent=danName(dan)+(practice?' れんしゅう':'');
-  $('rMiss').textContent=miss+'回';
+  $('rTitle').textContent=practice?'h練れんh習しゅうh終おわり！':'クリア！';
+  $('rMode').textContent=danName(dan)+(practice?' h練れんh習しゅう':'');
+  $('rMiss').textContent=miss+'k回かい';
   $('retry').hidden=wrongs.length===0;
-  $('retry').textContent='まちがえた'+wrongs.length+'もんだけれんしゅう';
+  $('retry').textContent='h間違まちがえた'+wrongs.length+'h問もんだけh練れんh習しゅう';
   $('nextDan').hidden=practice||dan==='r'||dan>=9;
-  if(!$('nextDan').hidden)$('nextDan').textContent=(dan+1)+'のだんへすすむ';
+  if(!$('nextDan').hidden)$('nextDan').textContent=(dan+1)+'のh段だんへh進すすむ';
   show('result');$('rTitle').focus({preventScroll:true});
   if(!practice)later(celebrate,150);
 }
@@ -464,7 +528,7 @@ function celebrate(){
   b.appendChild(fx);fxTimer=setTimeout(()=>{fx.classList.add('out');fxTimer=setTimeout(()=>fx.remove(),460)},3000);
 }
 
-/* ---------- あそびかた ---------- */
+/* ---------- h遊あそびh方かた ---------- */
 const dlg=$('tuto');
 function openTuto(){if(typeof dlg.showModal==='function'){if(!dlg.open)dlg.showModal()}else dlg.setAttribute('open','');document.body.classList.add('lock');dlg.querySelector('.body').scrollTop=0;$('tutoTitle').focus()}
 function closeTuto(){if(typeof dlg.close==='function'&&dlg.open)dlg.close();else dlg.removeAttribute('open');document.body.classList.remove('lock');save(KEY_TUTO,1)}
@@ -487,9 +551,9 @@ if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventLis
   if(!dlg||!v)return;
   const sync=()=>{box.classList.toggle('playing',!v.paused&&!v.ended)};
   v.addEventListener('play',sync);v.addEventListener('playing',sync);v.addEventListener('pause',sync);
-  v.addEventListener('ended',()=>{lbl.textContent='もういちど見る';sync()});
+  v.addEventListener('ended',()=>{lbl.textContent='もうh一いちh度どk見みる';sync()});
   btn.addEventListener('click',()=>{if(v.ended)v.currentTime=0;v.play().catch(()=>{})});
-  function onOpen(){lbl.textContent='どうがを見る';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
+  function onOpen(){lbl.textContent='h動どうh画がをk見みる';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
   function onClose(){v.pause()}
   let was=dlg.open;if(was)onOpen();
   new MutationObserver(()=>{if(dlg.open&&!was)onOpen();else if(!dlg.open&&was)onClose();was=dlg.open}).observe(dlg,{attributes:true,attributeFilter:['open']});

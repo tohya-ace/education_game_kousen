@@ -2,6 +2,64 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+<script>(function(){
+  /* 学年に あわせて 漢字と ひらがなを かきわける */
+  var GR={"1": "一右雨円王音下火花貝学気九休玉金空月犬見五口校左三山子四糸字耳七車手十出女小上森人水正生青夕石赤千川先早草足村大男竹中虫町天田土二日入年白八百文木本名目立力林六", "2": "引羽雲園遠何科夏家歌画回会海絵外角楽活間丸岩顔汽記帰弓牛魚京強教近兄形計元言原戸古午後語工公広交光考行高黄合谷国黒今才細作算止市矢姉思紙寺自時室社弱首秋週春書少場色食心新親図数西声星晴切雪船線前組走多太体台地池知茶昼長鳥朝直通弟店点電刀冬当東答頭同道読内南肉馬売買麦半番父風分聞米歩母方北毎妹万明鳴毛門夜野友用曜来里理話", "3": "悪安暗医委意育員院飲運泳駅央横屋温化荷界開階寒感漢館岸起期客究急級宮球去橋業曲局銀区苦具君係軽血決研県庫湖向幸港号根祭皿仕死使始指歯詩次事持式実写者主守取酒受州拾終習集住重宿所暑助昭消商章勝乗植申身神真深進世整昔全相送想息速族他打対待代第題炭短談着注柱丁帳調追定庭笛鉄転都度投豆島湯登等動童農波配倍箱畑発反坂板皮悲美鼻筆氷表秒病品負部服福物平返勉放味命面問役薬由油有遊予羊洋葉陽様落流旅両緑礼列練路和", "4": "愛案以衣位茨印英栄媛塩岡億加果貨課芽賀改械害街各覚潟完官管関観願岐希季旗器機議求泣給挙漁共協鏡競極熊訓軍郡群径景芸欠結建健験固功好香候康佐差菜最埼材崎昨札刷察参産散残氏司試児治滋辞鹿失借種周祝順初松笑唱焼照城縄臣信井成省清静席積折節説浅戦選然争倉巣束側続卒孫帯隊達単置仲沖兆低底的典伝徒努灯働特徳栃奈梨熱念敗梅博阪飯飛必票標不夫付府阜富副兵別辺変便包法望牧末満未民無約勇要養浴利陸良料量輪類令冷例連老労録", "5": "圧囲移因永営衛易益液演応往桜可仮価河過快解格確額刊幹慣眼紀基寄規喜技義逆久旧救居許境均禁句型経潔件険検限現減故個護効厚耕航鉱構興講告混査再災妻採際在財罪殺雑酸賛士支史志枝師資飼示似識質舎謝授修述術準序招証象賞条状常情織職制性政勢精製税責績接設絶祖素総造像増則測属率損貸態団断築貯張停提程適統堂銅導得毒独任燃能破犯判版比肥非費備評貧布婦武復複仏粉編弁保墓報豊防貿暴脈務夢迷綿輸余容略留領歴", "6": "胃異遺域宇映延沿恩我灰拡革閣割株干巻看簡危机揮貴疑吸供胸郷勤筋系敬警劇激穴券絹権憲源厳己呼誤后孝皇紅降鋼刻穀骨困砂座済裁策冊蚕至私姿視詞誌磁射捨尺若樹収宗就衆従縦縮熟純処署諸除承将傷障蒸針仁垂推寸盛聖誠舌宣専泉洗染銭善奏窓創装層操蔵臓存尊退宅担探誕段暖値宙忠著庁頂腸潮賃痛敵展討党糖届難乳認納脳派拝背肺俳班晩否批秘俵腹奮並陛閉片補暮宝訪亡忘棒枚幕密盟模訳郵優預幼欲翌乱卵覧裏律臨朗論"};
+  var KG={};for(var g in GR){var s=GR[g];for(var i=0;i<s.length;i++)KG[s[i]]=+g}
+  var L=null,from=null;
+  try{from=new URLSearchParams(location.search).get('from')}catch(e){}
+  if(window.KZ_LEVEL!==undefined)L=window.KZ_LEVEL;
+  else if(from){L={pre:0,'1':0,'2':1,'3':2,'4':3,'5':4,'6':5,brain:99}[from];if(L===undefined)L=null}
+  var S0='',S1='',S2='',RE=/([khr])([^]*)([^]*)/g;
+  function ok(k){for(var i=0;i<k.length;i++){var c=k.charCodeAt(i);if(c>=0x4e00&&c<=0x9fff){var g=KG[k[i]]||7;if(g>L)return false}}return true}
+  function seg(t,k,r){if(L===null)return t==='h'?r:k;return ok(k)?k:r}
+  function plain(s){return typeof s==='string'&&s.indexOf(S0)>=0?s.replace(RE,function(_,t,k,r){return seg(t,k,r)}):s}
+  function reading(s){return typeof s==='string'&&s.indexOf(S0)>=0?s.replace(RE,function(_,t,k,r){return r}):s}
+  window.__kz={plain:plain,reading:reading,level:L};
+  var SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,TITLE:1,OPTION:1};
+  function doText(n){
+    var v=n.nodeValue;if(!v||v.indexOf(S0)<0)return;
+    var p=n.parentNode;if(!p||p.nodeName==='SCRIPT'||p.nodeName==='STYLE'||p.nodeName==='TITLE')return;if(SKIP[p.nodeName]){n.nodeValue=plain(v);return}
+    if(L===null&&/r/.test(v)){
+      // ルビは そのまま ルビで だす
+      var f=document.createDocumentFragment(),last=0,m;RE.lastIndex=0;
+      while((m=RE.exec(v))){if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));
+        if(m[1]==='r'){var rb=document.createElement('ruby');rb.appendChild(document.createTextNode(m[2]));var rt=document.createElement('rt');rt.textContent=m[3];rb.appendChild(rt);f.appendChild(rb)}
+        else f.appendChild(document.createTextNode(seg(m[1],m[2],m[3])));last=RE.lastIndex}
+      if(last<v.length)f.appendChild(document.createTextNode(v.slice(last)));
+      p.replaceChild(f,n);return}
+    n.nodeValue=plain(v);
+  }
+  var ATTR=['aria-label','title','alt','placeholder'];
+  function doEl(el){for(var i=0;i<ATTR.length;i++){var a=el.getAttribute&&el.getAttribute(ATTR[i]);if(a&&a.indexOf(S0)>=0)el.setAttribute(ATTR[i],plain(a))}
+    if(el.nodeName==='INPUT'&&el.value&&el.value.indexOf(S0)>=0)el.value=plain(el.value)}
+  function walk(root){
+    if(root.nodeType===3){doText(root);return}
+    if(root.nodeType!==1&&root.nodeType!==11)return;
+    if(root.nodeType===1){if(SKIP[root.nodeName]&&root.nodeName!=='OPTION'&&root.nodeName!=='TITLE')return;doEl(root)}
+    var tw=document.createTreeWalker(root,5,null),list=[],x;
+    while((x=tw.nextNode()))list.push(x);
+    for(var i=0;i<list.length;i++){var q=list[i];try{if(q.nodeType===3){if(q.parentNode)doText(q)}else doEl(q)}catch(e){}}
+  }
+  var mo=new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var m=ms[i];try{
+    if(m.type==='characterData')doText(m.target);
+    else if(m.type==='attributes')doEl(m.target);
+    else for(var j=0;j<m.addedNodes.length;j++)walk(m.addedNodes[j])}catch(e){}}});
+  mo.observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:ATTR});
+  document.addEventListener('DOMContentLoaded',function(){try{walk(document.documentElement)}catch(e){}});
+  window.addEventListener('load',function(){try{walk(document.documentElement)}catch(e){}});
+  // ねんのため しばらくは ときどき みなおす
+  var sw=0,iv=setInterval(function(){try{walk(document.documentElement)}catch(e){}if(++sw>16)clearInterval(iv)},250);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)walk(document.documentElement)});
+  // 読み上げは ひらがなで
+  try{var U=window.SpeechSynthesisUtterance;if(U){var d=Object.getOwnPropertyDescriptor(U.prototype,'text');
+    if(d&&d.set)Object.defineProperty(U.prototype,'text',{get:d.get,set:function(v){d.set.call(this,reading(v))},configurable:true});
+    var W=function(t){var u=new U(reading(t));return u};W.prototype=U.prototype;window.SpeechSynthesisUtterance=W}}catch(e){}
+  // ダウンロードの なまえ
+  try{var dd=Object.getOwnPropertyDescriptor(HTMLAnchorElement.prototype,'download');
+    if(dd&&dd.set)Object.defineProperty(HTMLAnchorElement.prototype,'download',{get:dd.get,set:function(v){dd.set.call(this,plain(v))},configurable:true})}catch(e){}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>やさい・くだものジグソー｜知育Webアプリ KouSen式</title>
 <meta name="theme-color" content="#274F8E">
@@ -140,21 +198,21 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
 <body>
 <div class="wrap">
   <div class="titlebar">
-    <h1>やさい・くだものジグソー<span class="dot" style="background:var(--red)"></span><span class="dot" style="background:var(--orange)"></span><span class="dot" style="background:var(--green)"></span></h1>
-    <button class="tutoBtn" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>あそびかた</button>
+    <h1>h野菜やさい・h果物くだものジグソー<span class="dot" style="background:var(--red)"></span><span class="dot" style="background:var(--orange)"></span><span class="dot" style="background:var(--green)"></span></h1>
+    <button class="tutoBtn" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>h遊あそびh方かた</button>
   </div>
 
-  <!-- えらぶ画面 -->
+  <!-- h選えらぶk画がk面めん -->
   <section id="selScr">
-    <p class="label">ピースの数</p>
-    <div class="counts" id="counts" role="group" aria-label="ピースの数" style="margin-top:8px">
+    <p class="label">ピースのk数かず</p>
+    <div class="counts" id="counts" role="group" aria-label="ピースのk数かず" style="margin-top:8px">
       <button data-n="16">16</button><button data-n="25">25</button><button data-n="36">36</button>
     </div>
-    <p class="label" style="margin-top:14px">たべものをえらぶ</p>
+    <p class="label" style="margin-top:14px">h食たべh物ものをh選えらぶ</p>
     <div class="foods" id="foodsAll" style="margin-top:8px"></div>
-    <p class="label" style="margin-top:14px">くだもの</p>
+    <p class="label" style="margin-top:14px">h果物くだもの</p>
     <div class="foods" id="foodsF" style="margin-top:8px"></div>
-    <p class="label" style="margin-top:14px">やさい</p>
+    <p class="label" style="margin-top:14px">h野菜やさい</p>
     <div class="foods" id="foodsV" style="margin-top:8px"></div>
     <div class="startBar">
       <div class="sel" id="selText"></div>
@@ -162,53 +220,53 @@ dialog.tuto::backdrop{background:rgba(15,25,45,.55)}
     </div>
   </section>
 
-  <!-- あそぶ画面 -->
+  <!-- h遊あそぶk画がk面めん -->
   <section id="playScr" hidden>
     <div class="playBar">
       <button class="sbtn" id="quit">‹ やめる</button>
       <div class="info"><b id="pName"></b><span id="pCount"></span></div>
-      <button class="sbtn" id="sortBtn">ならべる</button>
-      <div class="stat"><small>のこり</small><span id="rest">0</span></div>
+      <button class="sbtn" id="sortBtn">h並ならべる</button>
+      <div class="stat"><small>h残のこり</small><span id="rest">0</span></div>
     </div>
-    <div class="field" id="field" style="margin-top:8px"><div class="loading" id="loading">じゅんびちゅう…</div></div>
+    <div class="field" id="field" style="margin-top:8px"><div class="loading" id="loading">h準じゅんh備びh中ちゅう…</div></div>
     <p class="msg" id="msg" style="margin-top:8px" hidden></p>
     <div class="endBtns" id="endBtns" style="margin-top:8px" hidden>
-      <button class="again" id="again">もういちど</button>
-      <button id="toSel">ほかのにする</button>
+      <button class="again" id="again">もうh一いちh度ど</button>
+      <button id="toSel">h他ほかのにする</button>
     </div>
   </section>
 
-  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにもどる</a>
+  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにh戻もどる</a>
 </div>
 
 <dialog class="tuto" id="tuto" aria-labelledby="tutoTitle">
-  <div class="head"><h2 id="tutoTitle" tabindex="-1" style="outline:none">ジグソーのあそびかた</h2><button class="close" id="closeTuto" aria-label="とじる">✕</button></div>
+  <div class="head"><h2 id="tutoTitle" tabindex="-1" style="outline:none">ジグソーのh遊あそびh方かた</h2><button class="close" id="closeTuto" aria-label="h閉とじる">✕</button></div>
   <div class="body">
-    <section class="tvid" aria-label="どうがで見るあそびかた">
+    <section class="tvid" aria-label="h動どうh画がでk見みるh遊あそびh方かた">
       <div class="vbox" id="vbox">
         <video id="tutoVideo" src="video/food_tutorial.mp4" poster="video/food_tutorial.jpg" playsinline muted preload="metadata" controls></video>
-        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">どうがを見る</span></button>
+        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">h動どうh画がをk見みる</span></button>
       </div>
-      <p class="vnext">どうがのあとは、下のくわしいせつめいも見てね</p>
+      <p class="vnext">h動どうh画がのあとは、k下したのh詳くわしいh説せつh明めいもk見みてね</p>
     </section>
     <section class="step">
-      <h3><span class="n">1</span>ピースの数とたべものをえらぶ</h3>
-      <p>ピースの数を <b>16・25・36</b> からえらんで、すきなやさいやくだものをタップします。<b>オールスター</b>は、ぜんぶのやさいとくだものがあつまった絵です。えらんだら「スタート」をおします。</p>
+      <h3><span class="n">1</span>ピースのk数かずとh食たべh物ものをh選えらぶ</h3>
+      <p>ピースのk数かずを <b>16・25・36</b> からh選えらんで、h好すきなh野菜やさいやh果物くだものをタップします。<b>オールスター</b>は、h全ぜんh部ぶのh野菜やさいとh果物くだものがh集あつまったk絵えです。h選えらんだら「スタート」をh押おします。</p>
     </section>
     <section class="step">
-      <h3><span class="n">2</span>ピースをうごかしてはめる</h3>
-      <p>ばらばらのピースを、ゆびでおさえたままうごかして、まん中のわくの中のただしいばしょにおきます。ちかくまでもっていくと、ピタッとはまります。</p>
+      <h3><span class="n">2</span>ピースをh動うごかしてはめる</h3>
+      <p>ばらばらのピースを、h指ゆびでh押おさえたままh動うごかして、まんk中なかのh枠わくのk中なかのh正ただしいh場ばh所しょにh置おきます。h近ちかくまでh持もっていくと、ピタッとはまります。</p>
     </section>
     <section class="step">
-      <h3><span class="n">3</span>うすい絵を見ながら</h3>
-      <p>わくの中には、できあがりの絵がうすく出ています。ピースの絵と見くらべて、はまるばしょをさがしてね。ピースがかさなって見づらいときは「ならべる」をおすと、ピースがきれいにならびます。</p>
+      <h3><span class="n">3</span>h薄うすいk絵えをk見みながら</h3>
+      <p>h枠わくのk中なかには、できh上あがりのk絵えがh薄うすくk出でています。ピースのk絵えとk見みh比くらべて、はまるh場ばh所しょをh探さがしてね。ピースがh重かさなってk見みづらいときは「h並ならべる」をh押おすと、ピースがきれいにh並ならびます。</p>
     </section>
     <section class="step">
-      <h3><span class="n">4</span>ぜんぶはめたらクリア</h3>
-      <p>ぜんぶのピースがはまるとクリアです。</p>
+      <h3><span class="n">4</span>h全ぜんh部ぶはめたらクリア</h3>
+      <p>h全ぜんh部ぶのピースがはまるとクリアです。</p>
     </section>
   </div>
-  <div class="foot"><button class="btn" id="startTuto">はじめる</button></div>
+  <div class="foot"><button class="btn" id="startTuto">h始はじめる</button></div>
 </dialog>
 
 <script>
@@ -217,10 +275,10 @@ const FOODS=[
  {k:'ichigo',n:'イチゴ',c:'f'},{k:'mikan',n:'みかん',c:'f'},{k:'kiwi',n:'キウイフルーツ',c:'f'},{k:'suika',n:'スイカ',c:'f'},
  {k:'banana',n:'バナナ',c:'f'},{k:'pine',n:'パイナップル',c:'f'},{k:'budou',n:'ブドウ',c:'f'},{k:'melon',n:'メロン',c:'f'},{k:'mango',n:'マンゴー',c:'f'},
  {k:'momo',n:'モモ',c:'f'},{k:'ringo',n:'リンゴ',c:'f'},{k:'lemon',n:'レモン',c:'f'},
- {k:'asupara',n:'アスパラ',c:'v'},{k:'avocado',n:'アボガド',c:'v'},{k:'edamame',n:'えだまめ',c:'v'},{k:'eringi',n:'えりんぎ',c:'v'},{k:'kyuri',n:'きゅうり',c:'v'},
- {k:'shiitake',n:'しいたけ',c:'v'},{k:'jagaimo',n:'じゃがいも',c:'v'},{k:'tamanegi',n:'タマネギ',c:'v'},{k:'tomato',n:'トマト',c:'v'},{k:'nasu',n:'ナス',c:'v'},
- {k:'negi',n:'ネギ',c:'v'},{k:'hakusai',n:'はくさい',c:'v'},{k:'broccoli',n:'ブロッコリー',c:'v'},{k:'hourenso',n:'ほうれん草',c:'v'},{k:'maitake',n:'まいたけ',c:'v'},
- {k:'renkon',n:'れんこん',c:'v'},{k:'lettuce',n:'レタス',c:'v'},{k:'cabbage',n:'キャベツ',c:'v'},{k:'piman',n:'ピーマン',c:'v'},{k:'satsuma',n:'さつまいも',c:'v'},
+ {k:'asupara',n:'アスパラ',c:'v'},{k:'avocado',n:'アボガド',c:'v'},{k:'edamame',n:'h枝えだh豆まめ',c:'v'},{k:'eringi',n:'えりんぎ',c:'v'},{k:'kyuri',n:'h胡瓜きゅうり',c:'v'},
+ {k:'shiitake',n:'h椎茸しいたけ',c:'v'},{k:'jagaimo',n:'じゃがh芋いも',c:'v'},{k:'tamanegi',n:'タマネギ',c:'v'},{k:'tomato',n:'トマト',c:'v'},{k:'nasu',n:'ナス',c:'v'},
+ {k:'negi',n:'ネギ',c:'v'},{k:'hakusai',n:'h白はくh菜さい',c:'v'},{k:'broccoli',n:'ブロッコリー',c:'v'},{k:'hourenso',n:'ほうれんk草そう',c:'v'},{k:'maitake',n:'h舞茸まいたけ',c:'v'},
+ {k:'renkon',n:'h蓮根れんこん',c:'v'},{k:'lettuce',n:'レタス',c:'v'},{k:'cabbage',n:'キャベツ',c:'v'},{k:'piman',n:'ピーマン',c:'v'},{k:'satsuma',n:'さつまh芋いも',c:'v'},
  {k:'kabocha',n:'カボチャ',c:'v'}
 ];
 const $=id=>document.getElementById(id);
@@ -229,14 +287,14 @@ function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 let sel=load(KEY_SEL,{k:null,n:16});if(![16,25,36].includes(sel.n))sel.n=16;
 
-/* ---- えらぶ画面 ---- */
+/* ---- h選えらぶk画がk面めん ---- */
 function buildSel(){
   [['foodsAll','all'],['foodsF','f'],['foodsV','v']].forEach(([id,c])=>{
     const box=$(id);box.innerHTML='';
     FOODS.filter(f=>f.c===c).forEach(f=>{
       const b=document.createElement('button');b.className='food'+(c==='all'?' all':'');b.dataset.k=f.k;
       b.innerHTML=`<img src="food/${f.k}_s.webp" alt="" width="240" height="240" loading="lazy" decoding="async">`+
-        (c==='all'?`<span>${f.n}<small>ぜんぶのやさいとくだものがあつまった絵</small></span>`:`<span>${f.n}</span>`);
+        (c==='all'?`<span>${f.n}<small>h全ぜんh部ぶのh野菜やさいとh果物くだものがh集あつまったk絵え</small></span>`:`<span>${f.n}</span>`);
       b.onclick=()=>{sel.k=f.k;save(KEY_SEL,sel);renderSel()};
       box.appendChild(b);
     });
@@ -249,12 +307,12 @@ function renderSel(){
     b.setAttribute('aria-pressed',b.dataset.k===sel.k);
   });
   const f=FOODS.find(x=>x.k===sel.k);
-  $('selText').innerHTML=f?`<b>${f.n}</b>${sel.n}ピース`:'<b>たべものをえらんでね</b>ピースの数もえらべます';
+  $('selText').innerHTML=f?`<b>${f.n}</b>${sel.n}ピース`:'<b>h食たべh物ものをh選えらんでね</b>ピースのk数かずもh選えらべます';
   $('go').disabled=!f;
 }
 
-/* ---- ピースの形 ---- */
-function layout(N,A){ // A = 横/たて
+/* ---- ピースのk形かたち ---- */
+function layout(N,A){ // A = k横よこ/たて
   let bestR=null;
   for(let R=2;R<=20;R++){
     const c=N/R; if(c<2)break;
@@ -307,7 +365,7 @@ function tracePiece(ctx,p,S){
   ctx.closePath();
 }
 
-/* ---- あそぶ ---- */
+/* ---- h遊あそぶ ---- */
 const field=$('field');
 let G=null; // げんざいの ゲーム
 function imgOf(f){return f.k}
@@ -316,10 +374,10 @@ function startGame(){
   $('selScr').hidden=true;$('playScr').hidden=false;window.scrollTo(0,0);
   $('pName').textContent=f.n;$('pCount').textContent=sel.n+'ピース';
   $('msg').hidden=true;$('endBtns').hidden=true;
-  field.classList.remove('done');field.innerHTML='<div class="loading">じゅんびちゅう…</div>';
+  field.classList.remove('done');field.innerHTML='<div class="loading">h準じゅんh備びh中ちゅう…</div>';
   const img=new Image();img.decoding='async';
   img.onload=()=>setup(f,img);
-  img.onerror=()=>{field.innerHTML='<div class="loading">絵が読みこめませんでした</div>'};
+  img.onerror=()=>{field.innerHTML='<div class="loading">k絵えがk読よみh込こめませんでした</div>'};
   img.src='food/'+imgOf(f)+'.webp';
 }
 function setup(f,img){
@@ -429,11 +487,11 @@ function win(){
   G.done=true;
   setTimeout(()=>{field.classList.add('done');celebrate()},250);
   const m=$('msg');m.hidden=false;m.className='msg ok';
-  m.textContent=`クリア！「${G.f.n}」の${G.N}ピースのパズルがかんせいしたよ。`;
+  m.textContent=`クリア！「${G.f.n}」の${G.N}ピースのパズルがh完かんh成せいしたよ。`;
   $('endBtns').hidden=false;
 }
 let rz=0;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if(G&&!$('playScr').hidden)fit(false)},150)});
-// ばらばらのピースを、あいているところに ならべなおす
+// ばらばらのピースを、h空あいているところに h並ならべh直なおす
 $('sortBtn').onclick=()=>arrange(true);
 function arrange(anim){
   if(!G||G.done)return;
@@ -476,7 +534,7 @@ function celebrate(){
   fxTimer=setTimeout(()=>{fx.classList.add('out');fxTimer=setTimeout(()=>fx.remove(),460)},3200);
 }
 
-/* ---- あそびかた ---- */
+/* ---- h遊あそびh方かた ---- */
 const dlg=$('tuto');
 function openTuto(){if(typeof dlg.showModal==='function'){if(!dlg.open)dlg.showModal()}else dlg.setAttribute('open','');document.body.classList.add('lock');dlg.querySelector('.body').scrollTop=0;$('tutoTitle').focus()}
 function closeTuto(){if(typeof dlg.close==='function'&&dlg.open)dlg.close();else dlg.removeAttribute('open');document.body.classList.remove('lock');save(KEY_TUTO,1)}
@@ -498,9 +556,9 @@ if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventLis
   if(!dlg||!v)return;
   const sync=()=>{box.classList.toggle('playing',!v.paused&&!v.ended)};
   v.addEventListener('play',sync);v.addEventListener('playing',sync);v.addEventListener('pause',sync);
-  v.addEventListener('ended',()=>{lbl.textContent='もういちど見る';sync()});
+  v.addEventListener('ended',()=>{lbl.textContent='もうh一いちh度どk見みる';sync()});
   btn.addEventListener('click',()=>{if(v.ended)v.currentTime=0;v.play().catch(()=>{})});
-  function onOpen(){lbl.textContent='どうがを見る';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
+  function onOpen(){lbl.textContent='h動どうh画がをk見みる';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
   function onClose(){v.pause()}
   let was=dlg.open;if(was)onOpen();
   new MutationObserver(()=>{if(dlg.open&&!was)onOpen();else if(!dlg.open&&was)onClose();was=dlg.open}).observe(dlg,{attributes:true,attributeFilter:['open']});

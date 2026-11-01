@@ -2,6 +2,64 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+<script>(function(){
+  /* 学年に あわせて 漢字と ひらがなを かきわける */
+  var GR={"1": "一右雨円王音下火花貝学気九休玉金空月犬見五口校左三山子四糸字耳七車手十出女小上森人水正生青夕石赤千川先早草足村大男竹中虫町天田土二日入年白八百文木本名目立力林六", "2": "引羽雲園遠何科夏家歌画回会海絵外角楽活間丸岩顔汽記帰弓牛魚京強教近兄形計元言原戸古午後語工公広交光考行高黄合谷国黒今才細作算止市矢姉思紙寺自時室社弱首秋週春書少場色食心新親図数西声星晴切雪船線前組走多太体台地池知茶昼長鳥朝直通弟店点電刀冬当東答頭同道読内南肉馬売買麦半番父風分聞米歩母方北毎妹万明鳴毛門夜野友用曜来里理話", "3": "悪安暗医委意育員院飲運泳駅央横屋温化荷界開階寒感漢館岸起期客究急級宮球去橋業曲局銀区苦具君係軽血決研県庫湖向幸港号根祭皿仕死使始指歯詩次事持式実写者主守取酒受州拾終習集住重宿所暑助昭消商章勝乗植申身神真深進世整昔全相送想息速族他打対待代第題炭短談着注柱丁帳調追定庭笛鉄転都度投豆島湯登等動童農波配倍箱畑発反坂板皮悲美鼻筆氷表秒病品負部服福物平返勉放味命面問役薬由油有遊予羊洋葉陽様落流旅両緑礼列練路和", "4": "愛案以衣位茨印英栄媛塩岡億加果貨課芽賀改械害街各覚潟完官管関観願岐希季旗器機議求泣給挙漁共協鏡競極熊訓軍郡群径景芸欠結建健験固功好香候康佐差菜最埼材崎昨札刷察参産散残氏司試児治滋辞鹿失借種周祝順初松笑唱焼照城縄臣信井成省清静席積折節説浅戦選然争倉巣束側続卒孫帯隊達単置仲沖兆低底的典伝徒努灯働特徳栃奈梨熱念敗梅博阪飯飛必票標不夫付府阜富副兵別辺変便包法望牧末満未民無約勇要養浴利陸良料量輪類令冷例連老労録", "5": "圧囲移因永営衛易益液演応往桜可仮価河過快解格確額刊幹慣眼紀基寄規喜技義逆久旧救居許境均禁句型経潔件険検限現減故個護効厚耕航鉱構興講告混査再災妻採際在財罪殺雑酸賛士支史志枝師資飼示似識質舎謝授修述術準序招証象賞条状常情織職制性政勢精製税責績接設絶祖素総造像増則測属率損貸態団断築貯張停提程適統堂銅導得毒独任燃能破犯判版比肥非費備評貧布婦武復複仏粉編弁保墓報豊防貿暴脈務夢迷綿輸余容略留領歴", "6": "胃異遺域宇映延沿恩我灰拡革閣割株干巻看簡危机揮貴疑吸供胸郷勤筋系敬警劇激穴券絹権憲源厳己呼誤后孝皇紅降鋼刻穀骨困砂座済裁策冊蚕至私姿視詞誌磁射捨尺若樹収宗就衆従縦縮熟純処署諸除承将傷障蒸針仁垂推寸盛聖誠舌宣専泉洗染銭善奏窓創装層操蔵臓存尊退宅担探誕段暖値宙忠著庁頂腸潮賃痛敵展討党糖届難乳認納脳派拝背肺俳班晩否批秘俵腹奮並陛閉片補暮宝訪亡忘棒枚幕密盟模訳郵優預幼欲翌乱卵覧裏律臨朗論"};
+  var KG={};for(var g in GR){var s=GR[g];for(var i=0;i<s.length;i++)KG[s[i]]=+g}
+  var L=null,from=null;
+  try{from=new URLSearchParams(location.search).get('from')}catch(e){}
+  if(window.KZ_LEVEL!==undefined)L=window.KZ_LEVEL;
+  else if(from){L={pre:0,'1':0,'2':1,'3':2,'4':3,'5':4,'6':5,brain:99}[from];if(L===undefined)L=null}
+  var S0='',S1='',S2='',RE=/([khr])([^]*)([^]*)/g;
+  function ok(k){for(var i=0;i<k.length;i++){var c=k.charCodeAt(i);if(c>=0x4e00&&c<=0x9fff){var g=KG[k[i]]||7;if(g>L)return false}}return true}
+  function seg(t,k,r){if(L===null)return t==='h'?r:k;return ok(k)?k:r}
+  function plain(s){return typeof s==='string'&&s.indexOf(S0)>=0?s.replace(RE,function(_,t,k,r){return seg(t,k,r)}):s}
+  function reading(s){return typeof s==='string'&&s.indexOf(S0)>=0?s.replace(RE,function(_,t,k,r){return r}):s}
+  window.__kz={plain:plain,reading:reading,level:L};
+  var SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,TITLE:1,OPTION:1};
+  function doText(n){
+    var v=n.nodeValue;if(!v||v.indexOf(S0)<0)return;
+    var p=n.parentNode;if(!p||p.nodeName==='SCRIPT'||p.nodeName==='STYLE'||p.nodeName==='TITLE')return;if(SKIP[p.nodeName]){n.nodeValue=plain(v);return}
+    if(L===null&&/r/.test(v)){
+      // ルビは そのまま ルビで だす
+      var f=document.createDocumentFragment(),last=0,m;RE.lastIndex=0;
+      while((m=RE.exec(v))){if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));
+        if(m[1]==='r'){var rb=document.createElement('ruby');rb.appendChild(document.createTextNode(m[2]));var rt=document.createElement('rt');rt.textContent=m[3];rb.appendChild(rt);f.appendChild(rb)}
+        else f.appendChild(document.createTextNode(seg(m[1],m[2],m[3])));last=RE.lastIndex}
+      if(last<v.length)f.appendChild(document.createTextNode(v.slice(last)));
+      p.replaceChild(f,n);return}
+    n.nodeValue=plain(v);
+  }
+  var ATTR=['aria-label','title','alt','placeholder'];
+  function doEl(el){for(var i=0;i<ATTR.length;i++){var a=el.getAttribute&&el.getAttribute(ATTR[i]);if(a&&a.indexOf(S0)>=0)el.setAttribute(ATTR[i],plain(a))}
+    if(el.nodeName==='INPUT'&&el.value&&el.value.indexOf(S0)>=0)el.value=plain(el.value)}
+  function walk(root){
+    if(root.nodeType===3){doText(root);return}
+    if(root.nodeType!==1&&root.nodeType!==11)return;
+    if(root.nodeType===1){if(SKIP[root.nodeName]&&root.nodeName!=='OPTION'&&root.nodeName!=='TITLE')return;doEl(root)}
+    var tw=document.createTreeWalker(root,5,null),list=[],x;
+    while((x=tw.nextNode()))list.push(x);
+    for(var i=0;i<list.length;i++){var q=list[i];try{if(q.nodeType===3){if(q.parentNode)doText(q)}else doEl(q)}catch(e){}}
+  }
+  var mo=new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var m=ms[i];try{
+    if(m.type==='characterData')doText(m.target);
+    else if(m.type==='attributes')doEl(m.target);
+    else for(var j=0;j<m.addedNodes.length;j++)walk(m.addedNodes[j])}catch(e){}}});
+  mo.observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:ATTR});
+  document.addEventListener('DOMContentLoaded',function(){try{walk(document.documentElement)}catch(e){}});
+  window.addEventListener('load',function(){try{walk(document.documentElement)}catch(e){}});
+  // ねんのため しばらくは ときどき みなおす
+  var sw=0,iv=setInterval(function(){try{walk(document.documentElement)}catch(e){}if(++sw>16)clearInterval(iv)},250);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)walk(document.documentElement)});
+  // 読み上げは ひらがなで
+  try{var U=window.SpeechSynthesisUtterance;if(U){var d=Object.getOwnPropertyDescriptor(U.prototype,'text');
+    if(d&&d.set)Object.defineProperty(U.prototype,'text',{get:d.get,set:function(v){d.set.call(this,reading(v))},configurable:true});
+    var W=function(t){var u=new U(reading(t));return u};W.prototype=U.prototype;window.SpeechSynthesisUtterance=W}}catch(e){}
+  // ダウンロードの なまえ
+  try{var dd=Object.getOwnPropertyDescriptor(HTMLAnchorElement.prototype,'download');
+    if(dd&&dd.set)Object.defineProperty(HTMLAnchorElement.prototype,'download',{get:dd.get,set:function(v){dd.set.call(this,plain(v))},configurable:true})}catch(e){}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ころころクラフト｜知育Webアプリ KouSen式</title>
 <meta name="theme-color" content="#274F8E">
@@ -185,12 +243,12 @@ button *{font-weight:700}
 <div class="wrap">
   <div class="titlebar">
     <h1>ころころクラフト<span class="dot" style="background:var(--red)"></span><span class="dot" style="background:var(--blue)"></span><span class="dot" style="background:var(--green)"></span></h1>
-    <button class="tutoBtn" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>あそびかた</button>
+    <button class="tutoBtn" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>h遊あそびh方かた</button>
   </div>
-  <div class="tabs" role="group" aria-label="よこのマス数">
+  <div class="tabs" role="group" aria-label="h横よこのマスk数すう">
     <button data-lv="easy">5マス</button><button data-lv="normal">6マス</button><button data-lv="hard">7マス</button>
   </div>
-  <div class="qbar"><button class="arrow" id="prevQ" aria-label="前のもんだい">‹</button><nav class="nums" id="nums" aria-label="もんだいばんごう"></nav><button class="arrow" id="nextQ" aria-label="つぎのもんだい">›</button></div>
+  <div class="qbar"><button class="arrow" id="prevQ" aria-label="k前まえのh問もんh題だい">‹</button><nav class="nums" id="nums" aria-label="h問もんh題だいh番ばんh号ごう"></nav><button class="arrow" id="nextQ" aria-label="h次つぎのh問もんh題だい">›</button></div>
   <div class="rollbar"><button class="btn roll" id="roll"></button><button class="btn reset" id="reset">リセット</button></div>
   <div class="stage"><div class="board" id="board">
     <div class="lanes" id="lanes">
@@ -200,30 +258,30 @@ button *{font-weight:700}
       <div class="ballLayer" id="balls"></div>
     </div>
   </div></div>
-  <div class="tray" role="group" aria-label="おくピース">
-    <button id="pickS"><div class="mini s"></div><span class="lbl">直線 <span class="count" id="cS">0</span></span></button>
-    <button id="pickX"><div class="mini x"></div><span class="lbl">こうさ <span class="count" id="cX">0</span></span></button>
+  <div class="tray" role="group" aria-label="h置おくピース">
+    <button id="pickS"><div class="mini s"></div><span class="lbl">k直ちょくk線せん <span class="count" id="cS">0</span></span></button>
+    <button id="pickX"><div class="mini x"></div><span class="lbl">h交こうh差さ <span class="count" id="cX">0</span></span></button>
   </div>
   <p class="msg" id="msg" role="status" aria-live="polite"></p>
   <div class="actions">
-    <button class="btn" id="answer">こたえを見る</button>
+    <button class="btn" id="answer">h答こたえをk見みる</button>
   </div>
   <div class="qtitle" id="qtitle" hidden></div>
-  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにもどる</a>
+  <a class="backTop" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>トップページにh戻もどる</a>
 </div>
 
 <dialog class="tuto" id="tuto" aria-labelledby="tutoTitle">
-  <div class="head"><h2 id="tutoTitle" tabindex="-1" autofocus style="outline:none">ころころクラフトのあそびかた</h2><button class="close" id="closeTuto" aria-label="とじる">✕</button></div>
+  <div class="head"><h2 id="tutoTitle" tabindex="-1" autofocus style="outline:none">ころころクラフトのh遊あそびh方かた</h2><button class="close" id="closeTuto" aria-label="h閉とじる">✕</button></div>
   <div class="body">
-    <section class="tvid" aria-label="どうがで見るあそびかた">
+    <section class="tvid" aria-label="h動どうh画がでk見みるh遊あそびh方かた">
       <div class="vbox" id="vbox">
         <video id="tutoVideo" src="video/craft_tutorial.mp4" poster="video/craft_tutorial.jpg" playsinline muted preload="metadata" controls></video>
-        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">どうがを見る</span></button>
+        <button class="vplay" id="vplay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15L19.5 12z" fill="currentColor"/></svg><span id="vplayLabel">h動どうh画がをk見みる</span></button>
       </div>
-      <p class="vnext">どうがのあとは、下のくわしいせつめいも見てね</p>
+      <p class="vnext">h動どうh画がのあとは、k下したのh詳くわしいh説せつh明めいもk見みてね</p>
     </section>
     <section class="step">
-      <h3><span class="n">1</span>ボールを同じばんごうのゴールへ</h3>
+      <h3><span class="n">1</span>ボールをk同おなじh番ばんh号ごうのゴールへ</h3>
       <div class="fig">
         <svg width="240" height="236" viewBox="0 0 240 236" role="img" aria-label="ボール1とボール2がこうさピースで入れかわり、同じばんごうのゴールに入る図">
           <rect x="30" y="4" width="180" height="228" rx="18" fill="#274F8E"/>
@@ -241,18 +299,18 @@ button *{font-weight:700}
           <path d="M128 200 h44 v14 a10 10 0 0 1 -10 10 h-24 a10 10 0 0 1 -10 -10z" fill="#5A3A5A" stroke="#E23B3B" stroke-width="3"/><text x="150" y="219" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">1</text>
         </svg>
       </div>
-      <p>上にあるボールは、まっすぐ下へころがります。ピースをおいてルートを作り、<b>すべてのボールを同じ色・同じばんごうのゴール</b>に入れよう。</p>
+      <p>k上うえにあるボールは、まっすぐk下したへh転ころがります。ピースをh置おいてルートをk作つくり、<b>h全すべてのボールをk同おなじk色いろ・k同おなじh番ばんh号ごうのゴール</b>にk入いれよう。</p>
     </section>
 
     <section class="step">
-      <h3><span class="n">2</span>ピースは2しゅるい</h3>
+      <h3><span class="n">2</span>ピースは2h種しゅh類るい</h3>
       <div class="fig">
         <div class="figItem">
           <svg width="96" height="110" viewBox="0 0 96 110" aria-hidden="true">
             <rect x="18" y="20" width="60" height="60" rx="9" fill="#fff" stroke="#B7C3D6" stroke-width="2"/><rect x="40" y="20" width="16" height="60" fill="#C9D3E3"/>
             <path d="M48 4 V98" stroke="#2F6FE0" stroke-width="4" stroke-dasharray="6 5"/><path d="M40 92 L48 104 L56 92" stroke="#2F6FE0" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <div class="cap">直線：まっすぐ下へ</div>
+          <div class="cap">k直ちょくk線せん：まっすぐk下したへ</div>
         </div>
         <div class="figItem">
           <svg width="170" height="110" viewBox="0 0 170 110" aria-hidden="true">
@@ -260,14 +318,14 @@ button *{font-weight:700}
             <path d="M50 4 V20 L120 80 V98" stroke="#E23B3B" stroke-width="4" stroke-dasharray="6 5" fill="none"/><path d="M112 92 L120 104 L128 92" stroke="#E23B3B" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M120 4 V20 L50 80 V98" stroke="#22A55B" stroke-width="4" stroke-dasharray="6 5" fill="none"/><path d="M42 92 L50 104 L58 92" stroke="#22A55B" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <div class="cap">こうさ：となりのれつへ（よこ2マス）</div>
+          <div class="cap">h交こうh差さ：h隣となりのh列れつへ（h横よこ2マス）</div>
         </div>
       </div>
-      <p>こうさピースはよこに2マス分の大きさです。左から来たボールは右へ、右から来たボールは左へうつります。</p>
+      <p>h交こうh差さピースはh横よこに2マスk分ぶんのk大おおきさです。k左ひだりからk来きたボールはk右みぎへ、k右みぎからk来きたボールはk左ひだりへh移うつります。</p>
     </section>
 
     <section class="step">
-      <h3><span class="n">3</span>ピースのおき方</h3>
+      <h3><span class="n">3</span>ピースのh置おきk方かた</h3>
       <div class="fig flow">
         <div class="figItem">
           <svg width="84" height="70" viewBox="0 0 84 70" aria-hidden="true">
@@ -275,7 +333,7 @@ button *{font-weight:700}
             <rect x="14" y="21" width="16" height="28" rx="4" fill="#fff" stroke="#B7C3D6" stroke-width="1.5"/><rect x="19" y="21" width="6" height="28" fill="#C9D3E3"/>
             <text x="56" y="34" text-anchor="middle" font-size="12" font-weight="800" fill="#1F2A44">直線</text><text x="56" y="51" text-anchor="middle" font-size="14" font-weight="800" fill="#1F2A44">3</text>
           </svg>
-          <div class="cap">①えらぶ</div>
+          <div class="cap">①h選えらぶ</div>
         </div>
         <span class="ar">›</span>
         <div class="figItem">
@@ -283,43 +341,43 @@ button *{font-weight:700}
             <rect x="0" y="0" width="70" height="70" rx="12" fill="#274F8E"/><rect x="8" y="8" width="54" height="54" rx="9" fill="#1E4078"/>
             <circle cx="35" cy="35" r="10" fill="#FFB020"/><circle cx="35" cy="35" r="17" fill="none" stroke="#FFB020" stroke-width="3" opacity=".6"/>
           </svg>
-          <div class="cap">②空きマスをタップ</div>
+          <div class="cap">②k空あきマスをタップ</div>
         </div>
         <span class="ar">›</span>
         <div class="figItem">
           <svg width="70" height="70" viewBox="0 0 70 70" aria-hidden="true">
             <rect x="0" y="0" width="70" height="70" rx="12" fill="#274F8E"/><rect x="8" y="8" width="54" height="54" rx="9" fill="#fff"/><rect x="28" y="8" width="14" height="54" fill="#C9D3E3"/>
           </svg>
-          <div class="cap">③おけた！</div>
+          <div class="cap">③h置おけた！</div>
         </div>
       </div>
-      <p>トレイ（ばんめんの下）でピースをえらび、空いているマスをタップします。おいた白いピースをもういちどタップすると外せます。</p>
+      <p>トレイ（h盤面ばんめんのk下した）でピースをh選えらび、k空あいているマスをタップします。h置おいたk白しろいピースをもうh一いちh度どタップするとk外はずせます。</p>
     </section>
 
     <section class="step">
-      <h3><span class="n">4</span>ばんめんはぜんぶ自分で組み立てる</h3>
+      <h3><span class="n">4</span>h盤面ばんめんはh全ぜんh部ぶk自じk分ぶんでk組くみk立たてる</h3>
       <div class="fig">
         <svg width="290" height="128" viewBox="0 0 290 128" role="img" aria-label="たて2マス、たて4マス、たて6マスと、もんだいがすすむほどばんめんがたてに長くなる図"><g transform="translate(14,25)"><rect width="70" height="50" rx="8" fill="#274F8E"/><circle cx="11" cy="9" r="3.4" fill="#1E4078"/><rect x="6" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="6" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><circle cx="23" cy="9" r="3.4" fill="#1E4078"/><rect x="18" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="18" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><circle cx="35" cy="9" r="3.4" fill="#1E4078"/><rect x="30" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="30" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><circle cx="47" cy="9" r="3.4" fill="#1E4078"/><rect x="42" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="42" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><circle cx="59" cy="9" r="3.4" fill="#1E4078"/><rect x="54" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="54" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><text x="35.0" y="66" text-anchor="middle" font-size="12" font-weight="800" fill="#5B6782">たて2マス</text></g><text x="96" y="54" text-anchor="middle" font-size="20" font-weight="800" fill="#5B6782">›</text><g transform="translate(112,13)"><rect width="70" height="74" rx="8" fill="#274F8E"/><circle cx="11" cy="9" r="3.4" fill="#1E4078"/><rect x="6" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="6" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="6" y="38" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="6" y="50" width="10" height="10" rx="2.5" fill="#1E4078"/><circle cx="23" cy="9" r="3.4" fill="#1E4078"/><rect x="18" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="18" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="18" y="38" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="18" y="50" width="10" height="10" rx="2.5" fill="#1E4078"/><circle cx="35" cy="9" r="3.4" fill="#1E4078"/><rect x="30" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="30" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="30" y="38" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="30" y="50" width="10" height="10" rx="2.5" fill="#1E4078"/><circle cx="47" cy="9" r="3.4" fill="#1E4078"/><rect x="42" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="42" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="42" y="38" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="42" y="50" width="10" height="10" rx="2.5" fill="#1E4078"/><circle cx="59" cy="9" r="3.4" fill="#1E4078"/><rect x="54" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="54" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="54" y="38" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="54" y="50" width="10" height="10" rx="2.5" fill="#1E4078"/><text x="35.0" y="90" text-anchor="middle" font-size="12" font-weight="800" fill="#5B6782">たて4マス</text></g><text x="194" y="54" text-anchor="middle" font-size="20" font-weight="800" fill="#5B6782">›</text><g transform="translate(210,1)"><rect width="70" height="98" rx="8" fill="#274F8E"/><circle cx="11" cy="9" r="3.4" fill="#1E4078"/><rect x="6" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="6" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="6" y="38" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="6" y="50" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="6" y="62" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="6" y="74" width="10" height="10" rx="2.5" fill="#1E4078"/><circle cx="23" cy="9" r="3.4" fill="#1E4078"/><rect x="18" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="18" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="18" y="38" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="18" y="50" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="18" y="62" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="18" y="74" width="10" height="10" rx="2.5" fill="#1E4078"/><circle cx="35" cy="9" r="3.4" fill="#1E4078"/><rect x="30" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="30" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="30" y="38" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="30" y="50" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="30" y="62" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="30" y="74" width="10" height="10" rx="2.5" fill="#1E4078"/><circle cx="47" cy="9" r="3.4" fill="#1E4078"/><rect x="42" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="42" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="42" y="38" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="42" y="50" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="42" y="62" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="42" y="74" width="10" height="10" rx="2.5" fill="#1E4078"/><circle cx="59" cy="9" r="3.4" fill="#1E4078"/><rect x="54" y="14" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="54" y="26" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="54" y="38" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="54" y="50" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="54" y="62" width="10" height="10" rx="2.5" fill="#1E4078"/><rect x="54" y="74" width="10" height="10" rx="2.5" fill="#1E4078"/><text x="35.0" y="114" text-anchor="middle" font-size="12" font-weight="800" fill="#5B6782">たて6マス</text></g></svg>
       </div>
-      <p>はじめからおいてあるピースはありません。<b>すべてのマスを自分のピースでうめて</b>、ルートを組み立てよう。トレイのピースをちょうどぜんぶつかうと、ばんめんがぴったりうまります。</p>
-      <p>「5マス」「6マス」「7マス」はばんめんのよこのマス数です。それぞれ50もんあり、もんだいがすすむほど<b>たてのマスがふえて</b>むずかしくなります。</p>
+      <p>h初はじめからh置おいてあるピースはありません。<b>h全すべてのマスをk自じk分ぶんのピースでh埋うめて</b>、ルートをk組くみk立たてよう。トレイのピースをちょうどh全ぜんh部ぶh使つかうと、h盤面ばんめんがぴったりh埋うまります。</p>
+      <p>「5マス」「6マス」「7マス」はh盤面ばんめんのh横よこのマスk数すうです。それぞれ50h問もんあり、h問もんh題だいがh進すすむほど<b>h縦たてのマスがh増ふえて</b>h難むずかしくなります。</p>
     </section>
 
     <section class="step">
-      <h3><span class="n">5</span>クリアのじょうけん</h3>
+      <h3><span class="n">5</span>クリアのh条じょうh件けん</h3>
       <ul class="checks">
-        <li>トレイのピースをぜんぶつかい切る（のこりがりょうほう0）</li>
+        <li>トレイのピースをh全ぜんh部ぶh使つかいk切きる（h残のこりがh両りょうh方ほう0）</li>
         <li>すべてのボールが同じばんごうのゴールに入る</li>
       </ul>
       <div class="keys">
-        <span class="k b">ボールをころがす</span><span>ばんめんの上のボタン。ボールがころがります</span>
-        <span class="k g">つぎのもんだいへ</span><span>クリアするとボタンがこれにかわります</span>
-        <span class="k">リセット</span><span>「ボールをころがす」の右。ピースとボールをさいしょのじょうたいにもどします</span>
-        <span class="k">こたえを見る</span><span>こたえのピースをぜんぶおきます</span>
+        <span class="k b">ボールをh転ころがす</span><span>ばんめんの上のボタン。ボールがころがります</span>
+        <span class="k g">h次つぎのh問もんh題だいへ</span><span>クリアするとボタンがこれにh変かわります</span>
+        <span class="k">リセット</span><span>「ボールをh転ころがす」のk右みぎ。ピースとボールをh最さいh初しょのh状じょうh態たいにh戻もどします</span>
+        <span class="k">h答こたえをk見みる</span><span>h答こたえのピースをh全ぜんh部ぶh置おきます</span>
       </div>
     </section>
     <section class="step">
-      <h3><span class="n">6</span>クリアしなくてもつぎへすすめる</h3>
+      <h3><span class="n">6</span>クリアしなくてもh次つぎへh進すすめる</h3>
       <div class="fig">
         <svg width="300" height="150" viewBox="0 0 300 150" role="img" aria-label="もんだいばんごうのタップ、矢じるしボタン、ばんめんの大きさタブで、ほかのもんだいへうつれることをしめす図">
           <rect x="10" y="8" width="280" height="36" rx="18" fill="#fff" stroke="#C9D6E4" stroke-width="2"/>
@@ -344,10 +402,10 @@ button *{font-weight:700}
           <circle cx="62" cy="139" r="6" fill="#22A55B"/><text x="74" y="143" font-size="11" font-weight="700" fill="#5B6782">＝クリアしたもんだいのしるし</text>
         </svg>
       </div>
-      <p>むずかしいもんだいは、あとまわしにしてもだいじょうぶ。クリアしていなくても、<b>もんだいばんごうをタップ</b>するか<b>「‹」「›」</b>で、すきなもんだいへうつれます。上の<b>「5マス」「6マス」「7マス」</b>のタブで、ばんめんのよこの大きさもいつでもかえられます。クリアしたもんだいのばんごうにはみどりのしるしがつきます。</p>
+      <p>h難むずかしいh問もんh題だいは、h後あとh回まわしにしてもh大丈夫だいじょうぶ。クリアしていなくても、<b>h問もんh題だいh番ばんh号ごうをタップ</b>するか<b>「‹」「›」</b>で、h好すきなh問もんh題だいへh移うつれます。k上うえの<b>「5マス」「6マス」「7マス」</b>のタブで、h盤面ばんめんのh横よこのk大おおきさもいつでもh変かえられます。クリアしたh問もんh題だいのh番ばんh号ごうにはh緑みどりのh印しるしがh付つきます。</p>
     </section>
   </div>
-  <div class="foot"><button class="btn" id="startTuto">はじめる</button></div>
+  <div class="foot"><button class="btn" id="startTuto">h始はじめる</button></div>
 </dialog>
 
 <script>
@@ -358,7 +416,7 @@ const DATA={};Object.keys(RAW).forEach(k=>{DATA[k]=RAW[k].map(q=>{const cols=q.s
   return{rows,cols,grid:Array.from({length:rows},()=>Array(cols).fill(null)),solution,inv:{S:q.S,X:q.X},
     balls:ORDER.slice(0,cols).map((c,i)=>({lane:i,color:c})),goals:ORDER.slice(0,cols).map((c,i)=>({lane:q.g[i],color:c})),tunnels:[]}})});
 const COL={red:'var(--red)',orange:'var(--orange)',green:'var(--green)',teal:'var(--teal)',blue:'var(--blue)',purple:'var(--purple)',pink:'var(--pink)'};
-const CNAME={red:'赤',orange:'オレンジ',green:'みどり',teal:'水色',blue:'青',purple:'むらさき',pink:'ピンク'};
+const CNAME={red:'k赤あか',orange:'オレンジ',green:'h緑みどり',teal:'k水みずk色いろ',blue:'k青あお',purple:'h紫むらさき',pink:'ピンク'};
 const CNUM={red:1,orange:2,green:3,teal:4,blue:5,purple:6,pink:7};
 const LVNAME={easy:'5マス',normal:'6マス',hard:'7マス'};
 let lv='easy',idx=0,P=null,grid=null,fixed=null,sel='S',busy=false;
@@ -400,15 +458,15 @@ function load(){
   P=DATA[lv][idx];
   grid=P.grid.map(r=>r.slice());fixed=P.grid.map(r=>r.map(v=>v!==null));
   document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lv===lv));
-  $('qtitle').textContent=`${LVNAME[lv]} だい${idx+1}もん（たて${P.rows}マス）`;
+  $('qtitle').textContent=`${LVNAME[lv]} h第だい${idx+1}h問もん（h縦たて${P.rows}マス）`;
   sel=P.inv.S>0?'S':'X';
   renderNums();sizeBoard();renderZones();render();placeBallsAtStart();
-  setMsg(`${LVNAME[lv]} だい${idx+1}もん（たて${P.rows}マス）：すべてのマスにピースをおいて、ルートを組み立てよう。`);
+  setMsg(`${LVNAME[lv]} h第だい${idx+1}h問もん（h縦たて${P.rows}マス）：h全すべてのマスにピースをh置おいて、ルートをk組くみk立たてよう。`);
 }
 function renderNums(){
   const n=$('nums');n.innerHTML='';
   DATA[lv].forEach((_,i)=>{const b=document.createElement('button');b.textContent=i+1;
-    b.setAttribute('aria-label',`だい${i+1}もん（たて${DATA[lv][i].rows}マス）${prog[lv+i]?'（クリアずみ）':''}`);
+    b.setAttribute('aria-label',`h第だい${i+1}h問もん（h縦たて${DATA[lv][i].rows}マス）${prog[lv+i]?'（クリアh済ずみ）':''}`);
     if(i===idx)b.setAttribute('aria-current','true');if(prog[lv+i])b.classList.add('done');
     b.onclick=()=>{idx=i;load()};n.appendChild(b)});
   const cur=n.children[idx];if(cur&&n.scrollWidth>n.clientWidth)n.scrollLeft=cur.offsetLeft-n.offsetLeft-n.clientWidth/2+cur.offsetWidth/2;
@@ -430,12 +488,12 @@ function render(){
       el.innerHTML='<svg viewBox="0 0 100 60"><path d="M10 58 V32 A40 28 0 0 1 90 32 V58" fill="none" stroke="#fff" stroke-width="7"/><text x="50" y="50" text-anchor="middle" font-size="26" fill="#fff" font-weight="800">?</text></svg>';
       el.setAttribute('aria-label','トンネル');el.style.gridRow=r+1;G.appendChild(el);c++;continue}
     if(v==='XR')continue;
-    if(v===null){el=document.createElement('button');el.className='cell empty';el.setAttribute('aria-label',`${r+1}だん目 ${c+1}れつ目 空きマス`);
+    if(v===null){el=document.createElement('button');el.className='cell empty';el.setAttribute('aria-label',`${r+1}h段だんk目め ${c+1}れつ目 空きマス`);
       el.onclick=((rr,cc)=>()=>place(rr,cc))(r,c)}
     else{const f=fixed[r][c];el=document.createElement(f?'div':'button');el.className='cell piece'+(f?' fixed':'');
       const gc=f?'#D9A21C':'#C9D3E3';
       if(v==='S'){el.innerHTML=svgS(gc)}else{el.innerHTML=svgX(gc);el.style.gridColumn=`${c+1}/span 2`}
-      el.setAttribute('aria-label',`${r+1}だん目 ${v==='S'?'直線':'こうさ'}ピース${f?'（こてい）':'（タップで外す）'}`);
+      el.setAttribute('aria-label',`${r+1}h段だんk目め ${v==='S'?'k直ちょくk線せん':'h交こうh差さ'}ピース${f?'（こてい）':'（タップでk外はずす）'}`);
       if(!f)el.onclick=((rr,cc)=>()=>removeAt(rr,cc))(r,c)}
     el.style.gridRow=r+1;if(!el.style.gridColumn)el.style.gridColumn=c+1;G.appendChild(el);
     if(v==='XL')c++;
@@ -447,15 +505,15 @@ function render(){
 }
 function place(r,c){
   if(busy)return;placeBallsAtStart();const rem=remaining();
-  if(rem[sel]<=0){setMsg('そのピースはもうのこっていません。');return}
+  if(rem[sel]<=0){setMsg('そのピースはもうh残のこっていません。');return}
   if(sel==='S'){grid[r][c]='S'}
   else{let L=-1;if(c+1<P.cols&&grid[r][c+1]===null&&!isTunnel(r,c+1))L=c;else if(c-1>=0&&grid[r][c-1]===null&&!isTunnel(r,c-1))L=c-1;
-    if(L<0){setMsg('こうさピースは、よこに2マスつづけて空いているところにおけます。','ng');return}
+    if(L<0){setMsg('h交こうh差さピースは、h横よこに2マスh続つづけてk空あいているところにh置おけます。','ng');return}
     grid[r][L]='XL';grid[r][L+1]='XR'}
-  render();const rm=remaining();setMsg(rm.S+rm.X===0?'ぜんぶおけました。上の「ボールをころがす」をおしてみよう。':`のこり：直線 ${rm.S}・こうさ ${rm.X}`);
+  render();const rm=remaining();setMsg(rm.S+rm.X===0?'h全ぜんh部ぶh置おけました。k上うえの「ボールをh転ころがす」をh押おしてみよう。':`h残のこり：k直ちょくk線せん ${rm.S}・h交こうh差さ ${rm.X}`);
 }
 function removeAt(r,c){if(busy)return;placeBallsAtStart();
-  if(grid[r][c]==='XL'){grid[r][c]=null;grid[r][c+1]=null}else grid[r][c]=null;render();const rm=remaining();setMsg(`のこり：直線 ${rm.S}・こうさ ${rm.X}`)}
+  if(grid[r][c]==='XL'){grid[r][c]=null;grid[r][c+1]=null}else grid[r][c]=null;render();const rm=remaining();setMsg(`h残のこり：k直ちょくk線せん ${rm.S}・h交こうh差さ ${rm.X}`)}
 function ballEls(){const L=$('balls');L.innerHTML='';return P.balls.map(b=>{const d=document.createElement('div');d.className='ball';d.style.backgroundColor=COL[b.color];d.textContent=CNUM[b.color];L.appendChild(d);return d})}
 function cs(){return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--cs'))}
 function setPos(el,x,y){el._x=x;el._y=y;const s=cs();el.style.left=(x*s)+'px';el.style.top=(ZF*s+y*s)+'px'}
@@ -469,7 +527,7 @@ function pathOf(b){
   pts.push({x:l+.5,y:P.rows+ZF/2,h:false});return{pts,stuck:false,lane:l}
 }
 let cleared=false;
-function setCleared(v){cleared=v;const r=$('roll');r.innerHTML=v?'つぎのもんだいへ ›':ROLL_ICON+'ボールをころがす';r.classList.toggle('go',v)}
+function setCleared(v){cleared=v;const r=$('roll');r.innerHTML=v?'h次つぎのh問もんh題だいへ ›':ROLL_ICON+'ボールをh転ころがす';r.classList.toggle('go',v)}
 function setDisabled(d){['roll','answer'].forEach(i=>$(i).disabled=d)}
 let timer=0;
 function stopAnim(){clearTimeout(timer);timer=0}
@@ -492,15 +550,15 @@ function finish(paths){
   busy=false;setDisabled(false);
   const rem=remaining();const stuck=paths.some(p=>p.stuck);
   const ok=!stuck&&P.balls.every((b,i)=>P.goals.find(x=>x.color===b.color).lane===paths[i].lane);
-  if(stuck){setMsg('空いているマスでボールが止まりました。ルートをつなげよう。','ng');return}
+  if(stuck){setMsg('k空あいているマスでボールがk止とまりました。ルートをh繋つなげよう。','ng');return}
   if(!ok){const w=P.balls.filter((b,i)=>P.goals.find(x=>x.color===b.color).lane!==paths[i].lane).map(b=>CNUM[b.color]);
-    setMsg(`${w.join('・')}番のボールが、ちがうゴールに入りました。`,'ng');return}
-  if(rem.S+rem.X>0){setMsg('ボールは正しく入りました。でもピースがまだのこっています。ぜんぶつかうルートをさがそう。','ng');return}
+    setMsg(`${w.join('・')}k番ばんのボールが、h違ちがうゴールにk入はいりました。`,'ng');return}
+  if(rem.S+rem.X>0){setMsg('ボールはk正ただしくk入はいりました。でもピースがまだh残のこっています。h全ぜんh部ぶh使つかうルートをh探さがそう。','ng');return}
   prog[lv+idx]=1;saveProg();renderNums();
   const last=idx===DATA[lv].length-1&&lv==='hard';
   if(!last)setCleared(true);
   celebrate();
-  setMsg(idx===DATA[lv].length-1?`クリア！「${LVNAME[lv]}」をぜんぶおえました。`:'クリア！上の「つぎのもんだいへ」ですすもう。','ok');
+  setMsg(idx===DATA[lv].length-1?`クリア！「${LVNAME[lv]}」をh全ぜんh部ぶh終おえました。`:'クリア！k上うえの「h次つぎのh問もんh題だいへ」でh進すすもう。','ok');
 }
 
 /* ---- クリア演出 ---- */
@@ -525,8 +583,8 @@ $('pickS').onclick=()=>{sel='S';render()};$('pickX').onclick=()=>{sel='X';render
 $('roll').onclick=()=>{if(cleared){goNext();return}roll()};
 $('prevQ').onclick=()=>{if(idx>0){idx--;load()}};
 $('nextQ').onclick=()=>{if(idx<DATA[lv].length-1){idx++;load()}};
-$('reset').onclick=()=>{clearFx();stopAnim();busy=false;setDisabled(false);grid=P.grid.map(r=>r.slice());placeBallsAtStart();render();setMsg('ピースとボールをさいしょのじょうたいにもどしました。')};
-$('answer').onclick=()=>{grid=P.solution.map(r=>r.slice());placeBallsAtStart();render();setMsg('こたえをおきました。上の「ボールをころがす」でたしかめよう。')};
+$('reset').onclick=()=>{clearFx();stopAnim();busy=false;setDisabled(false);grid=P.grid.map(r=>r.slice());placeBallsAtStart();render();setMsg('ピースとボールをh最さいh初しょのh状じょうh態たいにh戻もどしました。')};
+$('answer').onclick=()=>{grid=P.solution.map(r=>r.slice());placeBallsAtStart();render();setMsg('h答こたえをh置おきました。k上うえの「ボールをh転ころがす」でh確たしかめよう。')};
 function goNext(){const order=['easy','normal','hard'];if(idx<DATA[lv].length-1)idx++;else{const j=order.indexOf(lv);if(j<2){lv=order[j+1];idx=0}}load()}
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{lv=b.dataset.lv;idx=0;load()});
 let rt;function onViewport(){clearTimeout(rt);rt=setTimeout(()=>{
@@ -567,9 +625,9 @@ if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventLis
   if(!dlg||!v)return;
   const sync=()=>{box.classList.toggle('playing',!v.paused&&!v.ended)};
   v.addEventListener('play',sync);v.addEventListener('playing',sync);v.addEventListener('pause',sync);
-  v.addEventListener('ended',()=>{lbl.textContent='もういちど見る';sync()});
+  v.addEventListener('ended',()=>{lbl.textContent='もうh一いちh度どk見みる';sync()});
   btn.addEventListener('click',()=>{if(v.ended)v.currentTime=0;v.play().catch(()=>{})});
-  function onOpen(){lbl.textContent='どうがを見る';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
+  function onOpen(){lbl.textContent='h動どうh画がをk見みる';try{v.currentTime=0}catch(e){}v.play().catch(()=>{sync()})}
   function onClose(){v.pause()}
   let was=dlg.open;if(was)onOpen();
   new MutationObserver(()=>{if(dlg.open&&!was)onOpen();else if(!dlg.open&&was)onClose();was=dlg.open}).observe(dlg,{attributes:true,attributeFilter:['open']});

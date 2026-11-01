@@ -2,6 +2,64 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+<script>window.KZ_LEVEL=0;</script><script>(function(){
+  /* 学年に あわせて 漢字と ひらがなを かきわける */
+  var GR={"1": "一右雨円王音下火花貝学気九休玉金空月犬見五口校左三山子四糸字耳七車手十出女小上森人水正生青夕石赤千川先早草足村大男竹中虫町天田土二日入年白八百文木本名目立力林六", "2": "引羽雲園遠何科夏家歌画回会海絵外角楽活間丸岩顔汽記帰弓牛魚京強教近兄形計元言原戸古午後語工公広交光考行高黄合谷国黒今才細作算止市矢姉思紙寺自時室社弱首秋週春書少場色食心新親図数西声星晴切雪船線前組走多太体台地池知茶昼長鳥朝直通弟店点電刀冬当東答頭同道読内南肉馬売買麦半番父風分聞米歩母方北毎妹万明鳴毛門夜野友用曜来里理話", "3": "悪安暗医委意育員院飲運泳駅央横屋温化荷界開階寒感漢館岸起期客究急級宮球去橋業曲局銀区苦具君係軽血決研県庫湖向幸港号根祭皿仕死使始指歯詩次事持式実写者主守取酒受州拾終習集住重宿所暑助昭消商章勝乗植申身神真深進世整昔全相送想息速族他打対待代第題炭短談着注柱丁帳調追定庭笛鉄転都度投豆島湯登等動童農波配倍箱畑発反坂板皮悲美鼻筆氷表秒病品負部服福物平返勉放味命面問役薬由油有遊予羊洋葉陽様落流旅両緑礼列練路和", "4": "愛案以衣位茨印英栄媛塩岡億加果貨課芽賀改械害街各覚潟完官管関観願岐希季旗器機議求泣給挙漁共協鏡競極熊訓軍郡群径景芸欠結建健験固功好香候康佐差菜最埼材崎昨札刷察参産散残氏司試児治滋辞鹿失借種周祝順初松笑唱焼照城縄臣信井成省清静席積折節説浅戦選然争倉巣束側続卒孫帯隊達単置仲沖兆低底的典伝徒努灯働特徳栃奈梨熱念敗梅博阪飯飛必票標不夫付府阜富副兵別辺変便包法望牧末満未民無約勇要養浴利陸良料量輪類令冷例連老労録", "5": "圧囲移因永営衛易益液演応往桜可仮価河過快解格確額刊幹慣眼紀基寄規喜技義逆久旧救居許境均禁句型経潔件険検限現減故個護効厚耕航鉱構興講告混査再災妻採際在財罪殺雑酸賛士支史志枝師資飼示似識質舎謝授修述術準序招証象賞条状常情織職制性政勢精製税責績接設絶祖素総造像増則測属率損貸態団断築貯張停提程適統堂銅導得毒独任燃能破犯判版比肥非費備評貧布婦武復複仏粉編弁保墓報豊防貿暴脈務夢迷綿輸余容略留領歴", "6": "胃異遺域宇映延沿恩我灰拡革閣割株干巻看簡危机揮貴疑吸供胸郷勤筋系敬警劇激穴券絹権憲源厳己呼誤后孝皇紅降鋼刻穀骨困砂座済裁策冊蚕至私姿視詞誌磁射捨尺若樹収宗就衆従縦縮熟純処署諸除承将傷障蒸針仁垂推寸盛聖誠舌宣専泉洗染銭善奏窓創装層操蔵臓存尊退宅担探誕段暖値宙忠著庁頂腸潮賃痛敵展討党糖届難乳認納脳派拝背肺俳班晩否批秘俵腹奮並陛閉片補暮宝訪亡忘棒枚幕密盟模訳郵優預幼欲翌乱卵覧裏律臨朗論"};
+  var KG={};for(var g in GR){var s=GR[g];for(var i=0;i<s.length;i++)KG[s[i]]=+g}
+  var L=null,from=null;
+  try{from=new URLSearchParams(location.search).get('from')}catch(e){}
+  if(window.KZ_LEVEL!==undefined)L=window.KZ_LEVEL;
+  else if(from){L={pre:0,'1':0,'2':1,'3':2,'4':3,'5':4,'6':5,brain:99}[from];if(L===undefined)L=null}
+  var S0='',S1='',S2='',RE=/([khr])([^]*)([^]*)/g;
+  function ok(k){for(var i=0;i<k.length;i++){var c=k.charCodeAt(i);if(c>=0x4e00&&c<=0x9fff){var g=KG[k[i]]||7;if(g>L)return false}}return true}
+  function seg(t,k,r){if(L===null)return t==='h'?r:k;return ok(k)?k:r}
+  function plain(s){return typeof s==='string'&&s.indexOf(S0)>=0?s.replace(RE,function(_,t,k,r){return seg(t,k,r)}):s}
+  function reading(s){return typeof s==='string'&&s.indexOf(S0)>=0?s.replace(RE,function(_,t,k,r){return r}):s}
+  window.__kz={plain:plain,reading:reading,level:L};
+  var SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,TITLE:1,OPTION:1};
+  function doText(n){
+    var v=n.nodeValue;if(!v||v.indexOf(S0)<0)return;
+    var p=n.parentNode;if(!p||p.nodeName==='SCRIPT'||p.nodeName==='STYLE'||p.nodeName==='TITLE')return;if(SKIP[p.nodeName]){n.nodeValue=plain(v);return}
+    if(L===null&&/r/.test(v)){
+      // ルビは そのまま ルビで だす
+      var f=document.createDocumentFragment(),last=0,m;RE.lastIndex=0;
+      while((m=RE.exec(v))){if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));
+        if(m[1]==='r'){var rb=document.createElement('ruby');rb.appendChild(document.createTextNode(m[2]));var rt=document.createElement('rt');rt.textContent=m[3];rb.appendChild(rt);f.appendChild(rb)}
+        else f.appendChild(document.createTextNode(seg(m[1],m[2],m[3])));last=RE.lastIndex}
+      if(last<v.length)f.appendChild(document.createTextNode(v.slice(last)));
+      p.replaceChild(f,n);return}
+    n.nodeValue=plain(v);
+  }
+  var ATTR=['aria-label','title','alt','placeholder'];
+  function doEl(el){for(var i=0;i<ATTR.length;i++){var a=el.getAttribute&&el.getAttribute(ATTR[i]);if(a&&a.indexOf(S0)>=0)el.setAttribute(ATTR[i],plain(a))}
+    if(el.nodeName==='INPUT'&&el.value&&el.value.indexOf(S0)>=0)el.value=plain(el.value)}
+  function walk(root){
+    if(root.nodeType===3){doText(root);return}
+    if(root.nodeType!==1&&root.nodeType!==11)return;
+    if(root.nodeType===1){if(SKIP[root.nodeName]&&root.nodeName!=='OPTION'&&root.nodeName!=='TITLE')return;doEl(root)}
+    var tw=document.createTreeWalker(root,5,null),list=[],x;
+    while((x=tw.nextNode()))list.push(x);
+    for(var i=0;i<list.length;i++){var q=list[i];try{if(q.nodeType===3){if(q.parentNode)doText(q)}else doEl(q)}catch(e){}}
+  }
+  var mo=new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var m=ms[i];try{
+    if(m.type==='characterData')doText(m.target);
+    else if(m.type==='attributes')doEl(m.target);
+    else for(var j=0;j<m.addedNodes.length;j++)walk(m.addedNodes[j])}catch(e){}}});
+  mo.observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:ATTR});
+  document.addEventListener('DOMContentLoaded',function(){try{walk(document.documentElement)}catch(e){}});
+  window.addEventListener('load',function(){try{walk(document.documentElement)}catch(e){}});
+  // ねんのため しばらくは ときどき みなおす
+  var sw=0,iv=setInterval(function(){try{walk(document.documentElement)}catch(e){}if(++sw>16)clearInterval(iv)},250);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)walk(document.documentElement)});
+  // 読み上げは ひらがなで
+  try{var U=window.SpeechSynthesisUtterance;if(U){var d=Object.getOwnPropertyDescriptor(U.prototype,'text');
+    if(d&&d.set)Object.defineProperty(U.prototype,'text',{get:d.get,set:function(v){d.set.call(this,reading(v))},configurable:true});
+    var W=function(t){var u=new U(reading(t));return u};W.prototype=U.prototype;window.SpeechSynthesisUtterance=W}}catch(e){}
+  // ダウンロードの なまえ
+  try{var dd=Object.getOwnPropertyDescriptor(HTMLAnchorElement.prototype,'download');
+    if(dd&&dd.set)Object.defineProperty(HTMLAnchorElement.prototype,'download',{get:dd.get,set:function(v){dd.set.call(this,plain(v))},configurable:true})}catch(e){}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>小学1年生｜知的探求Webアプリ KouSen式</title>
 <meta name="description" content="知的探求Webアプリ KouSen式。ボールをころがして考える、こどもむけのゲームです。">
@@ -94,6 +152,32 @@ h1 .kicker{display:block;font-size:.42em;letter-spacing:.12em;color:var(--sub);m
 .game.keisan .plate .name{font-size:clamp(1.05rem,4.7vw,1.5rem)}
 .game.eitango .plate{max-width:min(68%,330px)}
 .game.eitango .plate .name{font-size:clamp(1.02rem,4.6vw,1.45rem);letter-spacing:.01em}
+.game.flashkanyo{--tint:#FBEFE6;--edge:#B5542F}
+.game.kanyomaster{--tint:#F7EAE0;--edge:#9A4626}
+.game.flashkotowaza{--tint:#EEF3E2;--edge:#5E7A2E}
+.game.kotowazaou{--tint:#ECEFE0;--edge:#4E6A24}
+.game.flashkanyo .plate,.game.kanyomaster .plate,.game.flashkotowaza .plate,.game.kotowazaou .plate{max-width:min(68%,330px)}
+.game.flashkanyo .plate .name,.game.kanyomaster .plate .name,.game.flashkotowaza .plate .name,.game.kotowazaou .plate .name{font-size:clamp(.95rem,4.3vw,1.4rem)}
+.game.flashroma{--tint:#E8F0FF;--edge:#3A63C9}
+.game.romamaster{--tint:#E6ECFB;--edge:#2D4FA8}
+.game.flashchizu{--tint:#E9F5E4;--edge:#4A8A3A}
+.game.chizuou{--tint:#F3F0E2;--edge:#8A6A2A}
+.game.flashroma .plate,.game.romamaster .plate,.game.flashchizu .plate,.game.chizuou .plate{max-width:min(68%,330px)}
+.game.flashroma .plate .name,.game.romamaster .plate .name,.game.flashchizu .plate .name,.game.chizuou .plate .name{font-size:clamp(.95rem,4.3vw,1.4rem)}
+.game.rtkotoba{--tint:#E3F4E8;--edge:#2E9A5E}
+.game.rtbunsho{--tint:#FFEBDC;--edge:#E0733A}
+.game.rtadd{--tint:#ECE6FB;--edge:#7A5CC9}
+.game.rtclock{--tint:#E2EEF9;--edge:#2F7FC1}
+.game.rtmoney{--tint:#FBF1D6;--edge:#C9961B}
+.game.rtsub{--tint:#FCE8EF;--edge:#D9467A}
+.game.rtnum{--tint:#E3F4F7;--edge:#1F8FA8}
+.game.rtlen{--tint:#E2F4F1;--edge:#2A9D8F}
+.game.rtvol{--tint:#E5EEFB;--edge:#3B7DDD}
+.game.rtkotoba .plate,.game.rtbunsho .plate,.game.rtadd .plate,.game.rtclock .plate,.game.rtsub .plate,.game.rtnum .plate,.game.rtlen .plate,.game.rtvol .plate,.game.rtmoney .plate{max-width:min(63%,320px);padding:7px 12px 9px}
+.game.rtkotoba .plate .name,.game.rtbunsho .plate .name,.game.rtadd .plate .name,.game.rtclock .plate .name,.game.rtsub .plate .name,.game.rtnum .plate .name,.game.rtlen .plate .name,.game.rtvol .plate .name,.game.rtmoney .plate .name{font-size:clamp(1rem,4.5vw,1.32rem);letter-spacing:.01em;white-space:normal;line-height:1.22;word-break:keep-all;overflow-wrap:anywhere}
+.game.rtkotoba .plate .desc,.game.rtbunsho .plate .desc,.game.rtadd .plate .desc,.game.rtclock .plate .desc,.game.rtsub .plate .desc,.game.rtnum .plate .desc,.game.rtlen .plate .desc,.game.rtvol .plate .desc,.game.rtmoney .plate .desc{margin-top:2px;line-height:1.35}
+.plate .badge{display:inline-block;margin-bottom:3px;padding:0 9px;border-radius:999px;background:var(--edge);color:#fff;font-size:clamp(.66rem,2.9vw,.78rem);line-height:1.65;letter-spacing:.06em}
+.plate .badge rt{font-size:.55em}
 .game .art{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;pointer-events:none}
 .game .art img{display:block;width:100%;height:100%;object-fit:cover;object-position:right center}
 .plate{position:relative;z-index:1;margin-left:12px;max-width:min(58%,272px);padding:10px 14px 11px;border-radius:16px;
@@ -152,11 +236,25 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
   @keyframes roll{from{transform:translateX(-160%) rotate(-360deg);opacity:0}to{transform:none;opacity:1}}
 }
 @media (max-width:400px){.wrap{padding-left:12px;padding-right:12px}.plate{margin-left:10px;padding:8px 11px 9px}.go{width:38px;height:38px;right:10px;bottom:10px}}
+.game.flashyoji{--tint:#FBEFE6;--edge:#B5542F}
+.game.yojiou{--tint:#F6E6DA;--edge:#9A4524}
+.game.flashyoji .plate,.game.yojiou .plate{max-width:min(68%,330px)}
+.game.flashyoji .plate .name,.game.yojiou .plate .name{font-size:clamp(.95rem,4.3vw,1.4rem)}
+.subj{display:inline-block;margin:0 4px 3px 0;padding:0 8px;border-radius:6px;border:1.5px solid currentColor;background:#fff;font-size:clamp(.64rem,2.8vw,.76rem);line-height:1.5;font-weight:700;vertical-align:top}
+.subj.s-koku{color:#C2410C}.subj.s-san{color:#1D4ED8}.subj.s-ri{color:#15803D}
+.subjtabs{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
+.subjtabs button{font:inherit;font-size:.92rem;padding:6px 14px;border-radius:999px;border:2px solid var(--edge,#1F2A44);background:#fff;color:#1F2A44;cursor:pointer}
+.subjtabs button[aria-pressed="true"]{background:var(--edge,#1F2A44);color:#fff}
+.games li[hidden]{display:none}
 
 /* ---- カテゴリ ---- */
 .cats{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .cat{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:118px;padding:10px 8px 12px;border-radius:22px;text-decoration:none;color:#1F2A44;background:var(--tint);border:3px solid var(--edge);box-shadow:0 5px 0 var(--edge);transition:transform .12s,box-shadow .12s;text-align:center}
 .cat:active{transform:translateY(4px);box-shadow:0 1px 0 var(--edge)}
+.cats li.wide{grid-column:1/-1}
+.cat.wide{min-height:92px;flex-direction:row;gap:14px}
+.cat.wide .big{white-space:nowrap}
+.cat.wide .cnt{align-self:center}
 .cat .ic{font-size:1.7rem;line-height:1}
 .cat .big{font-size:clamp(1.25rem,5.6vw,1.6rem);font-weight:600;line-height:1.15;color:var(--edge)}
 .cat .big b{font-size:1.5em;font-weight:600}
@@ -167,7 +265,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
 .crumb{display:flex;align-items:center;gap:10px}
 .backBtn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px 0 10px;border-radius:999px;border:2px solid var(--accent);background:var(--panel);color:var(--accent);text-decoration:none;font-size:.98rem;white-space:nowrap}
 .backBtn svg{width:18px;height:18px}
-.ctitle{margin:0;display:flex;align-items:center;gap:8px;font-size:clamp(1.3rem,6vw,1.7rem);font-weight:600;color:var(--edge)}
+.ctitle{margin:0;display:flex;align-items:center;gap:8px;white-space:nowrap;min-width:0;font-size:clamp(1.05rem,5.4vw,1.7rem);font-weight:600;color:var(--edge)}
 .ctitle rt{font-size:.42em}
 </style>
 </head>
@@ -187,241 +285,387 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
     </button>
     </div>
   </header>
-  <p class="lead">あそびたい ゲームを えらんでね。</p>
+  <p class="lead">h遊あそびたい ゲームを h選えらんでね。</p>
 
-    <div class="crumb" style="--edge:#E0607E"><a class="backBtn" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>トップ</a><h2 class="ctitle"><span aria-hidden="true">🌱</span>小学1年生</h2></div>
+    <div class="crumb" style="--edge:#E0607E"><a class="backBtn" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>トップ</a><h2 class="ctitle"><span aria-hidden="true">🌱</span>k小しょうk学がく1k年ねんk生せい</h2></div>
+  <div class="subjtabs" role="group" aria-label="k教きょうk科か" style="--edge:#E0607E"><button type="button" data-s="all" aria-pressed="true">h全ぜんh部ぶ</button><button type="button" data-s="s-koku" aria-pressed="false">k国こくk語ご</button><button type="button" data-s="s-san" aria-pressed="false">k算さんk数すう</button><button type="button" data-s="other" aria-pressed="false">ゲーム</button></div>
   <ul class="games">
-    <li>
+    <li data-subj="other">
       <a class="game flashhira" href="flash_aiueo.html?from=1">
         <picture class="art"><source srcset="img/flashhira.webp" type="image/webp"><img src="img/flashhira.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">フラッシュあいうえお</span>
-          <span class="desc">「あ」から「ん」まで、ひらがなを 声に出して 読もう</span>
+          <span class="desc">「あ」から「ん」まで、h平ひらh仮がh名なを k声こえにk出だして k読よもう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game flashkata" href="flash_aiueo_kata.html?from=1">
         <picture class="art"><source srcset="img/flashkata.webp" type="image/webp"><img src="img/flashkata.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">フラッシュアイウエオ</span>
-          <span class="desc">「ア」から「ン」まで、カタカナを 声に出して 読もう</span>
+          <span class="desc">「ア」から「ン」まで、カタカナを k声こえにk出だして k読よもう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game kazutouch" href="kazu_touch.html?from=1&pick=button%5Bdata-m%3D%22100%22%5D">
         <picture class="art"><source srcset="img/kazutouch.webp" type="image/webp"><img src="img/kazutouch.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
-          <span class="name">かぞえてタッチ</span>
-          <span class="desc">すうじのカードを 1から じゅんばんに タッチしよう</span>
+          <span class="name">h数かぞえてタッチ</span>
+          <span class="desc">h数すうh字じのカードを 1から h順じゅんh番ばんに タッチしよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game aiueotouch" href="aiueo_touch.html?from=1&pick=button%5Bdata-m%3D%22all%22%5D">
         <picture class="art"><source srcset="img/aiueotouch.webp" type="image/webp"><img src="img/aiueotouch.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">あいうえおタッチ</span>
-          <span class="desc">ひらがなのカードを「あ」から じゅんばんに タッチしよう</span>
+          <span class="desc">h平ひらh仮がh名なのカードを「あ」から h順じゅんh番ばんに タッチしよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game aiueokatatouch" href="aiueo_kata_touch.html?from=1&pick=button%5Bdata-m%3D%22all%22%5D">
         <picture class="art"><source srcset="img/aiueokatatouch.webp" type="image/webp"><img src="img/aiueokatatouch.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">アイウエオタッチ</span>
-          <span class="desc">カタカナのカードを「ア」から じゅんばんに タッチしよう</span>
+          <span class="desc">カタカナのカードを「ア」から h順じゅんh番ばんに タッチしよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game abctouch" href="abc_touch.html?from=1&pick=button%5Bdata-m%3D%22U%22%5D">
         <picture class="art"><source srcset="img/abctouch.webp" type="image/webp"><img src="img/abctouch.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">ABCタッチ</span>
-          <span class="desc">アルファベットを「A」から じゅんばんに タッチしよう</span>
+          <span class="desc">アルファベットを「A」から h順じゅんh番ばんに タッチしよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game flashk" href="flash_kanji.html?from=1&pick=button%5Bdata-g%3D%221%22%5D">
         <picture class="art"><source srcset="img/flashk.webp" type="image/webp"><img src="img/flashk.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
-          <span class="name">フラッシュ漢字</span>
-          <span class="desc">かん字の読み方を、声に出してどんどん読もう</span>
+          <span class="name">フラッシュk漢かんk字じ</span>
+          <span class="desc">h漢かんk字じのk読よみk方かたを、k声こえにk出だしてどんどんk読よもう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game kanji" href="kanji_ou.html?from=1&pick=button%5Bdata-g%3D%221%22%5D">
         <picture class="art"><source srcset="img/kanji.webp" type="image/webp"><img src="img/kanji.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
-          <span class="name">目指せ！漢字王</span>
-          <span class="desc">学年ごとのかん字のよみを、フリック入力でこたえよう</span>
+          <span class="name">k目指めざせ！k漢かんk字じk王おう</span>
+          <span class="desc">k学がくk年ねんごとのh漢かんk字じのh読よみを、フリックk入にゅうk力りょくでh答こたえよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="s-koku">
+      <a class="game rtkotoba" href="rt_kotoba.html?from=1">
+        <picture class="art"><source srcset="img/rt_kotoba.webp" type="image/webp"><img src="img/rt_kotoba.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-koku">k国こくk語ご</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">ことばのk使つかいk方かた</span>
+          <span class="desc">ぶんに あう ことばを えらぼう</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-san">
+      <a class="game rtbunsho" href="rt_bunsho.html?from=1">
+        <picture class="art"><source srcset="img/rt_bunsho.webp" type="image/webp"><img src="img/rt_bunsho.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-san">k算さんk数すう</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">k算さんk数すうの<wbr>k文ぶんk章しょうk問もんk題だい</span>
+          <span class="desc">おはなしを よんで こたえよう</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-san">
+      <a class="game rtadd" href="rt_add10.html?from=1">
+        <picture class="art"><source srcset="img/rt_add10.webp" type="image/webp"><img src="img/rt_add10.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-san">k算さんk数すう</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">10までのk足たしk算ざん</span>
+          <span class="desc">こたえが 10までの たしざん</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-san">
+      <a class="game rtadd" href="rt_add20.html?from=1">
+        <picture class="art"><source srcset="img/rt_add20.webp" type="image/webp"><img src="img/rt_add20.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-san">k算さんk数すう</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">20までのk足たしk算ざん</span>
+          <span class="desc">こたえが 20までの たしざん</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-san">
+      <a class="game rtadd" href="rt_add3.html?from=1">
+        <picture class="art"><source srcset="img/rt_add3.webp" type="image/webp"><img src="img/rt_add3.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-san">k算さんk数すう</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">20までの3k口くちの<wbr>k足たしk算ざん</span>
+          <span class="desc">3つの かずを たそう</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-san">
+      <a class="game rtadd" href="rt_add100a.html?from=1">
+        <picture class="art"><source srcset="img/rt_add100a.webp" type="image/webp"><img src="img/rt_add100a.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-san">k算さんk数すう</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">100までのk足たしk算ざん k初しょk級きゅう</span>
+          <span class="desc">10、20、30…の たしざん</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-san">
+      <a class="game rtadd" href="rt_add100b.html?from=1">
+        <picture class="art"><source srcset="img/rt_add100b.webp" type="image/webp"><img src="img/rt_add100b.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-san">k算さんk数すう</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">100までのk足たしk算ざん k中ちゅうk級きゅう</span>
+          <span class="desc">2けた ＋ 1けたの たしざん</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-san">
+      <a class="game rtadd" href="rt_add100c.html?from=1">
+        <picture class="art"><source srcset="img/rt_add100c.webp" type="image/webp"><img src="img/rt_add100c.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-san">k算さんk数すう</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">100までのk足たしk算ざん k上じょうk級きゅう</span>
+          <span class="desc">2けた ＋ 2けたの たしざん</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-san">
+      <a class="game rtclock" href="rt_clock1.html?from=1">
+        <picture class="art"><source srcset="img/rt_clock1.webp" type="image/webp"><img src="img/rt_clock1.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-san">k算さんk数すう</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">k時計とけいのk読よみk方かた k初しょk級きゅう</span>
+          <span class="desc">15ふん ごとの とけい</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-san">
+      <a class="game rtclock" href="rt_clock2.html?from=1">
+        <picture class="art"><source srcset="img/rt_clock2.webp" type="image/webp"><img src="img/rt_clock2.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-san">k算さんk数すう</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">k時計とけいのk読よみk方かた k中ちゅうk級きゅう</span>
+          <span class="desc">5ふん ごとの とけい</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-san">
+      <a class="game rtclock" href="rt_clock3.html?from=1">
+        <picture class="art"><source srcset="img/rt_clock3.webp" type="image/webp"><img src="img/rt_clock3.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-san">k算さんk数すう</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">k時計とけいのk読よみk方かた k上じょうk級きゅう</span>
+          <span class="desc">1ぷん ごとの とけい</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-san">
+      <a class="game rtmoney" href="rt_money1.html?from=1">
+        <picture class="art"><source srcset="img/rt_money1.webp" type="image/webp"><img src="img/rt_money1.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-san">k算さんk数すう</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">おk金かねのk数かぞえk方かた k初しょk級きゅう</span>
+          <span class="desc">1・5・10・50えんを かぞえる</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-san">
+      <a class="game rtnum" href="rt_zukei.html?from=1">
+        <picture class="art"><source srcset="img/rt_zukei.webp" type="image/webp"><img src="img/rt_zukei.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-san">k算さんk数すう</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">k図ずk形けい</span>
+          <span class="desc">ながさ・ひろさ・かたち</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="other">
       <a class="game keisan" href="anzan_timeattack.html?from=1&pick=button%5Bdata-mode%3D%22add%22%5D%7Cbutton%5Bdata-dig%3D%221%22%5D">
         <picture class="art"><source srcset="img/keisan.webp" type="image/webp"><img src="img/keisan.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
-          <span class="name">あんざんタイムアタック</span>
-          <span class="desc">足し算・引き算・かけ算・わり算を10もん。はやくとくほど高い点になるよ</span>
+          <span class="name">h暗算あんざんタイムアタック</span>
+          <span class="desc">k足たしk算ざん・k引ひきk算ざん・h掛かけk算ざん・h割わりk算ざんを10h問もん。h速はやくh解とくほどk高たかいk点てんになるよ</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game maze" href="block_maze.html?from=1&pick=button%5Bdata-m%3D%22N%22%5D">
         <picture class="art"><source srcset="img/maze.webp" type="image/webp"><img src="img/maze.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
-          <span class="name">ブロックめいろ</span>
-          <span class="desc">ゆびで なぞって、スタートから ゴールまで すすもう</span>
+          <span class="name">ブロックh迷めいh路ろ</span>
+          <span class="desc">h指ゆびで なぞって、スタートから ゴールまで h進すすもう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game food" href="food_jigsaw.html?from=1&pick=button%5Bdata-n%3D%2216%22%5D">
         <picture class="art"><source srcset="img/food.webp" type="image/webp"><img src="img/food.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
-          <span class="name">やさい・くだものジグソー</span>
-          <span class="desc">すきなやさいやくだものの絵で、ジグソーパズルをしよう</span>
+          <span class="name">h野菜やさい・h果物くだものジグソー</span>
+          <span class="desc">h好すきなh野菜やさいやh果物くだもののk絵えで、ジグソーパズルをしよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game nurie" href="nurie.html?from=1&pick=.tabs%20%5Bdata-lv%3D%221%22%5D">
         <picture class="art"><source srcset="img/nurie.webp" type="image/webp"><img src="img/nurie.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
-          <span class="name">ぬりえ</span>
-          <span class="desc">16色で タップして ぬろう！ 30まいの 絵</span>
+          <span class="name">h塗ぬりh絵え</span>
+          <span class="desc">16k色しょくで タップして h塗ぬろう！ 30h枚まいの k絵え</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game color" href="color_timeattack.html?from=1">
         <picture class="art"><source srcset="img/color.webp" type="image/webp"><img src="img/color.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
-          <span class="name">いろまぜマスター</span>
-          <span class="desc">えのぐを1色か2色えらんで、見本と同じ色を作ろう</span>
+          <span class="name">h色いろh混まぜマスター</span>
+          <span class="desc">h絵えのh具ぐを1k色しょくか2k色しょくh選えらんで、k見みk本ほんとk同おなじk色いろをk作つくろう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game kotoba" href="kotoba_search.html?from=1&pick=.tabs%20%5Bdata-n%3D%225%22%5D">
         <picture class="art"><source srcset="img/kotoba.webp" type="image/webp"><img src="img/kotoba.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">ことばサーチ</span>
-          <span class="desc">たて・よこ・ななめに かくれた ことばを さがそう</span>
+          <span class="desc">h縦たて・h横よこ・h斜ななめに h隠かくれた h言葉ことばを h探さがそう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game donut" href="donut_connect.html?from=1">
         <picture class="art"><source srcset="img/donut.webp" type="image/webp"><img src="img/donut.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">ドーナツコネクト</span>
-          <span class="desc">なぞって 入れかえて 3つ ならべて けそう</span>
+          <span class="desc">なぞって k入いれh替かえて 3つ h並ならべて h消けそう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game quizrun" href="quiz_runner.html?from=1&rec=1">
         <picture class="art"><source srcset="img/quizrun.webp" type="image/webp"><img src="img/quizrun.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">クイズランナー</span>
-          <span class="desc">まちがえるまで クイズに こたえて はしろう</span>
+          <span class="desc">h間違まちがえるまで クイズに h答こたえて h走はしろう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game pair" href="pair_tsukuru.html?from=1&pick=button%5Bdata-m%3D%2216%22%5D">
         <picture class="art"><source srcset="img/pair.webp" type="image/webp"><img src="img/pair.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">ペアツクール</span>
-          <span class="desc">カードを めくって、同じ えの ペアを さがそう</span>
+          <span class="desc">カードを めくって、k同おなじ h絵えの ペアを h探さがそう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game block" href="block_puzzle.html?from=1&pick=button%5Bdata-n%3D%224%22%5D">
         <picture class="art"><source srcset="img/block.webp" type="image/webp"><img src="img/block.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">ブロックウメール</span>
-          <span class="desc">ブロックを ばんめんに すきまなく おこう</span>
+          <span class="desc">ブロックを h盤面ばんめんに h隙間すきまなく h置おこう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game puzzle" href="korokoro_puzzle.html?from=1&pick=button%5Bdata-lv%3D%22easy%22%5D">
         <picture class="art"><source srcset="img/puzzle.webp" type="image/webp"><img src="img/puzzle.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">ころころパズル</span>
-          <span class="desc">黄色のピースとトンネルをヒントに、すきまをうめよう</span>
+          <span class="desc">k黄きk色いろのピースとトンネルをヒントに、h隙間すきまをh埋うめよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game craft" href="korokoro_craft.html?from=1&pick=button%5Bdata-lv%3D%22easy%22%5D">
         <picture class="art"><source srcset="img/craft.webp" type="image/webp"><img src="img/craft.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">ころころクラフト</span>
-          <span class="desc">まっさらなばんめんに、ピースをぜんぶ自分でならべよう</span>
+          <span class="desc">まっさらなh盤面ばんめんに、ピースをh全ぜんh部ぶk自じk分ぶんでh並ならべよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game chiba" href="chiba_puzzle.html?from=1&pick=button%5Bdata-area%3D%22nw%22%5D">
         <picture class="art"><source srcset="img/chiba.webp" type="image/webp"><img src="img/chiba.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
-          <span class="name">ちばけんパズル</span>
-          <span class="desc">市町村のピースを、ちばけんの地図にはめよう</span>
+          <span class="name">h千葉県ちばけんパズル</span>
+          <span class="desc">k市しk町ちょうk村そんのピースを、h千葉県ちばけんのk地ちk図ずにはめよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game japan" href="japan_puzzle.html?from=1&pick=button%5Bdata-area%3D%22hokkaido%22%5D">
         <picture class="art"><source srcset="img/japan.webp" type="image/webp"><img src="img/japan.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
-          <span class="name">都道府県パズル</span>
-          <span class="desc">47の都道府県のピースを、日本の地図にはめよう</span>
+          <span class="name">k都道府県とどうふけんパズル</span>
+          <span class="desc">47のk都道府県とどうふけんのピースを、k日本にほんのk地ちk図ずにはめよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
-    <li>
+    <li data-subj="other">
       <a class="game numpl" href="number_place.html?from=1&pick=.tabs%20%5Bdata-n%3D%223%22%5D">
         <picture class="art"><source srcset="img/numpl.webp" type="image/webp"><img src="img/numpl.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="name">ナンバープレイス</span>
-          <span class="desc">たても よこも 同じ すうじが 入らないように うめよう</span>
+          <span class="desc">h縦たても h横よこも k同おなじ h数すうh字じが k入はいらないように h埋うめよう</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
     </li>
   </ul>
+<script>(function(){var bs=document.querySelectorAll('.subjtabs button');function set(v){bs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.s===v?'true':'false')});document.querySelectorAll('ul.games>li').forEach(function(li){li.hidden=!(v==='all'||li.dataset.subj===v)});try{sessionStorage.setItem('subj_'+location.pathname,v)}catch(e){}}
+bs.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.s)})});try{var v=sessionStorage.getItem('subj_'+location.pathname);if(v&&document.querySelector('.subjtabs button[data-s="'+v+'"]'))set(v)}catch(e){}})();</script>
 
 
   <p class="foot">ホームがめんについかすると、インターネットがつながらないところでもあそべます。</p>
@@ -430,11 +674,11 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
 <dialog class="bm" id="pg" aria-labelledby="pgTitle">
   <div class="head">
     <h2 id="pgTitle" tabindex="-1">保護者の方へ</h2>
-    <button class="close" id="closePg" aria-label="閉じる">✕</button>
+    <button class="close" id="closePg" aria-label="k閉とじる">✕</button>
   </div>
   <div class="body pgText">
-    <p>本Webアプリは、地域の子供に遊んでもらうために、作者の趣味で開発しております。<br>無用な広告表示等はせず、ウイルス対策等も実施しておりますので、安心して遊んで頂ければ幸いです。<br>もしよろしければ、お知り合いの方にも広めて頂ければ幸いです。</p>
-    <p class="ask">一点お願いがございます。<br>本Webアプリを遊んで頂いて、お気づきの点、改善提案、新しいゲームの要望等、何かご意見がございましたら、以下のオープンチャットにご参加頂き、ご意見頂けますと幸いです。<br>頂いたご意見に全て対応できるとは限りませんが、今後の開発の参考にさせて頂きます。</p>
+    <p>k本ほんWebアプリは、地域の子供に遊んでもらうために、作者の趣味で開発しております。<br>無用な広告表示等はせず、ウイルス対策等も実施しておりますので、安心して遊んで頂ければ幸いです。<br>もしよろしければ、お知り合いの方にも広めて頂ければ幸いです。</p>
+    <p class="ask">一点お願いがございます。<br>k本ほんWebアプリを遊んで頂いて、お気づきの点、改善提案、新しいゲームの要望等、何かご意見がございましたら、以下のオープンチャットにご参加頂き、ご意見頂けますと幸いです。<br>頂いたご意見に全て対応できるとは限りませんが、今後の開発の参考にさせて頂きます。</p>
     <p>オープンチャットはLINEアプリを使用しますが、ご自身のアカウントが公になることはございません。<br>本トークルームに限ったユーザー名を設定してご入室頂けますので、こちらも安心してご参加ください。</p>
     <a class="lineBtn" href="https://line.me/ti/g2/QkG2LDZdHEaQyuLPgbaAhA4jRbjw1I7ek9ss3A?utm_source=invitation&amp;utm_medium=QR_code&amp;utm_campaign=default" target="_blank" rel="noopener">スマートフォンの方はこちらから参加</a>
     <p class="qrCap">パソコンなどで見ているときは、スマートフォンでQRコードを読み取ってください。</p>
@@ -445,7 +689,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
 <dialog class="bm" id="bm" aria-labelledby="bmTitle">
   <div class="head">
     <h2 id="bmTitle" tabindex="-1">ブックマークのススメ</h2>
-    <button class="close" id="closeBm" aria-label="閉じる">✕</button>
+    <button class="close" id="closeBm" aria-label="k閉とじる">✕</button>
   </div>
   <div class="body">
     <p class="why">「KouSen式」をスマートフォンやタブレットのホーム画面に追加しておくと、アプリのようにワンタップで開けます。</p>
