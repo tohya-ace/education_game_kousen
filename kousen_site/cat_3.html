@@ -61,8 +61,8 @@
 })();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>小学3年生｜知的探求Webアプリ KouSen式</title>
-<meta name="description" content="知的探求Webアプリ KouSen式。ボールをころがして考える、こどもむけのゲームです。">
+<title>小学3年生｜知育・学習・脳トレ総合アプリ KouSen式</title>
+<meta name="description" content="知育・学習・脳トレ総合アプリ KouSen式。ボールをころがして考える、こどもむけのゲームです。">
 <meta name="theme-color" content="#274F8E">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
@@ -241,7 +241,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
 .game.flashyoji .plate,.game.yojiou .plate{max-width:min(68%,330px)}
 .game.flashyoji .plate .name,.game.yojiou .plate .name{font-size:clamp(.95rem,4.3vw,1.4rem)}
 .subj{display:inline-block;margin:0 4px 3px 0;padding:0 8px;border-radius:6px;border:1.5px solid currentColor;background:#fff;font-size:clamp(.64rem,2.8vw,.76rem);line-height:1.5;font-weight:700;vertical-align:top}
-.subj.s-koku{color:#C2410C}.subj.s-san{color:#1D4ED8}.subj.s-ri{color:#15803D}
+.subj.s-koku{color:#C2410C}.subj.s-san{color:#1D4ED8}.subj.s-ri{color:#15803D}.subj.s-sha{color:#9D4EDD}
 .subjtabs{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
 .subjtabs button{font:inherit;font-size:.92rem;padding:6px 14px;border-radius:999px;border:2px solid var(--edge,#1F2A44);background:#fff;color:#1F2A44;cursor:pointer}
 .subjtabs button[aria-pressed="true"]{background:var(--edge,#1F2A44);color:#fff}
@@ -275,7 +275,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
   <header class="top">
     <div class="brand">
       <img src="icons/icon-192.png" alt="" width="54" height="54">
-      <h1><span class="kicker">知的探求Webアプリ</span>KouSen式<span class="rollIn" aria-hidden="true"><i style="background-color:var(--red)"></i><i style="background-color:var(--blue)"></i><i style="background-color:var(--green)"></i></span></h1>
+      <h1><span class="kicker">k知ちk育いく・k学がくk習しゅう・k脳のうトレk総そうk合ごうアプリ</span>KouSen式<span class="rollIn" aria-hidden="true"><i style="background-color:var(--red)"></i><i style="background-color:var(--blue)"></i><i style="background-color:var(--green)"></i></span></h1>
     </div>
     <div class="pills">
     <button class="bmBtn" id="openBm" aria-haspopup="dialog">
@@ -289,7 +289,7 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
   <p class="lead">h遊あそびたい ゲームを h選えらんでね。</p>
 
     <div class="crumb" style="--edge:#C9A21B"><a class="backBtn" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>トップ</a><h2 class="ctitle"><span aria-hidden="true">🌻</span>k小しょうk学がく3k年ねんk生せい</h2></div>
-  <div class="subjtabs" role="group" aria-label="k教きょうk科か" style="--edge:#C9A21B"><button type="button" data-s="all" aria-pressed="true">h全ぜんh部ぶ</button><button type="button" data-s="s-koku" aria-pressed="false">k国こくk語ご</button><button type="button" data-s="s-san" aria-pressed="false">k算さんk数すう</button><button type="button" data-s="s-ri" aria-pressed="false">k理りk科か</button><button type="button" data-s="other" aria-pressed="false">ゲーム</button></div>
+  <div class="subjtabs" role="group" aria-label="k教きょうk科か" style="--edge:#C9A21B"><button type="button" data-s="all" aria-pressed="true">h全ぜんh部ぶ</button><button type="button" data-s="s-koku" aria-pressed="false">k国こくk語ご</button><button type="button" data-s="s-san" aria-pressed="false">k算さんk数すう</button><button type="button" data-s="s-ri" aria-pressed="false">k理りk科か</button><button type="button" data-s="s-sha" aria-pressed="false">k社しゃk会かい</button><button type="button" data-s="other" aria-pressed="false">ゲーム</button></div>
   <ul class="games">
     <li data-subj="other">
       <a class="game abctouch" href="abc_touch.html?from=3&pick=button%5Bdata-m%3D%22L%22%5D">
@@ -670,8 +670,63 @@ dialog.bm::backdrop{background:rgba(15,25,45,.55)}
         <picture class="art"><source srcset="img/rt3_kaze.webp" type="image/webp"><img src="img/rt3_kaze.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
         <span class="plate">
           <span class="subj s-ri">k理りk科か</span>          <span class="badge">k復ふくk習しゅうテスト</span>
-          <span class="name">k風かぜのk力ちから</span>
+          <span class="name">k風かぜとゴムのk力ちから</span>
           <span class="desc">k風かぜと ゴムの k力ちからの はたらき</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-ri">
+      <a class="game rtsub" href="rt3_denki.html?from=3">
+        <picture class="art"><source srcset="img/rt3_denki.webp" type="image/webp"><img src="img/rt3_denki.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-ri">k理りk科か</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">k電でんk気きのk通とおりk道みち</span>
+          <span class="desc">k豆まめk電でんk球きゅうに k明あかりが つく つなぎk方かた</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-ri">
+      <a class="game rtclock" href="rt3_jishaku.html?from=3">
+        <picture class="art"><source srcset="img/rt3_jishaku.webp" type="image/webp"><img src="img/rt3_jishaku.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-ri">k理りk科か</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">k磁じk石しゃくのk性せいk質しつ</span>
+          <span class="desc">k磁じk石しゃくに つく もの・きょくの はたらき</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-ri">
+      <a class="game rtmoney" href="rt3_omosa.html?from=3">
+        <picture class="art"><source srcset="img/rt3_omosa.webp" type="image/webp"><img src="img/rt3_omosa.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-ri">k理りk科か</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">もののk重おもさ</span>
+          <span class="desc">k形かたちや しゅるいと k重おもさの かんけい</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-sha">
+      <a class="game rtnum" href="rt3_chiri.html?from=3">
+        <picture class="art"><source srcset="img/rt3_chiri.webp" type="image/webp"><img src="img/rt3_chiri.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-sha">k社しゃk会かい</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">k地ちk理り</span>
+          <span class="desc">k方ほうk位い・k地ちk図ずk記きk号ごう・まちの k様子ようす</span>
+        </span>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
+      </a>
+    </li>
+    <li data-subj="s-sha">
+      <a class="game rtmoney" href="rt3_reki.html?from=3">
+        <picture class="art"><source srcset="img/rt3_reki.webp" type="image/webp"><img src="img/rt3_reki.png" alt="" width="720" height="200" decoding="async" draggable="false"></picture>
+        <span class="plate">
+          <span class="subj s-sha">k社しゃk会かい</span>          <span class="badge">k復ふくk習しゅうテスト</span>
+          <span class="name">k歴れきk史し</span>
+          <span class="desc">まちの うつりかわりと k昔むかしの くらし</span>
         </span>
         <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5v17L20 12z" fill="#1F2A44"/></svg></span>
       </a>
@@ -831,11 +886,7 @@ bs.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.s)})}
   </div>
   <div class="body pgText">
     <p>k本ほんWebアプリは、地域の子供に遊んでもらうために、作者の趣味で開発しております。<br>無用な広告表示等はせず、ウイルス対策等も実施しておりますので、安心して遊んで頂ければ幸いです。<br>もしよろしければ、お知り合いの方にも広めて頂ければ幸いです。</p>
-    <p class="ask">一点お願いがございます。<br>k本ほんWebアプリを遊んで頂いて、お気づきの点、改善提案、新しいゲームの要望等、何かご意見がございましたら、以下のオープンチャットにご参加頂き、ご意見頂けますと幸いです。<br>頂いたご意見に全て対応できるとは限りませんが、今後の開発の参考にさせて頂きます。</p>
-    <p>オープンチャットはLINEアプリを使用しますが、ご自身のアカウントが公になることはございません。<br>本トークルームに限ったユーザー名を設定してご入室頂けますので、こちらも安心してご参加ください。</p>
-    <a class="lineBtn" href="https://line.me/ti/g2/QkG2LDZdHEaQyuLPgbaAhA4jRbjw1I7ek9ss3A?utm_source=invitation&amp;utm_medium=QR_code&amp;utm_campaign=default" target="_blank" rel="noopener">スマートフォンの方はこちらから参加</a>
-    <p class="qrCap">パソコンなどで見ているときは、スマートフォンでQRコードを読み取ってください。</p>
-    <div class="qrBox"><img src="img/openchat_qr.png" alt="LINEオープンチャットのQRコード" width="480" height="480" loading="lazy"></div>
+    <p>k本ほんWebアプリは復習のために、使用して頂くのが、一番適しております。<br>単元によっては、筆算をするなど、ノート等も使用し、学習にお役立てください。</p>
   </div>
 </dialog>
 
@@ -863,7 +914,7 @@ bs.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.s)})}
             <rect x="20" y="18" width="150" height="12" rx="6" fill="#DCE5EF"/><rect x="20" y="38" width="240" height="9" rx="4.5" fill="#EEF2F7"/><rect x="20" y="54" width="210" height="9" rx="4.5" fill="#EEF2F7"/>
             <rect x="12" y="92" width="276" height="46" rx="23" fill="#EEF1F5"/>
             <circle cx="38" cy="115" r="17" fill="#fff"/><path d="M41 107l-8 8 8 8" stroke="#1F2A44" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="62" y="98" width="174" height="34" rx="17" fill="#fff"/><text x="149" y="120" text-anchor="middle" font-size="13" fill="#1F2A44">知的探求Webアプリ KouSen式</text>
+            <rect x="62" y="98" width="174" height="34" rx="17" fill="#fff"/><text x="149" y="120" text-anchor="middle" font-size="13" fill="#1F2A44">知育・学習・脳トレ総合アプリ KouSen式</text>
             <circle cx="262" cy="115" r="17" fill="#fff"/><circle cx="254" cy="115" r="2.6" fill="#1F2A44"/><circle cx="262" cy="115" r="2.6" fill="#1F2A44"/><circle cx="270" cy="115" r="2.6" fill="#1F2A44"/>
             <circle cx="262" cy="115" r="24" fill="none" stroke="#F08A24" stroke-width="4"/>
             <path d="M262 64v18M254 75l8 8 8-8" stroke="#F08A24" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
@@ -950,7 +1001,7 @@ bs.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.s)})}
           <svg viewBox="0 0 300 150" role="img" aria-label="Chrome の右上にある「⋮」ボタンの場所">
             <rect x="1" y="1" width="298" height="148" rx="16" fill="#fff" stroke="#C9D6E4" stroke-width="2"/>
             <rect x="2" y="2" width="296" height="52" rx="15" fill="#EEF1F5"/><rect x="2" y="40" width="296" height="14" fill="#EEF1F5"/>
-            <rect x="14" y="12" width="190" height="30" rx="15" fill="#fff"/><text x="30" y="32" font-size="12" fill="#1F2A44">知的探求Webアプリ KouSen式</text>
+            <rect x="14" y="12" width="190" height="30" rx="15" fill="#fff"/><text x="30" y="32" font-size="12" fill="#1F2A44">知育・学習・脳トレ総合アプリ KouSen式</text>
             <rect x="216" y="15" width="22" height="22" rx="5" fill="none" stroke="#1F2A44" stroke-width="2.2"/><text x="227" y="31" text-anchor="middle" font-size="11" fill="#1F2A44">1</text>
             <circle cx="268" cy="19" r="2.6" fill="#1F2A44"/><circle cx="268" cy="27" r="2.6" fill="#1F2A44"/><circle cx="268" cy="35" r="2.6" fill="#1F2A44"/>
             <circle cx="268" cy="27" r="19" fill="none" stroke="#F08A24" stroke-width="4"/>
