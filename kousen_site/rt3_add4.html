@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>たし算ちょうきゅう（ふくしゅうテスト）｜知育Webアプリ KouSen式</title>
+<title>たし算超級（ふくしゅうテスト）｜知育Webアプリ KouSen式</title>
 <meta name="theme-color" content="#7A5CC9">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
@@ -213,7 +213,7 @@ dialog.tuto::backdrop{background:rgba(10,25,20,.55)}
 <body>
 <div class="wrap">
   <div class="titlebar">
-    <h1><span class="kick">ふくしゅうテスト</span>たし算 ちょうきゅう</h1>
+    <h1><span class="kick">ふくしゅうテスト</span>たし算 超級</h1>
     <button class="pill" id="openTuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a3 3 0 0 1 5.6 1.3c0 2-2.8 2.4-2.8 4"/><circle cx="12" cy="17.6" r=".6" fill="currentColor"/></svg>あそびかた</button>
   </div>
 
@@ -245,7 +245,7 @@ dialog.tuto::backdrop{background:rgba(10,25,20,.55)}
 </div>
 
 <dialog class="tuto" id="tuto" aria-labelledby="tutoTitle">
-  <div class="head"><h2 id="tutoTitle" tabindex="-1">たし算 ちょうきゅうの あそびかた</h2><button class="close" id="closeTuto" aria-label="とじる">✕</button></div>
+  <div class="head"><h2 id="tutoTitle" tabindex="-1">たし算 超級の あそびかた</h2><button class="close" id="closeTuto" aria-label="とじる">✕</button></div>
   <div class="body">
     <section class="tvid" aria-label="どうがで見るあそびかた">
       <div class="vbox" id="vbox">
@@ -306,7 +306,7 @@ function buildPool(){
   else if(k==='oto'){DATA.forEach(d=>P.push({t:'ch',q:d[0],a:d[1],w:d.slice(2),ask:'あてはまる ことばを えらぼう'}))}
   else if(k==='kokugo'){DATA.forEach(d=>P.push({t:'ch',ti:d[0],p:d[1],q:d[2],a:d[3],w:d[4]}))}
   else if(k==='unit'){DATA.forEach(d=>P.push(Object.assign({},d)))}
-  if(k.startsWith('add'))P.forEach((p,i)=>{if(i%4===0)p.fig=1});
+  if(k.startsWith('add'))P.forEach(p=>{p.fig=1});
   return P;
 }
 const SERIES=[['これ','それ','あれ','どれ'],['ここ','そこ','あそこ','どこ'],['こちら','そちら','あちら','どちら'],['こっち','そっち','あっち','どっち'],['この','その','あの','どの'],['こんな','そんな','あんな','どんな'],['こういう','そういう','ああいう','どういう'],['こう','そう','ああ','どう']];
@@ -424,7 +424,18 @@ function genFr6(k){
     return Object.assign({t:'fill',q:q},r)}
 }
 function genQ(){if(CFG.gen.startsWith('fr6'))return genFr6(CFG.gen);if(CFG.gen.startsWith('div4'))return genDiv4(CFG.gen);if(CFG.gen[0]==='d'&&CFG.gen!=='div1'&&CFG.gen!=='div2'&&CFG.gen!=='div3')return genDec(CFG.gen);return yoko(genQ0())}
-function genQ0(){if(CFG.gen==='hyoji')return genHyoji(false);if(CFG.gen==='hyoji2')return genHyoji(true);if(CFG.gen==='hyoji3')return genHyoji3();if(CFG.gen.startsWith('div'))return genDiv(CFG.gen);return genHissan(CFG.gen)}
+function pvFig(q){const big=CFG.gen==='hyoji3',H=big?PLB.slice().reverse():(CFG.gen==='hyoji2'?['千','百','十','一']:['百','十','一']);
+  const m=String(q.q).match(/\d{3,}/);let ds=null,hl=null;const pm=String(q.q).match(/の (一万|十万|百万|千万|一|十|百|千)のくらいの/);
+  if(pm)hl=pm[1];else if(m&&String(q.q).indexOf('「')<0&&String(q.q).indexOf('こ、')<0)ds=m[0];
+  const n=H.length,cw=Math.min(44,300/n);let b='';const dd=ds?ds.padStart(n,' ').slice(-n):null;
+  H.forEach((h,i)=>{const x=10+i*cw;b+='<rect x="'+x+'" y="8" width="'+cw+'" height="26" fill="'+(h===hl?'#FFE6B3':'#EEF4FB')+'" stroke="#1F2A44"/><text x="'+(x+cw/2)+'" y="26" font-size="11" text-anchor="middle" fill="#1F2A44">'+h+'</text>'+
+    '<rect x="'+x+'" y="34" width="'+cw+'" height="34" fill="#fff" stroke="#1F2A44"/><text x="'+(x+cw/2)+'" y="58" font-size="17" text-anchor="middle" fill="#1F2A44">'+(dd?dd[i].trim():'')+'</text>'});
+  const mm0=[...String(q.q).matchAll(/(\d+)を (\d+)こ/g)];if(mm0.length&&mm0.every(g=>+g[1]<=1000&&+g[2]<=9)){b='';const mm=mm0;let x=8;const C=['#E5484D','#2F7FC1','#2E9A5E','#C9961B'];
+    mm.forEach((g,k)=>{const u=+g[1],c=Math.min(+g[2],9);for(let i=0;i<c;i++){if(u>=100)b+='<rect x="'+x+'" y="8" width="20" height="20" fill="'+C[k%4]+'" stroke="#fff"/>';else if(u>=10)b+='<rect x="'+(x+6)+'" y="8" width="8" height="40" fill="'+C[k%4]+'" stroke="#fff"/>';else b+='<rect x="'+(x+6)+'" y="40" width="8" height="8" fill="'+C[k%4]+'"/>';x+=u>=100?22:12}
+      b+='<text x="'+(x-((u>=100?22:12)*c)/2)+'" y="64" font-size="10" text-anchor="middle" fill="#1F2A44">'+u+'×'+g[2]+'</text>';x+=10});return '<svg viewBox="0 0 '+(x+6)+' 70" width="100%" style="max-width:340px">'+b+'</svg>'}
+  return '<svg viewBox="0 0 '+(20+n*cw)+' 76" width="100%" style="max-width:340px">'+b+'</svg>'}
+function genQ0(){const q=genQ00();if(String(CFG.gen).startsWith('hyoji')&&!q.img)q.img=pvFig(q);return q}
+function genQ00(){if(CFG.gen==='hyoji')return genHyoji(false);if(CFG.gen==='hyoji2')return genHyoji(true);if(CFG.gen==='hyoji3')return genHyoji3();if(CFG.gen.startsWith('div'))return genDiv(CFG.gen);return genHissan(CFG.gen)}
 function qkey(q){return JSON.stringify(q)}
 /* 一通り 出るまで おなじ もんだいは 出さない */
 function draw(n){
